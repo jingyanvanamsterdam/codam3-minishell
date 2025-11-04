@@ -2,6 +2,7 @@
 #include "minishell.h"
 #include "libft.h"
 #include <stdlib.h>
+#include "env.h"
 
 void	ft_malloc_failure(char	*s, t_env *env_list)
 {

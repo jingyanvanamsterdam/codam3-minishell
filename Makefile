@@ -23,6 +23,16 @@ endif
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
+# ========== Testing SRC ============
+# env module
+ENV_SRC = src/env/env_init.c \
+			src/env/env_utils.c \
+			src/env/env_getset.c \
+			src/env/env_free.c \
+			src/env/test_env.c \
+			src/env/free_split.c \
+			src/env/env_error.c
+
 all: buildlib $(NAME)
 
 # %.o: %.c
@@ -46,5 +56,12 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
+
+# ================= Test rules ===================
+#  Example: make env -> compile only env/*.c + test_env.c into ./env executable
+env: buildlib
+	@echo "Compiling env testing module..."
+	cc $(FLAGS) $(HEADERS) $(ENV_SRC) $(LIBFT) -o env
+	@echo "✅ Built test executable: ./env"
 
 .PHONY: all buildlib clean fclean re

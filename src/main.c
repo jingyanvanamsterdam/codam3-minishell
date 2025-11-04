@@ -25,6 +25,7 @@ void	print_env_list(t_env *head)
 		current = current->next;
 	}
 }
+
 //cannot change the readline tab completion
 int		input_is_space(char *input)
 {
