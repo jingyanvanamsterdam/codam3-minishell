@@ -23,6 +23,13 @@ endif
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
+# ========== Testing SRC ============
+# lexing module
+LEX_SRC = src/lexing/lexing.c \
+			src/lexing/main.c \
+			src/lexing/lexing_error.c \
+			src/lexing/lexing_free.c \
+
 all: buildlib $(NAME)
 
 # %.o: %.c
@@ -46,5 +53,12 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
+
+# ================= Test rules ===================
+#  Example: make env -> compile only env/*.c + test_env.c into ./env executable
+lex: buildlib
+	@echo "Compiling lex testing module..."
+	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(LIBFT) -o lex
+	@echo "✅ Built test executable: ./lex"
 
 .PHONY: all buildlib clean fclean re

@@ -6,7 +6,7 @@
 /*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/07/25 16:15:55 by ray           #+#    #+#                 */
-/*   Updated: 2025/10/28 16:18:21 by jingyandong   ########   odam.nl         */
+/*   Updated: 2025/11/04 16:35:16 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,13 @@ void	*ft_calloc(size_t nmemb, size_t size);
 char	*ft_strdup(const char *s);
 double	ft_atof(char *str);
 int		ft_strcmp(const char *s1, const char *s2);
+int		ft_strcheck(char *s, int (*f)(int));
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 
 int		ft_isspace(int c);
+int		ft_isalpha(int c);
+int		ft_isdigit(int c);
+int		ft_isalnum(int c);
 
 #endif
