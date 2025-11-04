@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kuyu <kuyu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/24 12:10:57 by kuyu              #+#    #+#             */
-/*   Updated: 2025/04/24 12:34:58 by kuyu             ###   ########.fr       */
+/*   Created: 2025/04/30 16:02:42 by jdong             #+#    #+#             */
+/*   Updated: 2025/12/28 14:16:13 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,15 @@
 size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 {
 	size_t	i;
-	size_t	src_len;
 
 	i = 0;
-	src_len = ft_strlen(src);
-	if (size > 0)
+	if (size == 0)
+		return (ft_strlen(src));
+	while (src[i] && i < size - 1)
 	{
-		while (i < size - 1 && src[i] != '\0')
-		{
-			dst[i] = src[i];
-			++i;
-		}
-		dst[i] = '\0';
+		dst[i] = src[i];
+		i++;
 	}
-	return (src_len);
+	dst[i] = '\0';
+	return (ft_strlen(src));
 }
-// for this one, maybe I overlooked the case when size = 0;
-/* somehow, (i < size - 1) doesn't stop the while loop 
-when size = 0 and i = 1 */

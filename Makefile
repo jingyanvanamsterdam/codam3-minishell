@@ -24,6 +24,7 @@ endif
 LIBFT = $(LIBFT_DIR)/libft.a
 
 # ========== Testing SRC ============
+<<<<<<< HEAD
 # env module
 ENV_SRC = src/env/env_init.c \
 			src/env/env_utils.c \
@@ -32,8 +33,15 @@ ENV_SRC = src/env/env_init.c \
 			src/env/test_env.c \
 			src/env/free_split.c \
 			src/env/env_error.c
+=======
+# lexing module
+LEX_SRC = src/lexing/lexing.c \
+			src/lexing/main.c \
+			src/lexing/lexing_error.c \
+			src/lexing/lexing_free.c \
+>>>>>>> 497fd4c (Update lexing file from codam. 11.4)
 
-all: buildlib $(NAME)
+all: buildlib $(NAME) 
 
 # %.o: %.c
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
@@ -59,9 +67,16 @@ re: fclean all
 
 # ================= Test rules ===================
 #  Example: make env -> compile only env/*.c + test_env.c into ./env executable
+<<<<<<< HEAD
 env: buildlib
 	@echo "Compiling env testing module..."
 	cc $(FLAGS) $(HEADERS) $(ENV_SRC) $(LIBFT) -o env
 	@echo "✅ Built test executable: ./env"
+=======
+lex: buildlib
+	@echo "Compiling lex testing module..."
+	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(LIBFT) -o lex
+	@echo "✅ Built test executable: ./lex"
+>>>>>>> 497fd4c (Update lexing file from codam. 11.4)
 
-.PHONY: all buildlib clean fclean re
+.PHONY: all buildlib clean fclean re 

@@ -8,15 +8,15 @@ typedef enum e_token_type
 	REDIR_IN,
 	REDIR_OUT,
 	HEREDOC,
-	APPEND
+	APPEND,
 }			t_token_type;
 
-typedef struct	s_tokens
+typedef struct	s_token
 {
 	char			*value;
 	t_token_type	type;
-	struct s_tokens	*next;
-}				t_tokens;
+	struct s_token	*next;
+}				t_token;
 
 typedef struct	s_cmds
 { 
@@ -32,7 +32,10 @@ typedef struct	s_env
 
 typedef struct	s_shell
 {
-	/* data */
+	t_env	*env_list;
+	t_token	*token;
+	int		prev_exit;
+	// more to add
 }				t_shell;
 
 #endif
