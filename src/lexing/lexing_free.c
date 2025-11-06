@@ -18,15 +18,18 @@ void	free_split(char **key_value)
 	key_value = NULL;
 }
 
-void	free_token_list(t_token *token)
+void	free_token_list(t_token **lst)
 {
-	t_token	*tmp;
-	while (token)
+	t_token	*temp;
+
+	if (!lst)
+		return ;
+	while (*lst)
 	{
-		if (token->value)
-			free(token->value);
-		tmp = token->next;
-		free(token);
-		token = tmp;
+		temp = (*lst)->next;
+		if ((*lst)->value)
+			free((*lst)->value);
+		free(*lst);
+		*lst = temp;
 	}
 }
