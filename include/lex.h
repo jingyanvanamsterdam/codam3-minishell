@@ -3,10 +3,14 @@
 
 #include "struct.h"
 
-void	free_token_list(t_token *token);
+void	free_token_list(t_token **lst);
+void	free_env_list(t_env **lst);
 void	free_split(char **key_value);
 
-void	ft_token_failure(char *s, t_token *token);
-t_token	*tokenization(char *input, t_token *head);
+void	ft_malloc_failure(char *s, t_shell *shell);
+
+t_env 	*init_env(char **envp, t_shell *shell);
+
+t_token *tokenization(char *input, t_shell *shell);
 
 #endif

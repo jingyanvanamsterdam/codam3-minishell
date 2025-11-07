@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ray <ray@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/24 12:10:55 by kuyu              #+#    #+#             */
-/*   Updated: 2025/04/26 19:13:06 by ray              ###   ########.fr       */
+/*   Created: 2025/04/30 16:03:14 by jdong             #+#    #+#             */
+/*   Updated: 2025/12/28 14:24:29 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,21 @@
 
 size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
+	size_t	i;
 	size_t	dst_len;
 	size_t	src_len;
-	size_t	i;
-	size_t	at_most;
 
-	dst_len = ft_strlen(dst);
-	src_len = ft_strlen(src);
-	if (size <= dst_len)
-		return (src_len + size);
-	at_most = size - dst_len - 1;
 	i = 0;
-	while (i < at_most && i < src_len)
+	dst_len = 0;
+	src_len = ft_strlen(src);
+	while (dst_len < size && dst[dst_len])
+		dst_len++;
+	if (dst_len == size)
+		return (size + src_len);
+	while (i < (size - dst_len - 1) && src[i])
 	{
 		dst[dst_len + i] = src[i];
-		++i;
+		i++;
 	}
 	dst[dst_len + i] = '\0';
 	return (dst_len + src_len);
