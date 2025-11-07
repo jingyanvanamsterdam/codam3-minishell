@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "lex.h"
+#include "lex.h" //change to minishell.h after combin
 
 void	free_split(char **key_value)
 {
@@ -27,6 +27,22 @@ void	free_token_list(t_token **lst)
 	while (*lst)
 	{
 		temp = (*lst)->next;
+		if ((*lst)->value)
+			free((*lst)->value);
+		free(*lst);
+		*lst = temp;
+	}
+}
+
+void	free_env_list(t_env **lst)
+{
+	t_env	*temp;
+
+	while (*lst)
+	{
+		temp = (*lst)->next;
+		if ((*lst)->key)
+			free((*lst)->key);
 		if ((*lst)->value)
 			free((*lst)->value);
 		free(*lst);

@@ -1,14 +1,15 @@
 #include "struct.h"
-#include "lex.h"
+#include "lex.h" //change to minishell.h after combin
 #include "libft.h"
 #include <stdlib.h> 
 
-void	ft_token_failure(char *s, t_token *token)
+void	ft_malloc_failure(char *s, t_shell *shell)
 {
 	ft_putstr_fd(s, 2);
-	if (token)
-		free_token_list(token);
+	if (shell->token)
+		free_token_list(&(shell->token));
+	if (shell->env_lst)
+		free_env_list(&(shell->env_lst));
+	free(shell);
 	exit(EXIT_FAILURE);
 }
-
-// if we do exit at malloc, then need to free t_shell. To change later.
