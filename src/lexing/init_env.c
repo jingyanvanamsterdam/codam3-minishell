@@ -18,7 +18,7 @@ t_env	*create_node(char **key_value, t_shell *shell)
 	if (key_value[1])
 		node->value = ft_strdup(key_value[1]);
 	else
-		node->value = "";
+		node->value = ft_strdup("");
 	if (!node->key || !node->value)
 	{
 		free_split(key_value);

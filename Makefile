@@ -29,6 +29,7 @@ LEX_SRC = src/lexing/lexing.c \
 			src/lexing/main.c \
 			src/lexing/lexing_error.c \
 			src/lexing/lexing_free.c \
+			src/lexing/init_env.c
 
 all: buildlib $(NAME)
 
@@ -58,7 +59,7 @@ re: fclean all
 #  Example: make env -> compile only env/*.c + test_env.c into ./env executable
 lex: buildlib
 	@echo "Compiling lex testing module..."
-	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(LIBFT) -o lex
+	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(LIBFT) $(RLFLAG) -o lex
 	@echo "✅ Built test executable: ./lex"
 
 .PHONY: all buildlib clean fclean re
