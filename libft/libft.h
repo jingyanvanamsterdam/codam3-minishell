@@ -6,7 +6,7 @@
 /*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/07/25 16:15:55 by ray           #+#    #+#                 */
-/*   Updated: 2025/11/07 12:07:06 by jdong         ########   odam.nl         */
+/*   Updated: 2025/11/10 11:54:54 by jingyandong   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,6 @@ int		ft_isspace(int c);
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);
 int		ft_isalnum(int c);
+char	*ft_itoa(int n);
 
 #endif

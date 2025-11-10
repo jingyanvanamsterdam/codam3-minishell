@@ -118,42 +118,50 @@ char	*lookup_key(t_env *env_lst, char *key)
 	}
 	return (value);
 }
+
+static	void *free_handle_expands(char *prev, char *expansion, char *key)
+{
+	if (prev)
+		free(prev);
+	if (expansion)
+		free(expansion);
+	if (key)
+		free(key);
+	return (NULL);
+}
 /**if prev or expansion variable doesn't exist or env_lst == NULL, it would be returned an empty string.
  * if it is NULL, means malloc failture at somewhere: prev, key, expansion, comb. 
  */
-char	*handle_expansion_value(char *str, int index, t_env *env_lst)
+char	*handle_expansion_value(char *str, int index, int end, t_shell *shell)
 {
 	char	*prev;
 	char	*key;
 	char	*expansion;
 	char	*comb;
 
-	prev = ft_substr(str, 0, index);
-	if (str[index + 1] && str[index + 1] == '?')
-
-	key = ft_substr(str, index + 1,  skip_expansion(str, index) - index - 1);
-	expansion = lookup_key(env_lst, key);
-	comb = ft_strjoin(prev, expansion);
-	if (!prev || !key || !expansion || !comb)
+	prev = ft_substr(str, 0, index - 1);
+	key = NULL;
+	if ((end - index) == 0)
+		expansion = ft_strdup("$");
+	else if (str[index] == '?')
+		expansion = ft_itoa(shell->prev_exit);
+	else
 	{
-		if (prev)
-			free(prev);
-		if (key)
-			free(key);
-		if (expansion);
-			free(expansion);
-		return (NULL);
+		key = ft_substr(str, index,  end - index);
+		if (!key)
+			return (free_handle_expands(prev, expansion, key));
+		expansion = lookup_key(shell->env_lst, key);
 	}
+	comb = ft_strjoin(prev, expansion);
+	if (!prev || !expansion || !comb)
+		return (free_handle_expands(prev, expansion, key));
 	return (comb);
 }
-/* special symbol of {}*/
-int	skip_expansion(char *str, int index)
-{
-	int	i;
 
-	i = 1;
-	i += index;
-	while (str[i] && ft_isalnum(str[i]) || str[i] == '_')
+/** return the index of null or space or any other special char that expands will stop */
+int	skip_expansion(char *str, int i)
+{
+	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_' | str[i] == '?'))
 		i++;
 	return (i);
 }
@@ -163,20 +171,22 @@ int	update_start(char *input, int start, t_token **head, t_shell *shell)
 	int		end;
 	char	*value;
 	char	*str;
+	int		expands;
 	
 	end = 0;
 	value = NULL;
 	str = input + start;
 	//if it is in the double quote or single quote, it doesn't need to check ft_isspace();
-	while (str[end] 
-		|| ft_isspace(str[end]) 
+	while (str[end] || ft_isspace(str[end]) 
 		|| str[end] != '|' || str[end] != '<' || str[end] != '>' 
 		|| str[end] != '\'' || str[end] != '\"' || str[end] != '$')
 		end++;
+	//Handle if it encounter "$""
 	if (str[end] == '$')
 	{
-		value = handle_expansion_value(str, end, shell->env_lst);
-		end += skip_expansion(str, end);
+		expands = skip_expansion(str, end + 1);
+		value = handle_expansion_value(str, end + 1, expands, shell);
+		end = expands;
 	}
 	else
 		value = ft_substr(str, 0, end);
