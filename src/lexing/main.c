@@ -54,7 +54,7 @@ int	main(int argc, char **argv, char **envp)
 	t_shell *shell;
 	
 	//Init t_shell 
-	shell = malloc(sizeof(shell));
+	shell = (t_shell *)malloc(sizeof(t_shell));
 	if (!shell)
 		return (1);
 	shell->env_lst = NULL;
@@ -84,9 +84,12 @@ int	main(int argc, char **argv, char **envp)
 			continue;
 		}
 		add_history(input);
+		printf("before env\n");
 		// set up shell
 		shell->env_lst = init_env(envp, shell);
-		shell->token = tokenizaiton(input, shell);
+		printf("before token\n");
+		shell->token = tokenization(input, shell);
+		printf("after token\n");
 		print_tokens(shell->token);
 		//parse input into token
 		//parse token into cmd

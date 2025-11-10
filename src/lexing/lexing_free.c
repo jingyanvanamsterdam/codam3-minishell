@@ -34,7 +34,7 @@ void	free_token_list(t_token **lst)
 	}
 }
 
-void	free_env_list(t_env **lst)
+void	free_env_lst(t_env **lst)
 {
 	t_env	*temp;
 

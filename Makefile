@@ -39,7 +39,7 @@ LEX_SRC = src/lexing/lexing.c \
 			src/lexing/main.c \
 			src/lexing/lexing_error.c \
 			src/lexing/lexing_free.c \
->>>>>>> 497fd4c (Update lexing file from codam. 11.4)
+
 
 all: buildlib $(NAME) 
 
@@ -75,7 +75,7 @@ env: buildlib
 =======
 lex: buildlib
 	@echo "Compiling lex testing module..."
-	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(LIBFT) -o lex
+	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(LIBFT) $(RLFLAG) -o lex
 	@echo "✅ Built test executable: ./lex"
 >>>>>>> 497fd4c (Update lexing file from codam. 11.4)
 
