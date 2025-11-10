@@ -32,7 +32,7 @@ typedef struct	s_env
 
 typedef struct	s_shell
 {
-	t_env	*env_list;
+	t_env	*env_lst;
 	t_token	*token;
 	int		prev_exit;
 	// more to add
