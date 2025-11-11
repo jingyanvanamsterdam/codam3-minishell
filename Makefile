@@ -25,11 +25,13 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 # ========== Testing SRC ============
 # lexing module
-LEX_SRC = src/lexing/lexing.c \
-			src/lexing/main.c \
-			src/lexing/lexing_error.c \
-			src/lexing/lexing_free.c \
-			src/lexing/init_env.c
+LEX_SRC = $(shell find ./src/lexing -iname "*.c")
+#			src/lexing/lexing.c \
+#			src/lexing/main.c \
+#			src/lexing/lexing_error.c \
+#			src/lexing/lexing_free.c \
+#			src/lexing/init_env.c \
+#			src/lexing/lexing_util_expands.c
 
 all: buildlib $(NAME)
 

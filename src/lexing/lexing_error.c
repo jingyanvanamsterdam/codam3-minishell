@@ -6,10 +6,6 @@
 void	ft_malloc_failure(char *s, t_shell *shell)
 {
 	ft_putstr_fd(s, 2);
-	if (shell->token)
-		free_token_list(&(shell->token));
-	if (shell->env_lst)
-		free_env_lst(&(shell->env_lst));
-	free(shell);
+	free_shell(shell);
 	exit(EXIT_FAILURE);
 }

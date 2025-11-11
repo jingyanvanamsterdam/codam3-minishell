@@ -49,3 +49,12 @@ void	free_env_lst(t_env **lst)
 		*lst = temp;
 	}
 }
+// more to free later
+void	free_shell(t_shell *shell)
+{
+	if (shell->token)
+		free_token_list(&(shell->token));
+	if (shell->env_lst)
+		free_env_lst(&(shell->env_lst));
+	free(shell);
+}
