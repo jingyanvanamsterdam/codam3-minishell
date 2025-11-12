@@ -64,56 +64,42 @@ void	create_token_node(char *value, t_shell *shell, t_token_type type)
 	append_to_lst(&(shell->token), node);
 }
 
-
-
-//bool	switch_status(char c, t_lex_status *status)
-//{
-//	if (c == '\"')
-//	{
-//		if (*status == GENERAL)
-//			*status = DOUBLE_QUOTE;
-//		else if (*status == DOUBLE_QUOTE)
-//			*status = GENERAL;
-//		else
-//			return (false);
-//	}
-//	else if (c == '\'')
-//	{
-//		if (*status == GENERAL)
-//			*status = SINGLE_QUOTE;
-//		else if (*status == SINGLE_QUOTE)
-//			*status = GENERAL;
-//		else
-//			return (false);
-//	}
-//	else
-//		return (false);
-//	return (true);
-//}
-
 /**
  * This func return the index of the end of a string/
  * Based on status, the end requirement is different.
  */
-size_t	find_end(char *str, t_lex_status *status)
+size_t	find_end(char *str)
 {
 	size_t	end;
 	
 	end = 0;
-	if (*status == GENERAL)
-		while (str[end] && !ft_isspace(str[end]) 
+	while (str[end] && !ft_isspace(str[end]) 
 		&& str[end] != '|' && str[end] != '<' && str[end] != '>')
 		end++;
-	else if (*status == DOUBLE_QUOTE)
-		while (str[end] && str[end] != '\"')
-			end++;
-	else
-		while (str[end] && str[end] != '\'')
-			end++;
-	//printf("end at %c, end = %d\n", str[end], end);
 	return (end);
 }
 
+/**
+ * Return the index of the charater, if there is no, it will equal to the end.
+ * To do: Maybe replace with ft_strchr(), but some compare logic need to be changed.
+ */
+size_t	find_index(char *str, size_t end, char c)
+{
+	size_t	i;
+	
+	i = 0;
+	while (i < end)
+	{
+		if (str[i] == c)
+			return (i);
+		i++;
+	}
+	return (i);
+}
+
+/**
+ * change status and return the index of the start quote. 
+ */
 size_t	quote_index(char *str, size_t end, t_lex_status *status)
 {
 	size_t i;
@@ -150,11 +136,11 @@ size_t	update_start(char *str, t_shell *shell)
 	end = 0;
 	value = NULL;
 	src = NULL;
-	end = find_end(str, &(shell->status));
+	end = find_end(str);
 	quote_i = quote_index(str, end, &(shell->status));
 	if (quote_i < end)
 		end = find_close_quote(str + quote_i, end, shell);
-	if ((expands_i = expands_index(str, end)) < quote_i)
+	if ((expands_i = find_index(str, end, '$')) < quote_i)
 		value = handle_expands(str, expands_i, quote_i - expands_i, shell);
 	else 
 		value = ft_substr(str, 0, quote_i);
@@ -163,7 +149,7 @@ size_t	update_start(char *str, t_shell *shell)
 		ft_malloc_failure("Failture at malloc - tokenization\n", shell);
 	if (quote_i < end)
 	{
-		//src = handle_quote(str + quote_i, end, shell);
+		src = handle_quote(str + quote_i, quote_i - end, shell);
 		value = append_to_str(value, src); 
 	}
 	if (!value)
