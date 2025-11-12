@@ -4,20 +4,6 @@
 #include <stdlib.h>
 #include <stdio.h> // for printf
 
-size_t	expands_index(char *str, size_t end)
-{
-	size_t	i;
-	
-	i = 0;
-	while (i < end)
-	{
-		if (str[i] == '$')
-			return (i);
-		i++;
-	}
-	return (i);
-}
-
 char	*lookup_key(t_env *env_lst, const char *key)
 {
 	char	*value;

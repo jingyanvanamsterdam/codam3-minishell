@@ -34,7 +34,28 @@ size_t	find_close_quote(char *str, size_t end, t_shell *shell)
 	return (end);
 }
 
-//char	*handle_quote(char *str, size_t end, t_shell *shell, t_lex_status *status)
-//{
+char	*handle_quote(char *str, size_t len, t_shell *shell)
+{
+	char	*res;
+	size_t	i;
+	size_t	exp_i;
+	size_t	squote_i;
 
-//}
+	res = NULL;
+	i = 0;
+	exp_i = 0;
+	if (shell->status == SINGLE_QUOTE)
+		return (ft_substr(str, 0, len));
+	else if (shell->status == DOUBLE_QUOTE)
+	{
+		//handle double qutoe;
+		squote_i = find_index(str, len, '\'');
+		//if (squote_i == len)
+	
+		//if ((exp_i = find_index(str, len, '$')) == len)
+			//handle_expands;
+
+	}
+	shell->status = GENERAL;
+	return (res);
+}
