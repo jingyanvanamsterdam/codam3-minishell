@@ -11,6 +11,13 @@ typedef enum e_token_type
 	APPEND,
 }			t_token_type;
 
+typedef enum e_lex_stauts
+{
+	DOUBLE_QUOTE,
+	SINGLE_QUOTE,
+	GENERAL
+}			t_lex_status;
+
 typedef struct	s_token
 {
 	char			*value;
@@ -32,9 +39,10 @@ typedef struct	s_env
 
 typedef struct	s_shell
 {
-	t_env	*env_lst;
-	t_token	*token;
-	int		prev_exit;
+	t_env			*env_lst;
+	t_token			*token;
+	t_lex_status	status;
+	int				prev_exit;
 	// more to add
 }				t_shell;
 

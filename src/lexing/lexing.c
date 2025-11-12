@@ -64,12 +64,7 @@ void	create_token_node(char *value, t_shell *shell, t_token_type type)
 	append_to_lst(&(shell->token), node);
 }
 
-typedef enum e_lex_stauts
-{
-	DOUBLE_QUOTE,
-	SINGLE_QUOTE,
-	GENERAL
-}			t_lex_status;
+
 
 //bool	switch_status(char c, t_lex_status *status)
 //{
@@ -118,6 +113,7 @@ size_t	find_end(char *str, t_lex_status *status)
 	//printf("end at %c, end = %d\n", str[end], end);
 	return (end);
 }
+
 size_t	quote_index(char *str, size_t end, t_lex_status *status)
 {
 	size_t i;
@@ -139,7 +135,11 @@ size_t	quote_index(char *str, size_t end, t_lex_status *status)
 	}
 	return (i);
 }
-size_t	update_start(char *str, t_shell *shell, t_lex_status *status)
+
+/**
+ * quote_i == end, means there is no quote
+ */
+size_t	update_start(char *str, t_shell *shell)
 {
 	size_t	end;
 	size_t	quote_i;
@@ -149,31 +149,27 @@ size_t	update_start(char *str, t_shell *shell, t_lex_status *status)
 
 	end = 0;
 	value = NULL;
-	end = find_end(str, status);
-	quote_i = quote_index(str, end, status);
-	expands_i = contain_expands(str, end);
-	if (quote_i > expands_i)
-	{
-		value = ft_substr(str, 0, expands_i);
-		if (!value)
-			ft_malloc_failure("Failture at malloc - tokenization\n", shell);
-		src = handle_expands(str + expands_i, quote_i - expands_i, shell);
-	}
-	else
-	{
+	src = NULL;
+	end = find_end(str, &(shell->status));
+	quote_i = quote_index(str, end, &(shell->status));
+	if (quote_i < end)
+		end = find_close_quote(str + quote_i, end, shell);
+	if ((expands_i = expands_index(str, end)) < quote_i)
+		value = handle_expands(str, expands_i, quote_i - expands_i, shell);
+	else 
 		value = ft_substr(str, 0, quote_i);
-		if (!value)
-			ft_malloc_failure("Failture at malloc - tokenization\n", shell);
-		src = handle_quote(str + quote_i, end, shell);
-	}
-	if (!src)
+	printf("bf: end = %zu, qi = %zu, ei = %zu\n", end, quote_i, expands_i);
+	if (!value)
 		ft_malloc_failure("Failture at malloc - tokenization\n", shell);
-	value = append_to_str(value, src);
+	if (quote_i < end)
+	{
+		//src = handle_quote(str + quote_i, end, shell);
+		value = append_to_str(value, src); 
+	}
 	if (!value)
 		ft_malloc_failure("Failture at malloc - tokenization\n", shell);
 	create_token_node(value, shell, WORD);
 	free(value);
-	free(src);
 	return (end);
 }
 
@@ -258,35 +254,33 @@ size_t	update_sq_start(char *input, size_t start, t_shell *shell, t_lex_status *
 t_token *tokenization(char *input, t_shell *shell)
 {
 	size_t	start;
-	t_lex_status	status;
 
 	start = 0;
-	status = GENERAL;
 	size_t	input_len = ft_strlen(input);
 	while (start < input_len)
 	{
 		//printf("input len = %zu\n", input_len);
-		if (status == GENERAL)
+		if (shell->status == GENERAL)
 		{
-			start += update_start(input + start, shell, &status);
+			start += update_start(input + start, shell);
 			printf("after update start %zu\n", start);
 			if (input[start] == '|' || input[start] == '<' || input[start] == '>')
 				start = handle_special_symbol(input, start, shell);
 			else
-				start = skip_space_or_quotes(input, start, &status);
+				start = skip_space_or_quotes(input, start, &(shell->status));
 			printf("after handle symbol start = %zu\n", start);
 		}
-		else if (status == DOUBLE_QUOTE)
+		else if (shell->status == DOUBLE_QUOTE)
 		{
 			//start += update_dq_start(input, start, shell);
-			status = GENERAL;
+			shell->status = GENERAL;
 		}
-		else if (status == SINGLE_QUOTE)
+		else if (shell->status == SINGLE_QUOTE)
 		{
 			//start += update_sq_start(input, start, shell, &status);
 		}
 	}
-	if (status != GENERAL)
+	if (shell->status != GENERAL)
 		ft_input_error("unclosed quote\n", shell);
 	return (shell->token);
 }

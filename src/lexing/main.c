@@ -58,6 +58,7 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	shell->env_lst = NULL;
 	shell->token = NULL;
+	shell->status = GENERAL;
 	shell->prev_exit = 0;
 
 	shell->env_lst = init_env(envp, shell);

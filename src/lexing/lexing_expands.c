@@ -1,18 +1,17 @@
 #include "lex.h"
-#include <stdbool.h> // for boolean functions
 #include "struct.h"
 #include "libft.h"
 #include <stdlib.h>
 #include <stdio.h> // for printf
 
-size_t	contain_expands(char *str, size_t end)
+size_t	expands_index(char *str, size_t end)
 {
 	size_t	i;
 	
 	i = 0;
 	while (i < end)
 	{
-		if (str[end] == '$')
+		if (str[i] == '$')
 			return (i);
 		i++;
 	}
@@ -76,18 +75,21 @@ char	*expansion(char *str, t_shell *shell, size_t end)
 		free(key);
 	if (!expansion)
 		return (NULL);
+	//printf("expansion = %s\n", expansion);
 	return (expansion);
 }
 
-char	*handle_expands(char *str, size_t len, t_shell *shell)
+char	*handle_expands(char *str, size_t i, size_t len, t_shell *shell)
 {
-	size_t	i;
 	size_t	exp_len;
+	size_t	prev;
 	char	*res;
 
-	i = 0;
 	exp_len = 0;
-	res = NULL;
+	res = ft_substr(str, 0, i);
+	if (!res)
+		return (NULL);
+	prev = 0;
 	while (i < len)
 	{
 		if (str[i] == '$')
@@ -97,10 +99,15 @@ char	*handle_expands(char *str, size_t len, t_shell *shell)
 			if (!res)
 				return (NULL);
 			i += exp_len;
+			prev = i;
 		}
 		else
 			i++;
 	}
+	if (prev < i)
+		res = append_to_str(res, ft_substr(str, prev, i - prev));
+	if (!res)
+		return (NULL);
 	return (res);
 }
 
