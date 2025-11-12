@@ -20,6 +20,32 @@ static void	append_to_lst(t_token **head, t_token *node)
 	tmp->next = node;
 }
 
+/**
+ * This function copy the dst string and cat the src string into a new string and free the dst and src, return the new pointer. 
+ */
+char	*append_to_str(char *dst, char *src)
+{
+	size_t	dst_len;
+	size_t	src_len;
+	char	*new;
+
+	if (!src)
+		return (free(dst), NULL);
+	dst_len = 0;
+	if (dst)
+		dst_len = ft_strlen(dst);
+	src_len = ft_strlen(src);
+	new = malloc(dst_len + src_len + 1);
+	if (!new)
+		return (free(dst), free(src), NULL);
+	if (dst)
+		ft_strlcpy(new, dst, dst_len + 1);
+	else
+		new[0] = '\0';
+	ft_strlcat(new, src, dst_len + src_len + 1);
+	return (free(dst), free(src), new);
+}
+
 void	create_token_node(char *value, t_shell *shell, t_token_type type)
 {
 	t_token	*node;
@@ -70,53 +96,84 @@ typedef enum e_lex_stauts
 //	return (true);
 //}
 
-int	find_end(char *str, t_lex_status *status)
+/**
+ * This func return the index of the end of a string/
+ * Based on status, the end requirement is different.
+ */
+size_t	find_end(char *str, t_lex_status *status)
 {
-	int	end;
+	size_t	end;
 	
 	end = 0;
 	if (*status == GENERAL)
-	{
 		while (str[end] && !ft_isspace(str[end]) 
-		&& str[end] != '|' && str[end] != '<' && str[end] != '>' 
-		&& str[end] != '\'' && str[end] != '\"')
+		&& str[end] != '|' && str[end] != '<' && str[end] != '>')
 		end++;
-	}
 	else if (*status == DOUBLE_QUOTE)
-	{
 		while (str[end] && str[end] != '\"')
 			end++;
-	}
-	else if (*status == SINGLE_QUOTE)
-	{
-		while (str[end] && str[end != '\''])
+	else
+		while (str[end] && str[end] != '\'')
 			end++;
-	}
 	//printf("end at %c, end = %d\n", str[end], end);
 	return (end);
 }
-
-int	update_start(char *input, int start, t_shell *shell, t_lex_status *status)
+size_t	quote_index(char *str, size_t end, t_lex_status *status)
 {
-	int		end;
+	size_t i;
+
+	i = 0;
+	while (i < end)
+	{
+		if (str[i] == '\'')
+		{
+			*status = SINGLE_QUOTE;
+			return (i);
+		}
+		else if (str[i] == '\"')
+		{
+			*status = DOUBLE_QUOTE;
+			return (i);
+		}
+		i++;
+	}
+	return (i);
+}
+size_t	update_start(char *str, t_shell *shell, t_lex_status *status)
+{
+	size_t	end;
+	size_t	quote_i;
+	size_t	expands_i;
 	char	*value;
-	char	*str;
-	
+	char	*src;
+
 	end = 0;
 	value = NULL;
-	str = input + start;
-	//printf("input at start = %c\n", str[0]);
-	//if it is in the double quote or single quote, it doesn't need to check ft_isspace();
 	end = find_end(str, status);
-	printf("after find end = %d\n", end);
-	if (contain_expands(str, end - 1))
-		value = check_expands(str, end, shell);
+	quote_i = quote_index(str, end, status);
+	expands_i = contain_expands(str, end);
+	if (quote_i > expands_i)
+	{
+		value = ft_substr(str, 0, expands_i);
+		if (!value)
+			ft_malloc_failure("Failture at malloc - tokenization\n", shell);
+		src = handle_expands(str + expands_i, quote_i - expands_i, shell);
+	}
 	else
-		value = ft_substr(str, 0, end);
+	{
+		value = ft_substr(str, 0, quote_i);
+		if (!value)
+			ft_malloc_failure("Failture at malloc - tokenization\n", shell);
+		src = handle_quote(str + quote_i, end, shell);
+	}
+	if (!src)
+		ft_malloc_failure("Failture at malloc - tokenization\n", shell);
+	value = append_to_str(value, src);
 	if (!value)
 		ft_malloc_failure("Failture at malloc - tokenization\n", shell);
 	create_token_node(value, shell, WORD);
 	free(value);
+	free(src);
 	return (end);
 }
 
@@ -211,7 +268,7 @@ t_token *tokenization(char *input, t_shell *shell)
 		//printf("input len = %zu\n", input_len);
 		if (status == GENERAL)
 		{
-			start += update_start(input, start, shell, &status);
+			start += update_start(input + start, shell, &status);
 			printf("after update start %zu\n", start);
 			if (input[start] == '|' || input[start] == '<' || input[start] == '>')
 				start = handle_special_symbol(input, start, shell);
@@ -229,6 +286,8 @@ t_token *tokenization(char *input, t_shell *shell)
 			//start += update_sq_start(input, start, shell, &status);
 		}
 	}
+	if (status != GENERAL)
+		ft_input_error("unclosed quote\n", shell);
 	return (shell->token);
 }
 
