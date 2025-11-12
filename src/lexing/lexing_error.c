@@ -9,3 +9,12 @@ void	ft_malloc_failure(char *s, t_shell *shell)
 	free_shell(shell);
 	exit(EXIT_FAILURE);
 }
+
+ft_input_error(char	*s, t_shell *shell)
+{
+	ft_putstr_fd(s, 2);
+	free_shell(shell);
+	exit(EXIT_FAILURE);
+}
+
+//maybe change name and combine since the inside is the same. 
