@@ -35,26 +35,23 @@ size_t	quote_index(char *str, size_t end, t_lex_status *status)
  * if it is at the same index, meaning it is the end of the string and there is no close quote. 
  * if it is smaller, then end index not change. 
  */
-size_t	find_close_quote(char *str, size_t end, t_shell *shell)
+size_t	find_close_quote(char *str, size_t start, size_t end, t_shell *shell)
 {
-	size_t	i;
-
-	i = 0;
-	if (str[i] == '\'')
+	if (str[start] == '\'')
 	{
-		while (str[++i])
-			if (str[i] == '\'')
+		while (str[++start])
+			if (str[start] == '\'')
 				break ;
 	}
-	else if (str[i] == '\"')
+	else if (str[start] == '\"')
 	{
-		while (str[++i])
-			if (str[i] == '\"')
+		while (str[++start])
+			if (str[start] == '\"')
 				break ;
 	}
-	if (end < i)
-		return (i);
-	if (end == i)
+	if (end < start)
+		return (start);
+	if (end == start)
 		ft_input_error("unclosed quote\n", shell);
 	return (end);
 }
@@ -69,7 +66,7 @@ char	*handle_quote(char *str, size_t len, t_shell *shell)
 	if (shell->status == SINGLE_QUOTE || exp_i == len)
 		res = ft_substr(str, 0, len);
 	else if (shell->status == DOUBLE_QUOTE && exp_i < len)
-		res = handle_expands(str, exp_i, len - exp_i, shell);
+		res = handle_expands(str, len - 1, shell);
 	if (!res)
 		return (NULL);
 	shell->status = GENERAL;

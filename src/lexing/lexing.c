@@ -19,16 +19,15 @@ size_t	update_start(char *str, t_shell *shell)
 	value = NULL;
 	end = find_end(str);
 	if ((quote_i = quote_index(str, end, &(shell->status)))< end)
-		end = find_close_quote(str + quote_i, end, shell);
+		end = find_close_quote(str, quote_i, end, shell);
 	if ((expands_i = find_index(str, end, '$')) < quote_i)
-		value = handle_expands(str, expands_i, quote_i - expands_i, shell);
+		value = handle_expands(str, quote_i - expands_i, shell);
 	else 
 		value = ft_substr(str, 0, quote_i);
-	printf("bf: end = %zu, qi = %zu, ei = %zu\n", end, quote_i, expands_i);
 	if (!value)
 		ft_malloc_failure("Failture at malloc - tokenization\n", shell);
 	if (quote_i < end)
-		value = append_to_str(value, handle_quote(str + quote_i, quote_i - end, shell)); 
+		value = append_to_str(value, handle_quote(++str + quote_i, end - quote_i, shell)); 
 	if (!value)
 		ft_malloc_failure("Failture at malloc - tokenization\n", shell);
 	create_token_node(value, shell, WORD);
@@ -67,12 +66,10 @@ size_t	skip_space_or_quotes(char *str, size_t end)
 {
 	if (str[end])
 	{
-		// should be space, or \" or \'
+		if (str[end] == '\'' || str[end] == '\"')
+			end++;
 		while(ft_isspace(str[end]))
 			end++;
-		if (str[end] == '\'' || str[end] == '\"')
-			while(ft_isspace(str[++end]))
-				end++;
 	}
 	return (end);
 }
@@ -86,19 +83,10 @@ t_token *tokenization(char *input, t_shell *shell)
 	while (start < input_len)
 	{
 		start += update_start(input + start, shell);
-		printf("after update start %zu\n", start);
 		if (input[start] == '|' || input[start] == '<' || input[start] == '>')
 			start = handle_special_symbol(input, start, shell);
 		else
 			start = skip_space_or_quotes(input, start);
-		printf("after handle symbol start = %zu\n", start);
 	}
 	return (shell->token);
 }
-
-/**
- * ./lex 'echo $abc.txt + 5 "touch $def+$def|$abc<<457" ''
- * sig fault
- * $ expands variable is not being found ==> look up 
- * double quote has logic problem, "touch" is being created as one node. and then got sig fault.
- */
