@@ -16,5 +16,3 @@ void	ft_input_error(char	*s, t_shell *shell)
 	free_shell(shell);
 	exit(EXIT_FAILURE);
 }
-
-//maybe change name and combine since the inside is the same. 
