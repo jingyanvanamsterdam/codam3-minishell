@@ -50,6 +50,7 @@ void	handle_sigint(int sig)
 int	main(int argc, char **argv, char **envp)
 {
 	(void)argc;
+	(void)argv;
 	t_shell *shell;
 	
 	//Init t_shell 
@@ -61,45 +62,46 @@ int	main(int argc, char **argv, char **envp)
 	shell->status = GENERAL;
 	shell->prev_exit = 0;
 
-	shell->env_lst = init_env(envp, shell);
-	shell->token = tokenization(argv[1], shell);
-	print_tokens(shell->token);
-	free_shell(shell);
-	////setup signal
-	//signal(SIGINT, handle_sigint);
-	//signal(SIGQUIT, SIG_IGN);
-	//while (1)
-	//{
-	//	char	*input = readline("Minishell: ");
-	//	if (!input)
-	//	{
-	//		if (g_sig == SIGINT)
-	//		{
-	//			g_sig = 0;
-	//			continue ; 
-	//		}
-	//		// EOF return null; ctrl + d
-	//		write(1, "\n", 1);
-	//		break ; // exit the minishell program?
-	//	}
-	//	if (*input == '\0' || ft_strcheck(input, ft_isspace)) // this do check for tab, but it doesn't work for tab completion in readline.
-	//	{
-	//		free(input);
-	//		continue;
-	//	}
-	//	add_history(input);
-	//	// set up shell
-	//	shell->env_lst = init_env(envp, shell);
-	//	shell->token = tokenization(input, shell);
-	//	print_tokens(shell->token);
-	//	//parse input into token
-	//	//parse token into cmd
-	//	//excusion cmds
+	//shell->env_lst = init_env(envp, shell);
+	//shell->token = tokenization(argv[1], shell);
+	//print_tokens(shell->token);
+	//free_shell(shell);
 
-	//	free_env_lst(&(shell->env_lst));
-	//	free_token_list(&(shell->token));
-	//	free(input);
-	//}
-	////print_tokens(head);
+	//setup signal
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
+	while (1)
+	{
+		char	*input = readline("Minishell: ");
+		if (!input)
+		{
+			if (g_sig == SIGINT)
+			{
+				g_sig = 0;
+				continue ; 
+			}
+			// EOF return null; ctrl + d
+			write(1, "\n", 1);
+			break ; // exit the minishell program?
+		}
+		if (*input == '\0' || ft_strcheck(input, ft_isspace)) // this do check for tab, but it doesn't work for tab completion in readline.
+		{
+			free(input);
+			continue;
+		}
+		add_history(input);
+		// set up shell
+		shell->env_lst = init_env(envp, shell);
+		shell->token = tokenization(input, shell);
+		print_tokens(shell->token);
+		//parse input into token
+		//parse token into cmd
+		//excusion cmds
+
+		free_env_lst(&(shell->env_lst));
+		free_token_list(&(shell->token));
+		free(input);
+	}
+	//print_tokens(head);
 	return (0);
 }

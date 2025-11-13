@@ -14,13 +14,12 @@ void	ft_input_error(char	*s, t_shell *shell);
 
 t_env 	*init_env(char **envp, t_shell *shell);
 
-//functions for lex
+//helper funcs for lex
 char	*append_to_str(char *dst, char *src);
 void	append_to_lst(t_token **head, t_token *node);
 size_t	find_index(char *str, size_t end, char c);
 size_t	find_end(char *str);
 void	create_token_node(char *value, t_shell *shell, t_token_type type);
-t_token *tokenization(char *input, t_shell *shell);
 
 //Expands handling funcs. 
 size_t	skip_expansion(char *str);
@@ -32,5 +31,11 @@ char	*handle_expands(char *str, size_t len, t_shell *shell);
 size_t	find_close_quote(char *str, size_t start, size_t end, t_shell *shell);
 size_t	quote_index(char *str, size_t end, t_lex_status *status);
 char	*handle_quote(char *str, size_t len, t_shell *shell);
+
+//Main funcs for lex
+size_t	update_start(char *str, t_shell *shell);
+size_t	handle_special_symbol(char *str, size_t end, t_shell *shell);
+size_t	skip_space_or_quotes(char *str, size_t end);
+t_token *tokenization(char *input, t_shell *shell);
 
 #endif

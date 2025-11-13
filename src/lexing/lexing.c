@@ -77,9 +77,10 @@ size_t	skip_space_or_quotes(char *str, size_t end)
 t_token *tokenization(char *input, t_shell *shell)
 {
 	size_t	start;
+	size_t	input_len;
 
 	start = 0;
-	size_t	input_len = ft_strlen(input);
+	input_len = ft_strlen(input);
 	while (start < input_len)
 	{
 		start += update_start(input + start, shell);
