@@ -20,17 +20,17 @@ void print_tokens(t_token *head)
 	while (head)
 	{
 		if (head->type == WORD)
-			printf("%s ", head->value);
+			printf("%s, ", head->value);
 		else if (head->type == PIPE)
-			printf("| ");
+			printf("|, ");
 		else if (head->type == REDIR_IN)
-			printf("< ");		
+			printf("<, ");		
 		else if (head->type == REDIR_OUT)
-			printf("> ");		
+			printf(">, ");		
 		else if (head->type == HEREDOC)
-			printf("<< ");
+			printf("<<, ");
 		else if (head->type == APPEND)
-			printf(">> ");
+			printf(">>, ");
 		head = head->next;
 	}
 	printf("\n======================End the token:===========================\n");

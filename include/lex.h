@@ -26,10 +26,10 @@ t_token *tokenization(char *input, t_shell *shell);
 size_t	skip_expansion(char *str);
 char	*lookup_key(t_env *env_lst, const char *key);
 char	*expansion(char *str, t_shell *shell, size_t end);
-char	*handle_expands(char *str, size_t i, size_t len, t_shell *shell);
+char	*handle_expands(char *str, size_t len, t_shell *shell);
 
 //Quote handling funcs.
-size_t	find_close_quote(char *str, size_t end, t_shell *shell);
+size_t	find_close_quote(char *str, size_t start, size_t end, t_shell *shell);
 size_t	quote_index(char *str, size_t end, t_lex_status *status);
 char	*handle_quote(char *str, size_t len, t_shell *shell);
 
