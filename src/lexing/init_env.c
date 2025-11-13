@@ -28,7 +28,7 @@ t_env	*create_node(char **key_value, t_shell *shell)
 	return (node);
 }
 
-static void	append_to_lst(t_env **head, t_env *node)
+static void	append_to_env_lst(t_env **head, t_env *node)
 {
 	t_env	*tmp;
 
@@ -59,7 +59,7 @@ t_env *init_env(char **envp, t_shell *shell)
 		if (!key_value)
 			ft_malloc_failure("Failture at malloc env.\n", shell);
 		node = create_node(key_value, shell);
-		append_to_lst(&(shell->env_lst), node);
+		append_to_env_lst(&(shell->env_lst), node);
 		free_split(key_value);
 		i++;
 	}

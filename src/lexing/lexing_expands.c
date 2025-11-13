@@ -91,7 +91,7 @@ char	*handle_expands(char *str, size_t i, size_t len, t_shell *shell)
 			i++;
 	}
 	if (prev < i)
-		res = append_to_str(res, ft_substr(str, prev, i - prev));
+		res = append_to_str(res, ft_substr(str, prev, len - prev));
 	if (!res)
 		return (NULL);
 	return (res);
@@ -150,5 +150,4 @@ char	*handle_expands(char *str, size_t i, size_t len, t_shell *shell)
 //		return (NULL);
 //	return (res);
 //}
-
 
