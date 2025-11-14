@@ -4,7 +4,7 @@
 #include <stdio.h>	// for printf
 #include <stdlib.h>
 
-void	append_to_lst(t_token **head, t_token *node)
+static void	append_to_lst(t_token **head, t_token *node)
 {
 	t_token	*tmp;
 
@@ -17,7 +17,6 @@ void	append_to_lst(t_token **head, t_token *node)
 	while(tmp->next)
 		tmp = tmp->next;
 	tmp->next = node;
-	printf("node = %s\n", node->value);
 }
 
 /**
@@ -46,11 +45,17 @@ char	*append_to_str(char *dst, char *src)
 	return (free(src), new);
 }
 
-void	create_token_node(char *value, t_shell *shell, t_token_type type)
+/**
+ * check if value = "", not create token node.
+ * ft_substr might create empty string if it is only a stop symbol < > | 
+ */
+void	create_token_node(char *value, t_shell *shell, t_type type)
 {
 	t_token	*node;
 
-	node = (t_token*)malloc(sizeof(t_token) * 1);
+	if (ft_strlen(value) == 0)
+		return ;
+	node = (t_token*)malloc(sizeof(t_token));
 	if (!node)
 		ft_malloc_failure("Failture at malloc token node.\n", shell);
 	node->value = ft_strdup(value);

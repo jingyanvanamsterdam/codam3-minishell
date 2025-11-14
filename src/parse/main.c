@@ -36,6 +36,41 @@ void print_tokens(t_token *head)
 	printf("\n======================End the token:===========================\n");
 }
 
+void print_parsed_cmd(t_cmd *head)
+{
+	int	i;
+	
+	i = 1;
+	while (head)
+	{
+		printf("======================Start %d of cmd:===========================\n", i);
+		int j = 0;
+		printf("cmds part: \n");
+		while (head->cmd[j])
+		{
+			printf("%s", head->cmd[j]);
+			j++;
+			if (head->cmd[j])
+				printf(" ");
+			else
+				printf("\n");
+		}
+		if (head->redir)
+		{
+			printf("redir parts: \n");
+			t_redir *redir = head->redir;
+			while (redir)
+			{
+				printf("redirect type = %d, file at %s\n", redir->type, redir->file);
+				redir = redir->next;
+			}
+		}
+		printf("\n======================End the cmd:===========================\n\n");
+		head = head->next;
+		i++;
+	}
+}
+
 void	handle_sigint(int sig)
 {
 	(void)sig;
@@ -60,6 +95,7 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	shell->env_lst = NULL;
 	shell->token = NULL;
+	shell->cmd = NULL;
 	shell->status = GENERAL;
 	shell->prev_exit = 0;
 
@@ -94,15 +130,26 @@ int	main(int argc, char **argv, char **envp)
 		// set up shell
 		init_env(envp, shell); 
 		tokenization(input, shell);
+		//print_tokens(shell->token);
 		if (!shell->token)
+		{
+			free_env_lst(&(shell->env_lst));
 			continue ;
-		print_tokens(shell->token);
+		}
+		parsing(shell);
+		if (!shell->cmd)
+		{
+			free_token_lst(&(shell->token));
+			continue ;
+		}
+		print_parsed_cmd(shell->cmd);
 		//parse input into token
 		//parse token into cmd
 		//excusion cmds
 
 		free_env_lst(&(shell->env_lst));
 		free_token_lst(&(shell->token));
+		free_cmd_lst(&shell->cmd);
 		free(input);
 	}
 	//print_tokens(head);

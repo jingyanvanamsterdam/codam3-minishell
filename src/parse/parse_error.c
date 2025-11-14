@@ -12,13 +12,13 @@ void	ft_malloc_failure(char *s, t_shell *shell)
 
 void	ft_input_error(char	*s, t_shell *shell)
 {
+	ft_putstr_fd("minishell: syntax error near upexpected token `", 2);
 	ft_putstr_fd(s, 2);
+	ft_putstr_fd("'\n", 2);
 	if (shell->token)
 		free_token_lst(&(shell->token));
-	shell->token = NULL;
 	if (shell->cmd)
 		free_cmd_lst((&shell->cmd));
-	shell->cmd = NULL;
 }
 
 // new funcs are below:

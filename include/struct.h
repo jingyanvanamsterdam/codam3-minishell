@@ -1,7 +1,7 @@
 #ifndef STRUCT_H
 # define STRUCT_H
 
-typedef enum e_token_type
+typedef enum e_type
 {
 	WORD,
 	PIPE,
@@ -9,7 +9,7 @@ typedef enum e_token_type
 	REDIR_OUT,
 	HEREDOC,
 	APPEND,
-}			t_token_type;
+}			t_type;
 
 typedef enum e_lex_stauts
 {
@@ -21,13 +21,13 @@ typedef enum e_lex_stauts
 typedef struct	s_token
 {
 	char			*value;
-	t_token_type	type;
+	t_type			type;
 	struct s_token	*next;
 }				t_token;
 
 typedef struct	s_redir
 {
-	t_token_type	type;
+	t_type			type;
 	char			*file;
 	struct s_redir	*next;
 
