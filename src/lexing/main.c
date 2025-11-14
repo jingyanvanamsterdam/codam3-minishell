@@ -52,6 +52,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	t_shell *shell;
+	char	*input;
 	
 	//Init t_shell 
 	shell = (t_shell *)malloc(sizeof(t_shell));
@@ -72,7 +73,7 @@ int	main(int argc, char **argv, char **envp)
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
-		char	*input = readline("Minishell: ");
+		input = readline("Minishell: ");
 		if (!input)
 		{
 			if (g_sig == SIGINT)
@@ -91,8 +92,10 @@ int	main(int argc, char **argv, char **envp)
 		}
 		add_history(input);
 		// set up shell
-		shell->env_lst = init_env(envp, shell);
-		shell->token = tokenization(input, shell);
+		init_env(envp, shell); 
+		tokenization(input, shell);
+		if (!shell->token)
+			continue ;
 		print_tokens(shell->token);
 		//parse input into token
 		//parse token into cmd

@@ -12,7 +12,7 @@ void	free_split(char **key_value);
 void	ft_malloc_failure(char *s, t_shell *shell);
 void	ft_input_error(char	*s, t_shell *shell);
 
-t_env 	*init_env(char **envp, t_shell *shell);
+void 	init_env(char **envp, t_shell *shell);
 
 //helper funcs for lex
 char	*append_to_str(char *dst, char *src);
@@ -36,6 +36,6 @@ char	*handle_quote(char *str, size_t len, t_shell *shell);
 size_t	update_start(char *str, t_shell *shell);
 size_t	handle_special_symbol(char *str, size_t end, t_shell *shell);
 size_t	skip_space_or_quotes(char *str, size_t end);
-t_token *tokenization(char *input, t_shell *shell);
+void	tokenization(char *input, t_shell *shell);
 
 #endif

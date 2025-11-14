@@ -20,6 +20,8 @@ size_t	update_start(char *str, t_shell *shell)
 	end = find_end(str);
 	if ((quote_i = quote_index(str, end, &(shell->status)))< end)
 		end = find_close_quote(str, quote_i, end, shell);
+	if (end == (size_t)-1)
+		return ((size_t)-1);
 	if ((expands_i = find_index(str, end, '$')) < quote_i)
 		value = handle_expands(str, quote_i - expands_i, shell);
 	else 
@@ -74,20 +76,24 @@ size_t	skip_space_or_quotes(char *str, size_t end)
 	return (end);
 }
 
-t_token *tokenization(char *input, t_shell *shell)
+void tokenization(char *input, t_shell *shell)
 {
 	size_t	start;
 	size_t	input_len;
+	size_t	increase;
 
 	start = 0;
 	input_len = ft_strlen(input);
+	
 	while (start < input_len)
 	{
-		start += update_start(input + start, shell);
+		increase = update_start(input + start, shell);
+		if (increase == (size_t)-1)
+			return ;
+		start += increase;
 		if (input[start] == '|' || input[start] == '<' || input[start] == '>')
 			start = handle_special_symbol(input, start, shell);
 		else
 			start = skip_space_or_quotes(input, start);
 	}
-	return (shell->token);
 }
