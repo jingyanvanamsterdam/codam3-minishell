@@ -36,12 +36,7 @@ ENV_SRC = src/env/env_init.c \
 =======
 # lexing module
 LEX_SRC = $(shell find ./src/lexing -iname "*.c")
-#			src/lexing/lexing.c \
-#			src/lexing/main.c \
-#			src/lexing/lexing_error.c \
-#			src/lexing/lexing_free.c \
-#			src/lexing/init_env.c \
-#			src/lexing/lexing_util_expands.c
+PARSE_SRC = $(shell find ./src/parse -iname "*.c")
 
 all: buildlib $(NAME) 
 
@@ -80,5 +75,11 @@ lex: buildlib
 	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(LIBFT) $(RLFLAG) -o lex
 	@echo "✅ Built test executable: ./lex"
 >>>>>>> 497fd4c (Update lexing file from codam. 11.4)
+=======
+parse: buildlib
+	@echo "Compiling parse testing module..."
+	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(LIBFT) $(RLFLAG) -o parse
+	@echo "✅ Built test executable: ./parse"
+
 
 .PHONY: all buildlib clean fclean re 

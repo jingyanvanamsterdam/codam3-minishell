@@ -53,6 +53,7 @@ typedef struct	s_shell
 {
 	t_env			*env_lst;
 	t_token			*token;
+	t_cmd			*cmd;
 	t_lex_status	status;
 	int				prev_exit;
 	// more to add

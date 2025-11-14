@@ -1,4 +1,4 @@
-#include "lex.h" //change to minishell.h after combin
+#include "parse.h" //change to minishell.h after combin
 #include "struct.h"
 #include <stdlib.h>
 #include "libft.h"
@@ -11,7 +11,7 @@ t_env	*create_node(char **key_value, t_shell *shell)
 	node = (t_env*)malloc(sizeof(t_env) * 1);
 	if (!node)
 	{
-		free_split(key_value);
+		free_2d_arr(key_value);
 		ft_malloc_failure("Failture at malloc env.\n", shell);
 	}
 	node->key = ft_strdup(key_value[0]);
@@ -21,7 +21,7 @@ t_env	*create_node(char **key_value, t_shell *shell)
 		node->value = ft_strdup("");
 	if (!node->key || !node->value)
 	{
-		free_split(key_value);
+		free_2d_arr(key_value);
 		ft_malloc_failure("Failure at malloc env.\n", shell);
 	}
 	node->next = NULL;
@@ -60,7 +60,7 @@ void	init_env(char **envp, t_shell *shell)
 			ft_malloc_failure("Failture at malloc env.\n", shell);
 		node = create_node(key_value, shell);
 		append_to_env_lst(&(shell->env_lst), node);
-		free_split(key_value);
+		free_2d_arr(key_value);
 		i++;
 	}
 }
