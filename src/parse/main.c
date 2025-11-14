@@ -1,4 +1,4 @@
-#include "lex.h" //change to minishell.h after combin
+#include "parse.h" //change to minishell.h after combin
 #include "struct.h"
 #include "libft.h"
 #include <stdio.h>	
@@ -102,7 +102,7 @@ int	main(int argc, char **argv, char **envp)
 		//excusion cmds
 
 		free_env_lst(&(shell->env_lst));
-		free_token_list(&(shell->token));
+		free_token_lst(&(shell->token));
 		free(input);
 	}
 	//print_tokens(head);

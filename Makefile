@@ -26,12 +26,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 # ========== Testing SRC ============
 # lexing module
 LEX_SRC = $(shell find ./src/lexing -iname "*.c")
-#			src/lexing/lexing.c \
-#			src/lexing/main.c \
-#			src/lexing/lexing_error.c \
-#			src/lexing/lexing_free.c \
-#			src/lexing/init_env.c \
-#			src/lexing/lexing_util_expands.c
+PARSE_SRC = $(shell find ./src/parse -iname "*.c")
 
 all: buildlib $(NAME)
 
@@ -59,9 +54,9 @@ re: fclean all
 
 # ================= Test rules ===================
 #  Example: make env -> compile only env/*.c + test_env.c into ./env executable
-lex: buildlib
-	@echo "Compiling lex testing module..."
-	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(LIBFT) $(RLFLAG) -o lex
-	@echo "✅ Built test executable: ./lex"
+parse: buildlib
+	@echo "Compiling parse testing module..."
+	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(LIBFT) $(RLFLAG) -o parse
+	@echo "✅ Built test executable: ./parse"
 
 .PHONY: all buildlib clean fclean re

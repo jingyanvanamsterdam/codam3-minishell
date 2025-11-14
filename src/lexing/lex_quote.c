@@ -1,4 +1,4 @@
-#include "lex.h"
+#include "parse.h" 
 #include "libft.h"
 #include "struct.h"
 #include <stdlib.h>

@@ -1,19 +1,23 @@
-#ifndef LEX_H
-# define LEX_H
+#ifndef PARSE_H
+# define PARSE_H
 
 # include "struct.h"
 # include <stdlib.h>
 
-void	free_token_list(t_token **lst);
+//UTILS
+void	free_2d_arr(char **arr);
+void	free_token_lst(t_token **lst);
 void	free_env_lst(t_env **lst);
+void	free_redir_lst(t_redir **lst);
+void	free_cmd_lst(t_cmd **lst);
 void	free_shell(t_shell *shell);
-void	free_split(char **key_value);
 
-void	ft_malloc_failure(char *s, t_shell *shell);
+void	init_env(char **envp, t_shell *shell);
+
 void	ft_input_error(char	*s, t_shell *shell);
+void	ft_malloc_failure(char *s, t_shell *shell);
 
-void 	init_env(char **envp, t_shell *shell);
-
+//===========LEX======================
 //helper funcs for lex
 char	*append_to_str(char *dst, char *src);
 void	append_to_lst(t_token **head, t_token *node);
@@ -37,5 +41,10 @@ size_t	update_start(char *str, t_shell *shell);
 size_t	handle_special_symbol(char *str, size_t end, t_shell *shell);
 size_t	skip_space_or_quotes(char *str, size_t end);
 void	tokenization(char *input, t_shell *shell);
+//====================================
+
+//=============PARSE==================
+
+//====================================
 
 #endif

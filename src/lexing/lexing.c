@@ -1,4 +1,4 @@
-#include "lex.h" //change to minishell.h after combin
+#include "parse.h" //change to minishell.h after combin
 #include "struct.h"
 #include "libft.h"
 #include <stdbool.h> // for boolean functions 
