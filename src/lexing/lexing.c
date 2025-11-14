@@ -84,7 +84,6 @@ void tokenization(char *input, t_shell *shell)
 
 	start = 0;
 	input_len = ft_strlen(input);
-	
 	while (start < input_len)
 	{
 		increase = update_start(input + start, shell);

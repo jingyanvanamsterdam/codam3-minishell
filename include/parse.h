@@ -20,10 +20,9 @@ void	ft_malloc_failure(char *s, t_shell *shell);
 //===========LEX======================
 //helper funcs for lex
 char	*append_to_str(char *dst, char *src);
-void	append_to_lst(t_token **head, t_token *node);
 size_t	find_index(char *str, size_t end, char c);
 size_t	find_end(char *str);
-void	create_token_node(char *value, t_shell *shell, t_token_type type);
+void	create_token_node(char *value, t_shell *shell, t_type type);
 
 //Expands handling funcs. 
 size_t	skip_expansion(char *str);
@@ -45,6 +44,13 @@ void	tokenization(char *input, t_shell *shell);
 
 //=============PARSE==================
 
+//helper funcs
+size_t	calculate_cmd_len(t_token *token);
+void	append_to_cmd(char **cmd, char *src, t_shell *shell);
+t_token	*handle_redir(t_type t, t_token *token, t_redir **redir, t_shell *shell);
+void	create_cmd_node(t_redir *redir, t_shell *shell, char **cmd);
+
+void	parsing(t_shell *shell);
 //====================================
 
 #endif
