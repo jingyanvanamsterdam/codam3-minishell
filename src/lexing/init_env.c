@@ -45,7 +45,7 @@ static void	append_to_env_lst(t_env **head, t_env *node)
 	tmp->next = node;
 }
 
-t_env *init_env(char **envp, t_shell *shell)
+void	init_env(char **envp, t_shell *shell)
 {
 	int		i;
 	t_env	*node;		// store the newly created node
@@ -63,5 +63,4 @@ t_env *init_env(char **envp, t_shell *shell)
 		free_split(key_value);
 		i++;
 	}
-	return (shell->env_lst);
 }

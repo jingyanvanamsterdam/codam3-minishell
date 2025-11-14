@@ -13,6 +13,7 @@ void	ft_malloc_failure(char *s, t_shell *shell)
 void	ft_input_error(char	*s, t_shell *shell)
 {
 	ft_putstr_fd(s, 2);
-	free_shell(shell);
-	exit(EXIT_FAILURE);
+	if (shell->token)
+		free_token_list(&(shell->token));
+	shell->token = NULL;
 }
