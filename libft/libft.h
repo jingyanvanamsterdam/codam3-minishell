@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   libft.h                                            :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2025/07/25 16:15:55 by ray           #+#    #+#                 */
-/*   Updated: 2025/10/28 16:18:21 by jingyandong   ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   libft.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/25 16:15:55 by ray               #+#    #+#             */
+/*   Updated: 2025/11/10 07:13:27 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	*ft_calloc(size_t nmemb, size_t size);
 char	*ft_strdup(const char *s);
 double	ft_atof(char *str);
 int		ft_strcmp(const char *s1, const char *s2);
+char	*ft_strchr(const char *s, int c);
 
 int		ft_isspace(int c);
 
