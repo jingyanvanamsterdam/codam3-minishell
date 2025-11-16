@@ -51,17 +51,17 @@ void print_parsed_cmd(t_cmd *head)
 			printf("%s", head->cmd[j]);
 			j++;
 			if (head->cmd[j])
-				printf(" ");
+				printf(", ");
 			else
 				printf("\n");
 		}
 		if (head->redir)
 		{
-			printf("redir parts: \n");
+			printf("\nredir parts: \n");
 			t_redir *redir = head->redir;
 			while (redir)
 			{
-				printf("redirect type = %d, file at %s\n", redir->type, redir->file);
+				printf("redirect type = %d, file is %s\n", redir->type, redir->file);
 				redir = redir->next;
 			}
 		}
