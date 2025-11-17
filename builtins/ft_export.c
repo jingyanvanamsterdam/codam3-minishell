@@ -25,7 +25,7 @@ static void	add_or_update_env(t_env **env, char *key, char *value)
 		}
 		cur = cur->next;
 	}
-	new = malloc(sizeof(t_env));
+	new = malloc(sizeof(t_env));		// TODO: get a function to shorten the length?
 
 }
 
