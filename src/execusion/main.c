@@ -98,6 +98,7 @@ int	main(int argc, char **argv, char **envp)
 	shell->cmd = NULL;
 	shell->status = GENERAL;
 	shell->prev_exit = 0;
+	shell->exit = 0;
 
 	//shell->env_lst = init_env(envp, shell);
 	//shell->token = tokenization(argv[1], shell);
@@ -143,15 +144,16 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		print_parsed_cmd(shell->cmd);
-		//parse input into token
-		//parse token into cmd
-		//excusion cmds
-
-		free_env_lst(&(shell->env_lst));
 		free_token_lst(&(shell->token));
-		free_cmd_lst(&shell->cmd);
+		//excusion cmds
+		execusion(shell);
+		shell->prev_exit = shell->exit;
+		shell->exit = 0;
+		free_cmd_lst(&(shell->cmd));
+		free_env_lst(&(shell->env_lst));
 		free(input);
 	}
 	//print_tokens(head);
+	free_shell(shell);
 	return (0);
 }

@@ -56,6 +56,7 @@ typedef struct	s_shell
 	t_cmd			*cmd;
 	t_lex_status	status;
 	int				prev_exit;
+	int				exit;
 	// more to add
 }				t_shell;
 

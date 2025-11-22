@@ -26,17 +26,12 @@ LIBFT = $(LIBFT_DIR)/libft.a
 # ========== Testing SRC ============
 <<<<<<< HEAD
 # env module
-ENV_SRC = src/env/env_init.c \
-			src/env/env_utils.c \
-			src/env/env_getset.c \
-			src/env/env_free.c \
-			src/env/test_env.c \
-			src/env/free_split.c \
-			src/env/env_error.c
+ENV_SRC = $(shell find ./src/env -iname "*.c")
 =======
 # lexing module
 LEX_SRC = $(shell find ./src/lexing -iname "*.c")
 PARSE_SRC = $(shell find ./src/parse -iname "*.c")
+HEREDOC_SRC = $(shell find ./src/heredoc -iname "*.c")
 
 all: buildlib $(NAME) 
 
@@ -80,6 +75,10 @@ parse: buildlib
 	@echo "Compiling parse testing module..."
 	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(LIBFT) $(RLFLAG) -o parse
 	@echo "✅ Built test executable: ./parse"
+=======
+heredoc: buildlib
+	@echo "Compiling heredoc testing module..."
+	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(HEREDOC_SRC) $(LIBFT) $(RLFLAG) -o heredoc
+	@echo "✅ Built test executable: ./heredoc"
 
-
-.PHONY: all buildlib clean fclean re 
+.PHONY: all buildlib clean fclean re env lex parse heredoc
