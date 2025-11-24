@@ -22,3 +22,11 @@ void	ft_input_error(char	*s, t_shell *shell)
 }
 
 // new funcs are below:
+
+void	ft_malloc_failure_parsing(t_shell *shell)
+{
+	if (shell->token)
+		free_token_lst(&(shell->token));
+	if (shell->cmd)
+		free_cmd_lst((&shell->cmd));
+}

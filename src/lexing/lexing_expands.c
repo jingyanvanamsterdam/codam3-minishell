@@ -34,7 +34,7 @@ char	*lookup_key(t_env *env_lst, const char *key)
 	while (env_lst)
 	{
 		if (ft_strcmp(env_lst->key, key) == 0)
-			return (ft_strjoin(value,env_lst->value));
+			return (ft_strjoin(value, env_lst->value));
 		env_lst = env_lst->next;
 	}
 	return (value);

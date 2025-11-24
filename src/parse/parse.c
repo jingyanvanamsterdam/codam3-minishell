@@ -21,7 +21,7 @@ t_token	*parsing_before_pipe(t_token *token, t_shell *shell, char **cmd)
 				return (NULL);
 		}
 		else
-			append_to_cmd(cmd, token->value, shell);
+			append_to_cmd(cmd, token, shell);
 		token = token->next;
 	}
 	create_cmd_node(redir, shell, cmd);
@@ -46,6 +46,6 @@ void	parsing(t_shell *shell)
 			ft_malloc_failure("Malloc failed at parsing.\n", shell);
 		token = parsing_before_pipe(token, shell, cmd);
 		if (!shell->token)
-			return (free(cmd));
+			return (free_2d_arr(cmd), ft_malloc_failure("Malloc failed at parsing.\n", shell));
 	}
 }

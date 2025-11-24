@@ -32,13 +32,12 @@ char	*handle_expands(char *str, size_t len, t_shell *shell);
 
 //Quote handling funcs.
 size_t	find_close_quote(char *str, size_t start, size_t end, t_shell *shell);
-size_t	quote_index(char *str, size_t end, t_lex_status *status);
-char	*handle_quote(char *str, size_t len, t_shell *shell);
+size_t	quote_index(char *str, size_t end);
 
 //Main funcs for lex
 size_t	update_start(char *str, t_shell *shell);
 size_t	handle_special_symbol(char *str, size_t end, t_shell *shell);
-size_t	skip_space_or_quotes(char *str, size_t end);
+size_t	skip_space(char *str, size_t end);
 void	tokenization(char *input, t_shell *shell);
 //====================================
 

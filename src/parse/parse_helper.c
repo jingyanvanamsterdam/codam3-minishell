@@ -54,15 +54,17 @@ size_t	calculate_cmd_len(t_token *token)
 	}
 	return (len);
 }
-
-void	append_to_cmd(char **cmd, char *src, t_shell *shell)
+/**
+ * Function will remove the quote from cmds. 
+ */
+void	append_to_cmd(char **cmd, t_token *token, t_shell *shell)
 {
 	size_t	i;
 
 	i = 0;
 	while (cmd[i])
 		i++;
-	cmd[i] = ft_strdup(src);
+	cmd[i] = handle_token(WORD, token, shell);
 	if (!cmd[i])
 	{
 		free_2d_arr(cmd);
@@ -85,9 +87,7 @@ t_token	*handle_redir(t_type t, t_token *token, t_redir **redir, t_shell *shell)
 	if (!node)
 		ft_malloc_failure("Malloc failed at parsing.\n", shell);
 	node->type = t;
-	node->file = ft_strdup(token->value);
-	if (!(node->file))
-		ft_malloc_failure("Malloc failed at parsing.\n", shell);
+	node->file = handle_token(t, token, shell);
 	node->next = NULL;
 	append_to_rdir_lst(redir, node);
 	return (token);
@@ -110,4 +110,42 @@ void	create_cmd_node(t_redir *redir, t_shell *shell, char **cmd)
 	node->redir = redir;
 	node->next = NULL;
 	append_to_cmd_lst(&(shell->cmd), node);
+}
+
+char	*handle_token(t_type t, t_token *token, t_shell *shell)
+{
+	size_t	quote_i;
+	size_t	expand_i;
+	size_t	len;
+	char	*value;
+
+	quote_i = quote_index(token->value, len);
+	expand_i = find_index(token->value, len, '$');
+	if (expand_i < quote_i && t != HEREDOC)
+		value = handle_expands(token->value, quote_i - expand_i, shell);
+	else
+		value = ft_substr(token->value, 0, quote_i); //if no expands before quote, then deal with anything before quote.
+	if (!value)
+		ft_malloc_failure_parsing("Malloc failed at parsing\n", shell);	
+	if (t == HEREDOC || token->value[quote_i] == '\'')
+		value = append_to_str(value, ft_substr(token->value, quote_i + 1, len - quote_i - 2));
+	else if (quote_i < len)
+		value = append_to_str(value, handle_quote(token->value + quote_i + 1, len - quote_i, shell));
+	if (!value)
+		ft_malloc_failure_parsing("Malloc failed at parsing\n", shell);
+	return (value);
+}
+
+char	*handle_quote(char *str, size_t len, t_shell *shell)
+{
+	char	*res;
+	size_t	exp_i;
+
+	res = NULL;
+	exp_i = find_index(str, len, '$');
+	if (exp_i < len)
+		res = handle_expands(str, len - 1, shell);
+	if (!res)
+		return (NULL);
+	return (res);
 }

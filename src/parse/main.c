@@ -96,7 +96,6 @@ int	main(int argc, char **argv, char **envp)
 	shell->env_lst = NULL;
 	shell->token = NULL;
 	shell->cmd = NULL;
-	shell->status = GENERAL;
 	shell->prev_exit = 0;
 
 	//shell->env_lst = init_env(envp, shell);
