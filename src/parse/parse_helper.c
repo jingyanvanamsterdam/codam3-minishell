@@ -85,9 +85,11 @@ t_token	*handle_redir(t_type t, t_token *token, t_redir **redir, t_shell *shell)
 		return (ft_input_error(value, shell), NULL);
 	node = (t_redir *)malloc(sizeof(t_redir));
 	if (!node)
-		ft_malloc_failure("Malloc failed at parsing.\n", shell);
+		ft_malloc_failure("Malloc failed at parsing\n", shell);
 	node->type = t;
 	node->file = handle_token(t, token, shell);
+	if (!node->file)
+		ft_malloc_failure("Malloc failed at parsing\n", shell);
 	node->next = NULL;
 	append_to_rdir_lst(redir, node);
 	return (token);
@@ -98,43 +100,23 @@ t_token	*handle_redir(t_type t, t_token *token, t_redir **redir, t_shell *shell)
  * It is not input error or something need to be ignored to create node. 
  * cmd's path = NULL; change during execution process. 
  */
-void	create_cmd_node(t_redir *redir, t_shell *shell, char **cmd)
+void	create_cmd_node(t_shell *shell, char **cmd)
 {
 	t_cmd	*node;
 
 	node = (t_cmd *)malloc(sizeof(t_cmd));
 	if (!node)
+	{
+		free_2d_arr(cmd);
 		ft_malloc_failure("Malloc failed at parsing.\n", shell);
+	}
 	node->cmd = cmd;
 	node->path = NULL;
-	node->redir = redir;
+	node->redir = NULL;
 	node->next = NULL;
 	append_to_cmd_lst(&(shell->cmd), node);
 }
 
-char	*handle_token(t_type t, t_token *token, t_shell *shell)
-{
-	size_t	quote_i;
-	size_t	expand_i;
-	size_t	len;
-	char	*value;
-
-	quote_i = quote_index(token->value, len);
-	expand_i = find_index(token->value, len, '$');
-	if (expand_i < quote_i && t != HEREDOC)
-		value = handle_expands(token->value, quote_i - expand_i, shell);
-	else
-		value = ft_substr(token->value, 0, quote_i); //if no expands before quote, then deal with anything before quote.
-	if (!value)
-		ft_malloc_failure_parsing("Malloc failed at parsing\n", shell);	
-	if (t == HEREDOC || token->value[quote_i] == '\'')
-		value = append_to_str(value, ft_substr(token->value, quote_i + 1, len - quote_i - 2));
-	else if (quote_i < len)
-		value = append_to_str(value, handle_quote(token->value + quote_i + 1, len - quote_i, shell));
-	if (!value)
-		ft_malloc_failure_parsing("Malloc failed at parsing\n", shell);
-	return (value);
-}
 
 char	*handle_quote(char *str, size_t len, t_shell *shell)
 {
@@ -145,7 +127,35 @@ char	*handle_quote(char *str, size_t len, t_shell *shell)
 	exp_i = find_index(str, len, '$');
 	if (exp_i < len)
 		res = handle_expands(str, len - 1, shell);
+	else
+		res = ft_substr(str, 0, len - 1);
 	if (!res)
 		return (NULL);
 	return (res);
+}
+
+
+char	*handle_token(t_type t, t_token *token, t_shell *shell)
+{
+	size_t	quote_i;
+	size_t	expand_i;
+	size_t	len;
+	char	*value;
+
+	len = ft_strlen(token->value);
+	quote_i = quote_index(token->value, len);
+	expand_i = find_index(token->value, len, '$');
+	if (expand_i < quote_i && t != HEREDOC)
+		value = handle_expands(token->value, quote_i - expand_i, shell);
+	else
+		value = ft_substr(token->value, 0, quote_i); //if no expands before quote, then deal with anything before quote.
+	if (!value)
+		ft_malloc_failure("Malloc failed at paring\n", shell);	
+	if (t == HEREDOC || token->value[quote_i] == '\'')
+		value = append_to_str(value, ft_substr(token->value, quote_i + 1, len - quote_i - 2));
+	else if (quote_i < len)
+		value = append_to_str(value, handle_quote(token->value + quote_i + 1, len - quote_i - 1, shell));
+	if (!value)
+		ft_malloc_failure("Malloc failed at paring quote\n", shell);
+	return (value);
 }

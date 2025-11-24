@@ -16,11 +16,12 @@ void	init_env(char **envp, t_shell *shell);
 
 void	ft_input_error(char	*s, t_shell *shell);
 void	ft_malloc_failure(char *s, t_shell *shell);
+void	ft_malloc_failure_parsing(t_shell *shell);
 
 //===========LEX======================
 //helper funcs for lex
 char	*append_to_str(char *dst, char *src);
-size_t	find_index(char *str, size_t end, char c);
+size_t	find_index(char *str, size_t len, char c);
 size_t	find_end(char *str);
 void	create_token_node(char *value, t_shell *shell, t_type type);
 
@@ -45,10 +46,11 @@ void	tokenization(char *input, t_shell *shell);
 
 //helper funcs
 size_t	calculate_cmd_len(t_token *token);
-void	append_to_cmd(char **cmd, char *src, t_shell *shell);
+void	append_to_cmd(char **cmd, t_token *token, t_shell *shell);
 t_token	*handle_redir(t_type t, t_token *token, t_redir **redir, t_shell *shell);
-void	create_cmd_node(t_redir *redir, t_shell *shell, char **cmd);
-
+void	create_cmd_node(t_shell *shell, char **cmd);
+char	*handle_quote(char *str, size_t len, t_shell *shell);
+char	*handle_token(t_type t, t_token *token, t_shell *shell);
 void	parsing(t_shell *shell);
 //====================================
 

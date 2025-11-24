@@ -11,6 +11,7 @@ t_token	*parsing_before_pipe(t_token *token, t_shell *shell, char **cmd)
 	redir = NULL; 
 	if (token->type == PIPE)
 		return (ft_input_error(token->value, shell), NULL);
+	create_cmd_node(shell, cmd);
 	while (token && token->type != PIPE)
 	{
 		if (token->type == REDIR_IN || token->type == REDIR_OUT 
@@ -24,7 +25,7 @@ t_token	*parsing_before_pipe(t_token *token, t_shell *shell, char **cmd)
 			append_to_cmd(cmd, token, shell);
 		token = token->next;
 	}
-	create_cmd_node(redir, shell, cmd);
+	shell->cmd->redir = redir;
 	if (token && token->type == PIPE)
 		return (token->next);
 	return (token);
@@ -46,6 +47,6 @@ void	parsing(t_shell *shell)
 			ft_malloc_failure("Malloc failed at parsing.\n", shell);
 		token = parsing_before_pipe(token, shell, cmd);
 		if (!shell->token)
-			return (free_2d_arr(cmd), ft_malloc_failure("Malloc failed at parsing.\n", shell));
+			return (free_2d_arr(cmd));
 	}
 }
