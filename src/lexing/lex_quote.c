@@ -47,7 +47,7 @@ size_t	find_close_quote(char *str, size_t start, size_t end, t_shell *shell)
 		return (++start);
 	else if (end == start || !str[start])
 	{
-		ft_input_error("minishell error: unclosed quote\n", shell);
+		ft_input_error("unclosed quote\n", "", shell);
 		return ((size_t)-1);
 	}
 	return (end);

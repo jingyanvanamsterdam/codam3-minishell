@@ -57,12 +57,12 @@ void	create_token_node(char *value, t_shell *shell, t_type type)
 		return ;
 	node = (t_token*)malloc(sizeof(t_token));
 	if (!node)
-		ft_malloc_failure("Failture at malloc token node.\n", shell);
+		ft_malloc_failure("tokenization.\n", shell);
 	node->value = ft_strdup(value);
 	if (!node->value)
 	{
 		free(value);
-		ft_malloc_failure("Failure at malloc env.\n", shell);
+		ft_malloc_failure("tokenization.\n", shell);
 	}
 	node->type = type;
 	node->next = NULL;

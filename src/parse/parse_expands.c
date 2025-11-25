@@ -6,7 +6,7 @@
 
 /** 
  */
-char	*process_expands(char *str, size_t *i, size_t *prev, t_shell *shell)
+char	*process_expand(char *str, size_t *i, size_t *prev, t_shell *shell)
 {
 	char	*res;
 	size_t	exp_len;
@@ -99,7 +99,7 @@ char	*handle_expands(char *str, size_t len, t_shell *shell)
 	{
 		if (str[i] == '$')
 		{
-			tmp = process_expands(str, &i, &prev, shell);
+			tmp = process_expand(str, &i, &prev, shell);
 			if (!tmp)
 				return (NULL);
 			res = append_to_str(res, tmp);

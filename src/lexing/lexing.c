@@ -23,12 +23,8 @@ size_t	update_start(char *str, t_shell *shell)
 	if (end == (size_t)-1)
 		return ((size_t)-1);
 	value = ft_substr(str, 0, end);
-	//if (!value)
-	//	ft_malloc_failure("Failture at malloc - tokenization\n", shell);
-	//if (quote_i < end)
-	//	value = append_to_str(value, handle_quote(str + quote_i, end - quote_i, shell)); 
 	if (!value)
-		ft_malloc_failure("Failture at malloc - tokenization\n", shell);
+		ft_malloc_failure("tokenization\n", shell);
 	create_token_node(value, shell, WORD);
 	free(value);
 	return (end);

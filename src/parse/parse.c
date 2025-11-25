@@ -4,20 +4,26 @@
 #include <stdlib.h>
 #include <stdio.h> // printf
 
-t_token	*parsing_before_pipe(t_token *token, t_shell *shell, char **cmd)
+/**
+ * This function parse tokens by types and update to the next token.
+ * if there is input error, the shell will cleaned up and return NULL. 
+ */
+t_token	*parse_token(t_token *token, t_shell *shell, char **cmd)
 {
 	t_redir *redir;
 
 	redir = NULL; 
 	if (token->type == PIPE)
-		return (ft_input_error(token->value, shell), NULL);
-	create_cmd_node(shell, cmd);
+	{
+		ft_input_error("near upexpected token `", token->value, shell);
+		return (NULL);
+	}
 	while (token && token->type != PIPE)
 	{
 		if (token->type == REDIR_IN || token->type == REDIR_OUT 
 			|| token->type == HEREDOC || token->type == APPEND)
 		{
-			token = handle_redir(token->type, token, &redir, shell);
+			token = handle_redir(token, &redir, shell);
 			if (!shell->token)
 				return (NULL);
 		}
@@ -25,12 +31,15 @@ t_token	*parsing_before_pipe(t_token *token, t_shell *shell, char **cmd)
 			append_to_cmd(cmd, token, shell);
 		token = token->next;
 	}
-	shell->cmd->redir = redir;
+	update_cmd_redir(redir, shell);
 	if (token && token->type == PIPE)
 		return (token->next);
 	return (token);
 }
 
+/**
+ * If there is input error, check shell->token == NULL
+ */
 void	parsing(t_shell *shell)
 {
 	t_token	*token;
@@ -44,9 +53,10 @@ void	parsing(t_shell *shell)
 		size = calculate_cmd_len(token) + 1;
 		cmd = ft_calloc(size, sizeof(char *));
 		if (!cmd)
-			ft_malloc_failure("Malloc failed at parsing.\n", shell);
-		token = parsing_before_pipe(token, shell, cmd);
+			ft_malloc_failure("parsing.\n", shell);
+		create_cmd_node(shell, cmd);
+		token = parse_token(token, shell, cmd);
 		if (!shell->token)
-			return (free_2d_arr(cmd));
+			return ;
 	}
 }
