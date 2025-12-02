@@ -14,7 +14,7 @@ int	dup_files(t_shell *shell, int *file, int **pipes)
 	int	count;
 
 	count = count_cmd(shell->cmd);
-	handle_redir(shell, file, pipes);
+	handle_redir(shell, file);
 	if (file[0] == -1 || file[1] == -1)
 		return (shell->exit);
 	if (dup2(file[0], STDIN_FILENO) < 0)
@@ -94,9 +94,11 @@ void	execusion(t_shell *shell)
 	int	pid;
 	int	file[2];
 	// handle cmd execution path. 
-
+	count = count_cmd(shell->cmd);
+	pipes = NULL;
+	if (count > 1)
+		pipes = create_pipes(shell);
 	// handle redirection including heredoc.
-	pipes = create_pipes(shell);
 	file[0] = 0;
 	file[1] = 1;
 	pid = create_process(shell, pipes, file);

@@ -57,12 +57,12 @@ void	create_token_node(char *value, t_shell *shell, t_type type)
 		return ;
 	node = (t_token*)malloc(sizeof(t_token));
 	if (!node)
-		ft_malloc_failure("Failture at malloc token node.\n", shell);
+		ft_malloc_failure("tokenization.\n", shell);
 	node->value = ft_strdup(value);
 	if (!node->value)
 	{
 		free(value);
-		ft_malloc_failure("Failure at malloc env.\n", shell);
+		ft_malloc_failure("tokenization.\n", shell);
 	}
 	node->type = type;
 	node->next = NULL;
@@ -88,12 +88,12 @@ size_t	find_end(char *str)
  * Return the index of the charater, if there is no, it will equal to the end.
  * To do: Maybe replace with ft_strchr(), but some compare logic need to be changed.
  */
-size_t	find_index(char *str, size_t end, char c)
+size_t	find_index(char *str, size_t len, char c)
 {
 	size_t	i;
 	
 	i = 0;
-	while (i < end)
+	while (i < len)
 	{
 		if (str[i] == c)
 			return (i);

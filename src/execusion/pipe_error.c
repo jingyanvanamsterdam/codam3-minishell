@@ -9,9 +9,23 @@
 
 void	ft_malloc_failure(char *s, t_shell *shell)
 {
+	ft_putstr_fd(ERROR "minishell: " RESET, 2);
+	ft_putstr_fd("malloc failure at ", 2);
 	ft_putstr_fd(s, 2);
 	free_shell(shell);
 	exit(EXIT_FAILURE);
+}
+
+void	ft_input_error(char *errmes, char *s, t_shell *shell)
+{
+	ft_putstr_fd(ERROR "minishell: syntax error: " RESET, 2);
+	ft_putstr_fd(errmes, 2);
+	ft_putstr_fd(s, 2);
+	ft_putstr_fd("\n", 2);
+	if (shell->token)
+		free_token_lst(&(shell->token));
+	if (shell->cmd)
+		free_cmd_lst((&shell->cmd));
 }
 
 void	ft_pipe_error(t_shell *shell, char *str, int **pipes, int n)
@@ -22,9 +36,10 @@ void	ft_pipe_error(t_shell *shell, char *str, int **pipes, int n)
 	exit(EXIT_FAILURE);
 }
 
+// To do check when the error is being printed if cannot find the file and there is heredoc.
 void	ft_error_printing(char *mes)
 {
-	ft_putstr_fd("sh: ", 2);
+	ft_putstr_fd(ERROR "minishell: " RESET, 2);
 	ft_putstr_fd(mes, 2);
 	write(2, ": ", 2);
 	ft_putstr_fd(strerror(errno), 2);

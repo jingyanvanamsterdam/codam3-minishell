@@ -6,7 +6,7 @@
 
 /** 
  */
-char	*process_expands(char *str, size_t *i, size_t *prev, t_shell *shell)
+char	*process_expand(char *str, size_t *i, size_t *prev, t_shell *shell)
 {
 	char	*res;
 	size_t	exp_len;
@@ -34,7 +34,7 @@ char	*lookup_key(t_env *env_lst, const char *key)
 	while (env_lst)
 	{
 		if (ft_strcmp(env_lst->key, key) == 0)
-			return (ft_strjoin(value,env_lst->value));
+			return (ft_strjoin(value, env_lst->value));
 		env_lst = env_lst->next;
 	}
 	return (value);
@@ -99,7 +99,7 @@ char	*handle_expands(char *str, size_t len, t_shell *shell)
 	{
 		if (str[i] == '$')
 		{
-			tmp = process_expands(str, &i, &prev, shell);
+			tmp = process_expand(str, &i, &prev, shell);
 			if (!tmp)
 				return (NULL);
 			res = append_to_str(res, tmp);

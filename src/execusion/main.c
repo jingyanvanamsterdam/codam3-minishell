@@ -1,4 +1,5 @@
 #include "parse.h" //change to minishell.h after combin
+#include "pipe.h"
 #include "struct.h"
 #include "libft.h"
 #include <stdio.h>	
@@ -71,15 +72,23 @@ void print_parsed_cmd(t_cmd *head)
 	}
 }
 
-void	handle_sigint(int sig)
+t_redir	*test_for_heredoc(t_shell *shell)
 {
-	(void)sig;
-	g_sig = SIGINT;
-	write(1, "\n", 1);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-	//并非async
+	t_cmd *cmd = shell->cmd;
+	t_redir *redir = NULL;
+
+	while (cmd)
+	{
+		redir = cmd->redir;
+		while (redir)
+		{
+			if (redir->type == HEREDOC)
+				return redir;
+			redir = redir->next;
+		}
+		cmd = cmd->next;
+	}
+	return (redir);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -96,7 +105,6 @@ int	main(int argc, char **argv, char **envp)
 	shell->env_lst = NULL;
 	shell->token = NULL;
 	shell->cmd = NULL;
-	shell->status = GENERAL;
 	shell->prev_exit = 0;
 	shell->exit = 0;
 
@@ -107,20 +115,22 @@ int	main(int argc, char **argv, char **envp)
 
 	//setup signal
 	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN); //ctrl + d
 	while (1)
 	{
 		input = readline("Minishell: ");
+		//Only when ctrl + d is trigered when there is nothing on the readline
 		if (!input)
 		{
-			if (g_sig == SIGINT)
-			{
-				g_sig = 0;
-				continue ; 
-			}
-			// EOF return null; ctrl + d
-			write(1, "\n", 1);
-			break ; // exit the minishell program?
+			write(1, "exit\n", 6);
+			free_shell(shell);
+			exit(0);
+		}
+		if (g_sig == SIGINT)
+		{
+			g_sig = 0;
+			shell->prev_exit = 130;
+			continue ; 
 		}
 		if (*input == '\0' || ft_strcheck(input, ft_isspace)) // this do check for tab, but it doesn't work for tab completion in readline.
 		{
@@ -146,7 +156,8 @@ int	main(int argc, char **argv, char **envp)
 		print_parsed_cmd(shell->cmd);
 		free_token_lst(&(shell->token));
 		//excusion cmds
-		execusion(shell);
+		heredoc(shell, test_for_heredoc(shell));
+		//execusion(shell);
 		shell->prev_exit = shell->exit;
 		shell->exit = 0;
 		free_cmd_lst(&(shell->cmd));
@@ -154,6 +165,5 @@ int	main(int argc, char **argv, char **envp)
 		free(input);
 	}
 	//print_tokens(head);
-	free_shell(shell);
 	return (0);
 }

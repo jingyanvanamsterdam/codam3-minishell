@@ -31,7 +31,6 @@ ENV_SRC = $(shell find ./src/env -iname "*.c")
 # lexing module
 LEX_SRC = $(shell find ./src/lexing -iname "*.c")
 PARSE_SRC = $(shell find ./src/parse -iname "*.c")
-HEREDOC_SRC = $(shell find ./src/heredoc -iname "*.c")
 
 all: buildlib $(NAME) 
 

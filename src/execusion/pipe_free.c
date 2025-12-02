@@ -51,8 +51,6 @@ void	free_env_lst(t_env **lst)
 	}
 }
 
-
-// below are new functions and changed function :
 void	free_redir_lst(t_redir **lst)
 {
 	t_redir	*temp;

@@ -8,6 +8,9 @@
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h> //for g_sig
+
+volatile sig_atomic_t g_sig = 0;
 
 int	open_infile(char *file)
 {
@@ -15,7 +18,7 @@ int	open_infile(char *file)
 
 	if (access(file, F_OK) == -1 || access(file, R_OK) == -1)
 	{
-		ft_error_print(file);
+		ft_error_printing(file);
 		fd = open("/dev/null", O_RDONLY);
 	}
 	else
@@ -30,7 +33,7 @@ int	open_outfile(char *file)
 	int fd;
 
 	if (access(file, F_OK) == 0 && access(file, W_OK) == -1)
-		ft_error_printf(file);
+		ft_error_printing(file);
 	else
 		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
@@ -38,29 +41,57 @@ int	open_outfile(char *file)
 	return (fd);
 }
 
-void contain_quote(char *limiter)
+int	contain_quote(char *delimiter)
 {
 	int	i;
+	int check;
 
 	i = 0;
-	if (limiter[0] == '\'' || limiter[0] == '\"')
+	check = 0;
+	while (delimiter[i])
 	{
-		while (limiter[i])
-		{
-			if (limiter[i] == '\'' || limiter[i] == '\"')
-			{
-				limiter[i] = '\0';
-				break ;
-			}
-			i++;
-		}
+		if (delimiter[i] == '\'' || delimiter[i] == '\"')
+			return (1);
+		i++;
 	}
+	return (0);
 }
 
 int	heredoc(t_shell *shell, t_redir *redir)
 {
+	char *input;
+	char *res;
 	contain_quote(redir->file);
 	// readline and make a tmp open file(?);
+	res = NULL;
+	input = NULL;
+	while (1)
+	{
+		input = readline("> ");
+		if (!input)
+		{
+			//ft_warning_printing("minishell: warning: here-document at line %d delimited by end -of-file (wanted \%s')", linenumber, redir->file);
+			printf("warning\n");
+			break ;
+		}
+		//Handle input
+		/**
+		 * if meat delimiter; break;
+		 * if contain_quote is false: check for expansion -> input = handle_expansion(input);
+		 * else: take input literally.
+		 * res = append_to_str(res, input)
+		 */
+		//if (meet_delimiter(delimiter, input))
+		//{
+		//	break;
+		//}
+		//if (!contain_quote(redir->file))
+		//{
+		//	input = handle_expands(input);
+		//}
+		//res = append_to_str(res, input);//input is free in the function.
+	}
+	//write(file[0], tmp, ft_strlen(tmp));
 }
 
 void	handle_redir(t_shell *shell, int *file)

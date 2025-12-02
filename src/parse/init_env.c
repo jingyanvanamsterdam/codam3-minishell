@@ -12,7 +12,7 @@ t_env	*create_node(char **key_value, t_shell *shell)
 	if (!node)
 	{
 		free_2d_arr(key_value);
-		ft_malloc_failure("Failture at malloc env.\n", shell);
+		ft_malloc_failure("setting enviroment values.\n", shell);
 	}
 	node->key = ft_strdup(key_value[0]);
 	if (key_value[1])
@@ -22,7 +22,7 @@ t_env	*create_node(char **key_value, t_shell *shell)
 	if (!node->key || !node->value)
 	{
 		free_2d_arr(key_value);
-		ft_malloc_failure("Failure at malloc env.\n", shell);
+		ft_malloc_failure("setting enviroment values.\n", shell);
 	}
 	node->next = NULL;
 	return (node);
@@ -57,7 +57,7 @@ void	init_env(char **envp, t_shell *shell)
 	{
 		key_value = ft_split(envp[i], '=');
 		if (!key_value)
-			ft_malloc_failure("Failture at malloc env.\n", shell);
+			ft_malloc_failure("setting enviroment values.\n", shell);
 		node = create_node(key_value, shell);
 		append_to_env_lst(&(shell->env_lst), node);
 		free_2d_arr(key_value);

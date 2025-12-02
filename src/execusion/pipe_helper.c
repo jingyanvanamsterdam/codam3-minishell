@@ -3,7 +3,6 @@
 #include "parse.h"
 #include "libft.h"
 
-
 int	count_cmd(t_cmd *cmd)
 {
 	int	count;
@@ -26,7 +25,7 @@ void	init_file(int *file, int **pipes, int i, t_shell *shell)
 		file[0] = 0;
 	else
 		file[0] = pipes[i - 1][0];
-	if (i < count - 1)
+	if (i == count - 1)
 		file[1] = 1;
 	else
 		file[1] = pipes[i][1];

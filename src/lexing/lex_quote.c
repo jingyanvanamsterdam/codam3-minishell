@@ -7,7 +7,7 @@
 /**
  * change status and return the index of the start quote. 
  */
-size_t	quote_index(char *str, size_t end, t_lex_status *status)
+size_t	quote_index(char *str, size_t end)
 {
 	size_t i;
 
@@ -15,15 +15,9 @@ size_t	quote_index(char *str, size_t end, t_lex_status *status)
 	while (i < end)
 	{
 		if (str[i] == '\'')
-		{
-			*status = SINGLE_QUOTE;
 			return (i);
-		}
 		else if (str[i] == '\"')
-		{
-			*status = DOUBLE_QUOTE;
 			return (i);
-		}
 		i++;
 	}
 	return (i);
@@ -49,29 +43,12 @@ size_t	find_close_quote(char *str, size_t start, size_t end, t_shell *shell)
 			if (str[start] == '\"')
 				break ;
 	}
-	if (end < start)
-		return (start);
-	if (end == start)
+	if (end < start && str[start])
+		return (++start);
+	else if (end == start || !str[start])
 	{
-		ft_input_error("minishell error: unclosed quote\n", shell);
+		ft_input_error("unclosed quote\n", "", shell);
 		return ((size_t)-1);
 	}
 	return (end);
-}
-
-char	*handle_quote(char *str, size_t len, t_shell *shell)
-{
-	char	*res;
-	size_t	exp_i;
-
-	res = NULL;
-	exp_i = find_index(str, len, '$');
-	if (shell->status == SINGLE_QUOTE || exp_i == len)
-		res = ft_substr(str, 0, len);
-	else if (shell->status == DOUBLE_QUOTE && exp_i < len)
-		res = handle_expands(str, len - 1, shell);
-	if (!res)
-		return (NULL);
-	shell->status = GENERAL;
-	return (res);
 }
