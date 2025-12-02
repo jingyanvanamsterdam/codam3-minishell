@@ -57,7 +57,7 @@ int	contain_quote(char *delimiter)
 	return (0);
 }
 
-int	heredoc(t_shell *shell, t_redir *redir)
+int	heredoc(t_shell *shell, t_redir *redir, int readin)
 {
 	char *input;
 	char *res;
@@ -91,27 +91,30 @@ int	heredoc(t_shell *shell, t_redir *redir)
 		//}
 		//res = append_to_str(res, input);//input is free in the function.
 	}
-	//write(file[0], tmp, ft_strlen(tmp));
+	//write(readin, tmp, ft_strlen(tmp));
 }
 
-void	handle_redir(t_shell *shell, int *file)
+void	handle_redir(t_shell *shell, int *file, int i)
 {
 	t_redir	*redir;
+	t_cmd	*cmd;
+	int		j;
 
-	while (shell->cmd)
+	j = 0;
+	cmd = shell->cmd;
+	while (j++ < i)
+		cmd = cmd->next;
+	redir = cmd->redir;
+	while (redir)
 	{
-		redir = shell->cmd->redir;
-		while (redir)
-		{
-			if (redir->type == REDIR_IN)
-				file[0] = open_infile(redir->file);
-			else if (redir->type == REDIR_OUT)
-				file[1] = open_outfile(redir->file);
-			else if (redir->type == APPEND)
-				file[1] = output_append(shell, redir);
-			else if (redir->type == HEREDOC)
-				file[0] = heredoc(shell, redir);
-			redir = redir->next;
-		}
+		if (redir->type == REDIR_IN)
+			file[0] = open_infile(redir->file);
+		else if (redir->type == REDIR_OUT)
+			file[1] = open_outfile(redir->file);
+		else if (redir->type == APPEND)
+			output_append(shell, redir, file[1]);
+		else if (redir->type == HEREDOC)
+			heredoc(shell, redir, file[0]);
+		redir = redir->next;
 	}
 }

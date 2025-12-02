@@ -26,7 +26,7 @@ int		open_infile(char *file);
 int		open_outfile(char *file);
 void	contain_quote(char *limiter);
 int		heredoc(t_shell *shell, t_redir *redir);
-void	handle_redir(t_shell *shell, int *file);
+void	handle_redir(t_shell *shell, int *file, int i);
 
 //main execusion funcs
 int		dup_files(t_shell *shell, int *file, int **pipes);

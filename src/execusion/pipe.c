@@ -9,12 +9,13 @@
 #include <string.h>
 #include <unistd.h>
 
-int	dup_files(t_shell *shell, int *file, int **pipes)
+int	dup_files(t_shell *shell, int *file, int **pipes, int i)
 {
 	int	count;
 
+	init_file(file, pipes, i, shell);
 	count = count_cmd(shell->cmd);
-	handle_redir(shell, file);
+	handle_redir(shell, file, i);
 	if (file[0] == -1 || file[1] == -1)
 		return (shell->exit);
 	if (dup2(file[0], STDIN_FILENO) < 0)
@@ -74,8 +75,7 @@ int	create_process(t_shell *shell, int **pipes, int	*file)
 			return (perror("sh: fork"), -1);
 		else if (pid == 0)
 		{
-			init_file(file, pipes, i, shell);
-			if (dup_files(shell, file, pipes) == 0)
+			if (dup_files(shell, file, pipes, i) == 0)
 				execve_cmd(shell, i);
 			code = shell->exit;
 			ft_free_exit(pipes, shell, code);
