@@ -26,6 +26,7 @@ size_t	update_start(char *str, t_shell *shell)
 	if (!value)
 		ft_malloc_failure("tokenization\n", shell);
 	create_token_node(value, shell, WORD);
+	printf("value = %s\n", value);
 	free(value);
 	return (end);
 }

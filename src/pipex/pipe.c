@@ -91,15 +91,21 @@ int	**create_pipes(t_shell *shell)
 	return (pipes);
 }
 
+//void	run_child_process(t_shell *shell, int *file, int **pipes, int i)
+//{
+//	setup_child_signal();
+//	if (dup_files(shell, file, pipes, i) == 0)
+//		execve_cmd(shell, i);
+//	ft_free_exit(pipes, shell);
+//}
+
 int	create_process(t_shell *shell, int **pipes, int	*file)
 {
 	int		i;
 	pid_t	pid;
-	int		code;
 	int		count;
 
 	i = 0;
-	code = 0;
 	count = count_cmd(shell->cmd);
 	while (i < count)
 	{
@@ -108,10 +114,11 @@ int	create_process(t_shell *shell, int **pipes, int	*file)
 			return (perror("sh: fork"), -1);
 		else if (pid == 0)
 		{
+			//run_child_process
+			setup_child_signal();
 			if (dup_files(shell, file, pipes, i) == 0)
 				execve_cmd(shell, i);
-			code = shell->exit;
-			ft_free_exit(pipes, shell, code);
+			ft_free_exit(pipes, shell);
 		}
 		else
 			parent_close_file(shell, i, pipes, file);
@@ -126,6 +133,7 @@ void	execusion(t_shell *shell)
 	int	**pipes;
 	int	pid;
 	int	file[2];
+	int	status;
 	// handle cmd execution path. 
 	count = count_cmd(shell->cmd);
 	pipes = NULL;
@@ -135,6 +143,21 @@ void	execusion(t_shell *shell)
 	file[0] = 0;
 	file[1] = 1;
 	pid = create_process(shell, pipes, file);
+	if (pid == -1)
+	{
+		close_pipes(pipes, count - 1);
+		shell->exit = 1;
+	}
+	else if (waitpid(pid, &status, 0) > 0)
+	{
+		if (WIFEXITED(status))
+			shell->exit = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			shell->exit = 128 + WTERMSIG(status);
+	}
+	while (wait(NULL) > 0)
+		;
+	ft_free_exit(pipes, shell);
 	printf("only for use of pid. %d", pid);
 }
 

@@ -112,9 +112,7 @@ int	main(int argc, char **argv, char **envp)
 	//print_tokens(shell->token);
 	//free_shell(shell);
 
-	//setup signal
-	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, SIG_IGN); //ctrl + d
+	setup_signal();
 	while (1)
 	{
 		input = readline("Minishell: ");
@@ -129,8 +127,6 @@ int	main(int argc, char **argv, char **envp)
 		{
 			g_sig = 0;
 			shell->prev_exit = 130;
-			printf("g sig is changed.\n ");
-			continue ; 
 		}
 		if (*input == '\0' || ft_strcheck(input, ft_isspace)) // this do check for tab, but it doesn't work for tab completion in readline.
 		{
@@ -156,7 +152,7 @@ int	main(int argc, char **argv, char **envp)
 		print_parsed_cmd(shell->cmd);
 		free_token_lst(&(shell->token));
 		//excusion cmds
-		heredoc(shell, test_for_heredoc(shell), 1);
+		//heredoc(shell, test_for_heredoc(shell), 1);
 		//execusion(shell);
 		shell->prev_exit = shell->exit;
 		shell->exit = 0;

@@ -14,6 +14,9 @@ extern volatile sig_atomic_t g_sig;  // 只声明，不定义
 
 //signal:
 void	handle_sigint(int sig);
+void	handle_sigint_child(int sig);
+void	setup_signal(void);
+void	setup_child_signal(void);
 
 // helpers:
 int		count_cmd(t_cmd *cmd);
@@ -38,7 +41,7 @@ void	free_cmd_lst(t_cmd **lst);
 void	free_shell(t_shell *shell);
 //new free func:
 void	free_pipes(int **pipes, int n);
-void	ft_free_exit(int **pipes, t_shell *shell, int code);
+void	ft_free_exit(int **pipes, t_shell *shell);
 
 
 //stream funcs

@@ -110,13 +110,13 @@ void	free_pipes(int **pipes, int n)
 	pipes = NULL;
 }
 
-void	ft_free_exit(int **pipes, t_shell *shell, int code)
+void	ft_free_exit(int **pipes, t_shell *shell)
 {
 	int	n;
 
 	n = count_cmd(shell->cmd) - 1;
 	free_pipes(pipes, n);
 	//exit process?
-	exit(code);
+	exit(shell->exit);
 }
 

@@ -53,24 +53,29 @@ char	*handle_token(t_type t, t_token *token, t_shell *shell)
 	size_t	expand_i;
 	size_t	len;
 	char	*value;
+	int 	i;
 
 	len = ft_strlen(token->value);
-	quote_i = quote_index(token->value, len);
-	expand_i = find_index(token->value, len, '$');
-	if (t == HEREDOC)
-		value = ft_strdup(token->value);
-	else if (expand_i < quote_i)
-		value = handle_expands(token->value, quote_i - expand_i, shell);
-	else
-		value = ft_substr(token->value, 0, quote_i); //if no expands before quote, then deal with anything before quote.
-	if (!value)
-		ft_malloc_failure("parsing.\n", shell);	
-	if (t != HEREDOC && token->value[quote_i] == '\'')
-		value = append_to_str(value, ft_substr(token->value, quote_i + 1, len - quote_i - 2));
-	else if (t != HEREDOC && quote_i < len)
-		value = append_to_str(value, handle_dquote(token->value + quote_i + 1, len - quote_i - 1, shell));
-	if (!value)
-		ft_malloc_failure("parsing.\n", shell);
+	while (i < len)
+	{
+		quote_i = quote_index(token->value + i, len - i);
+		expand_i = find_index(token->value + i, len - i, '$');
+		if (t == HEREDOC)
+			value = ft_strdup(token->value);
+		else if (expand_i < quote_i)
+			value = handle_expands(token->value + i, quote_i - expand_i, shell);
+		else
+			value = ft_substr(token->value + i, 0, quote_i); //if no expands before quote, then deal with anything before quote.
+		if (!value)
+			ft_malloc_failure("parsing.\n", shell);
+		if (t != HEREDOC && token->value[quote_i] == '\'')
+			value = append_to_str(value, ft_substr(token->value + i, quote_i + 1, len - i - quote_i - 2));
+		else if (t != HEREDOC && quote_i < len)
+			value = append_to_str(value, handle_dquote(token->value + i + quote_i + 1, len - i - quote_i - 1, shell));
+		if (!value)
+			ft_malloc_failure("parsing.\n", shell);
+		//i += something.
+	}
 	return (value);
 }
 

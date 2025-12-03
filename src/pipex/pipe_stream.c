@@ -40,25 +40,39 @@ int	open_outfile(char *file)
 	return (fd);
 }
 
-int	contain_quote(char *delimiter)
-{
-	int	i;
+//int	contain_quote(char *file, char *delimiter)
+//{
+//	int	i;
+//	int flag;
+//	int j;
 
-	i = 0;
-	while (delimiter[i])
-	{
-		if (delimiter[i] == '\'' || delimiter[i] == '\"')
-			return (1);
-		i++;
-	}
-	return (0);
-}
+//	i = 0;
+//	flag = 0;
+//	while (file[i] && (file[i] != '\'' || file[i] != '\"'))
+//		i++;
+//	if (file[i])
+//	{
+//		if (i = 0)
+//			delimiter = ft_substr(file, )
+//	}
+//	if (flag == 1)
+//	{
+//		if (i > 0)
+//			delimiter = ft_substr(file, 0, i);
+//		delimiter = append_to_str
+//	}
+		
+
+//	return (0);
+//}
 
 void	heredoc(t_shell *shell, t_redir *redir, int readin)
 {
-	char *input;
-	char *res;
-	contain_quote(redir->file);
+	char	*input;
+	char	*res;
+	//char	*delimiter;
+
+	//flag = contain_quote(redir->file, delimiter);
 	// readline and make a tmp open file(?);
 	res = NULL;
 	input = NULL;
@@ -88,6 +102,7 @@ void	heredoc(t_shell *shell, t_redir *redir, int readin)
 		//}
 		//res = append_to_str(res, input);//input is free in the function.
 	}
+	printf("%s\n", redir->file);
 	write(1, shell->cmd->cmd[0], 3);
 	write(readin, res, ft_strlen(res));
 }
