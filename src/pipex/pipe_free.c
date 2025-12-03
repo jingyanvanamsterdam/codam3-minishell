@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "parse.h" //change to minishell.h after combin
+#include "pipe.h"
 
 // Changed name from free_split() 
 void	free_2d_arr(char **arr)
@@ -51,8 +52,6 @@ void	free_env_lst(t_env **lst)
 	}
 }
 
-
-// below are new functions and changed function :
 void	free_redir_lst(t_redir **lst)
 {
 	t_redir	*temp;
@@ -95,3 +94,29 @@ void	free_shell(t_shell *shell)
 		free_cmd_lst(&(shell->cmd));
 	free(shell);
 }
+// new function
+void	free_pipes(int **pipes, int n)
+{
+	int	i;
+
+	i = 0;
+	while (i < n)
+	{
+		free(pipes[i]);
+		pipes[i] = NULL;
+		i++;
+	}
+	free(pipes);
+	pipes = NULL;
+}
+
+void	ft_free_exit(int **pipes, t_shell *shell, int code)
+{
+	int	n;
+
+	n = count_cmd(shell->cmd) - 1;
+	free_pipes(pipes, n);
+	//exit process?
+	exit(code);
+}
+

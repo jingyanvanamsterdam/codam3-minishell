@@ -3,6 +3,7 @@
 
 # include "struct.h"
 # include <stdlib.h>
+# include "pipe.h"
 
 # define RESET   "\033[0m"
 # define BLACK   "\033[30m"
@@ -15,18 +16,7 @@
 //# define WHITE   "\033[37m"
 
 //UTILS
-void	free_2d_arr(char **arr);
-void	free_token_lst(t_token **lst);
-void	free_env_lst(t_env **lst);
-void	free_redir_lst(t_redir **lst);
-void	free_cmd_lst(t_cmd **lst);
-void	free_shell(t_shell *shell);
-
 void	init_env(char **envp, t_shell *shell);
-
-void	ft_input_error(char *errmes, char *s, t_shell *shell);
-void	ft_malloc_failure(char *s, t_shell *shell);
-
 //===========LEX======================
 //helper funcs for lex
 char	*append_to_str(char *dst, char *src);

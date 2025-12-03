@@ -2,6 +2,7 @@
 #include "pipe.h"
 #include "parse.h"
 #include "libft.h"
+#include <unistd.h> //close()
 
 int	count_cmd(t_cmd *cmd)
 {

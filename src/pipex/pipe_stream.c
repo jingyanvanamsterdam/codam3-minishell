@@ -10,8 +10,6 @@
 #include <unistd.h>
 #include <signal.h> //for g_sig
 
-volatile sig_atomic_t g_sig = 0;
-
 int	open_infile(char *file)
 {
 	int	fd;
@@ -32,6 +30,7 @@ int	open_outfile(char *file)
 {
 	int fd;
 
+	fd = -1;
 	if (access(file, F_OK) == 0 && access(file, W_OK) == -1)
 		ft_error_printing(file);
 	else
@@ -44,10 +43,8 @@ int	open_outfile(char *file)
 int	contain_quote(char *delimiter)
 {
 	int	i;
-	int check;
 
 	i = 0;
-	check = 0;
 	while (delimiter[i])
 	{
 		if (delimiter[i] == '\'' || delimiter[i] == '\"')
@@ -57,7 +54,7 @@ int	contain_quote(char *delimiter)
 	return (0);
 }
 
-int	heredoc(t_shell *shell, t_redir *redir, int readin)
+void	heredoc(t_shell *shell, t_redir *redir, int readin)
 {
 	char *input;
 	char *res;
@@ -91,10 +88,17 @@ int	heredoc(t_shell *shell, t_redir *redir, int readin)
 		//}
 		//res = append_to_str(res, input);//input is free in the function.
 	}
-	//write(readin, tmp, ft_strlen(tmp));
+	write(1, shell->cmd->cmd[0], 3);
+	write(readin, res, ft_strlen(res));
 }
 
-void	handle_redir(t_shell *shell, int *file, int i)
+void	output_append(t_shell *shell, t_redir *redir, int readout)
+{
+	write(1, shell->cmd->cmd[0], 3);
+	write(readout, redir->file, ft_strlen(redir->file));
+}
+
+void	redir_file(t_shell *shell, int *file, int i)
 {
 	t_redir	*redir;
 	t_cmd	*cmd;

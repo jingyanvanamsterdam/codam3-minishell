@@ -1,4 +1,5 @@
 #include "pipe.h" // change to minishell
+#include "parse.h"
 #include "struct.h"
 #include "libft.h"
 #include <stdio.h>	
@@ -8,6 +9,11 @@
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
+#include <errno.h> 
+#include <sys/types.h>
+#include <sys/wait.h>
+
+extern char		**environ; // delete and replace with shell->env_lst later. 
 
 int	dup_files(t_shell *shell, int *file, int **pipes, int i)
 {
@@ -15,7 +21,7 @@ int	dup_files(t_shell *shell, int *file, int **pipes, int i)
 
 	init_file(file, pipes, i, shell);
 	count = count_cmd(shell->cmd);
-	handle_redir(shell, file, i);
+	redir_file(shell, file, i);
 	if (file[0] == -1 || file[1] == -1)
 		return (shell->exit);
 	if (dup2(file[0], STDIN_FILENO) < 0)
@@ -31,6 +37,33 @@ int	dup_files(t_shell *shell, int *file, int **pipes, int i)
 	close_pipes(pipes, (count - 1));
 	close_files(file);
 	return (shell->exit);
+}
+
+void	execve_cmd(t_shell *shell, int i)
+{
+	t_cmd *cmd;
+	int j;
+
+	j = 0;
+	cmd = shell->cmd;
+	while (j++ < i)
+		cmd = cmd->next;
+	if (!cmd->cmd)
+	{
+		shell->exit = 0;
+		return ;
+	}
+	if (!cmd->path)
+	{
+		shell->exit = EXIT_NOCMD;
+		return ;
+	}
+	//env_lst is a list, but execve need a char **enviorn
+	if (execve(cmd->path, cmd->cmd, environ) == -1)
+	{
+		ft_error_printing(cmd->cmd[0]);
+		shell->exit = EXIT_CMD_NOEXC;
+	}
 }
 
 
@@ -102,6 +135,7 @@ void	execusion(t_shell *shell)
 	file[0] = 0;
 	file[1] = 1;
 	pid = create_process(shell, pipes, file);
+	printf("only for use of pid. %d", pid);
 }
 
 /** Question:

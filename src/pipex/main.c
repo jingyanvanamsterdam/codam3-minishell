@@ -14,7 +14,6 @@
 //赋值可能被打断，如果类型不是 sig_atomic_t，在某些体系结构上大于机器字长的写操作可能会写一半 → 用 sig_atomic_t 保证赋值原子。
 volatile sig_atomic_t g_sig = 0;
 
-
 void print_tokens(t_token *head)
 {
 	printf("======================Start the token:===========================\n");
@@ -130,6 +129,7 @@ int	main(int argc, char **argv, char **envp)
 		{
 			g_sig = 0;
 			shell->prev_exit = 130;
+			printf("g sig is changed.\n ");
 			continue ; 
 		}
 		if (*input == '\0' || ft_strcheck(input, ft_isspace)) // this do check for tab, but it doesn't work for tab completion in readline.
@@ -156,7 +156,7 @@ int	main(int argc, char **argv, char **envp)
 		print_parsed_cmd(shell->cmd);
 		free_token_lst(&(shell->token));
 		//excusion cmds
-		heredoc(shell, test_for_heredoc(shell));
+		heredoc(shell, test_for_heredoc(shell), 1);
 		//execusion(shell);
 		shell->prev_exit = shell->exit;
 		shell->exit = 0;
