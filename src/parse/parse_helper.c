@@ -3,6 +3,17 @@
 #include "libft.h"
 #include <stdlib.h>
 #include <stdio.h> // printf
+#include <stdbool.h>
+
+void	print_quotok(t_quotok *head)
+{
+	while (head)
+	{
+		printf("printing quotok %s\n", head->value);
+		head = head->next;
+	}
+	printf("==========finish printing==========\n");
+}
 
 static void	append_to_rdir_lst(t_redir **head, t_redir *node)
 {
@@ -31,51 +42,65 @@ void	update_cmd_redir(t_redir *redir, t_shell *shell)
 		cmd = cmd->next;
 	}
 }
-char	*handle_dquote(char *str, size_t len, t_shell *shell)
-{
-	char	*res;
-	size_t	exp_i;
 
+char	*join_quotok(t_quotok *quotok)
+{
+	char	*value;
+	char	*tmp;
+
+	value = NULL;
+	tmp = NULL;
+	//printf("quotok is created\n");
+	//print_quotok(quotok);
+	value = ft_strdup(quotok->value);
+	if (!value)
+		return (NULL);
+	quotok = quotok->next;
+	while (quotok)
+	{
+		//printf("find next quotok: value = %s\n", quotok->value);
+		tmp = value;
+		value = ft_strjoin(tmp, quotok->value);
+		free(tmp);
+		if (!value)
+			return (NULL);
+		quotok = quotok->next;
+	}
+	//printf("Joined tokens, value = %s\n", value);
+	return (value);
+}
+
+
+
+char	*remove_quote(char *value, t_shell *shell, bool hdoc)
+{
+	t_quotok *quotok;
+	char	*res;
+
+	quotok = NULL;
 	res = NULL;
-	exp_i = find_index(str, len, '$');
-	if (exp_i < len)
-		res = handle_expands(str, len - 1, shell);
-	else
-		res = ft_substr(str, 0, len - 1);
+	quotok = tokenize_quote(value, shell, hdoc);
+	//print_quotok(quotok);
+	res = join_quotok(quotok);
+	free_quotok(&quotok);
 	if (!res)
 		return (NULL);
+	//printf("res=%s\n", res);
 	return (res);
 }
 
 char	*handle_token(t_type t, t_token *token, t_shell *shell)
 {
-	size_t	quote_i;
-	size_t	expand_i;
-	size_t	len;
 	char	*value;
-	int 	i;
+	
 
-	len = ft_strlen(token->value);
-	while (i < len)
-	{
-		quote_i = quote_index(token->value + i, len - i);
-		expand_i = find_index(token->value + i, len - i, '$');
-		if (t == HEREDOC)
-			value = ft_strdup(token->value);
-		else if (expand_i < quote_i)
-			value = handle_expands(token->value + i, quote_i - expand_i, shell);
-		else
-			value = ft_substr(token->value + i, 0, quote_i); //if no expands before quote, then deal with anything before quote.
-		if (!value)
-			ft_malloc_failure("parsing.\n", shell);
-		if (t != HEREDOC && token->value[quote_i] == '\'')
-			value = append_to_str(value, ft_substr(token->value + i, quote_i + 1, len - i - quote_i - 2));
-		else if (t != HEREDOC && quote_i < len)
-			value = append_to_str(value, handle_dquote(token->value + i + quote_i + 1, len - i - quote_i - 1, shell));
-		if (!value)
-			ft_malloc_failure("parsing.\n", shell);
-		//i += something.
-	}
+	value = NULL;
+	if (t == HEREDOC)
+		value = ft_strdup(token->value);
+	else
+		value = remove_quote(token->value, shell, false);
+	if (!value)
+		ft_malloc_failure("parsing\n", shell);
 	return (value);
 }
 

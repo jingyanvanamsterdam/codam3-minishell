@@ -1,7 +1,7 @@
 #ifndef STRUCT_H
 # define STRUCT_H
 
-typedef enum e_type
+typedef enum	e_type
 {
 	WORD,
 	PIPE,
@@ -9,14 +9,20 @@ typedef enum e_type
 	REDIR_OUT,
 	HEREDOC,
 	APPEND,
-}			t_type;
+}				t_type;
 
-typedef enum e_lex_stauts
+typedef enum	e_quote
 {
 	DOUBLE_QUOTE,
 	SINGLE_QUOTE,
 	GENERAL
-}			t_lex_status;
+}				t_quote;
+
+typedef struct	s_quotok
+{
+	char 			*value;
+	struct s_quotok	*next;
+}				t_quotok;
 
 typedef struct	s_token
 {

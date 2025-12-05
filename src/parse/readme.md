@@ -15,3 +15,13 @@ Makefile changed
 Need to change makefile:
 1. one target for clean up
 2. one target for check valgrind 
+
+## Parsing test conditions:
+1. echo, "$? + 3 ="3, c'1 + $? "$?abc" 2 ', arg"a 'b'c" << heredoc
+2. echo arg1 $?asc << heredoc$ade
+3. <<abc echo $?.acd
+4. echo arg$x.c"$x.c"abc << here'doc'
+5. echo arg$ arg2 arg3$ << here$
+6. echo arg1$| grep arg<< here$
+
+

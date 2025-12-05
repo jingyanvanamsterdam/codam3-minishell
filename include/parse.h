@@ -4,6 +4,7 @@
 # include "struct.h"
 # include <stdlib.h>
 # include "pipe.h"
+#include <stdbool.h>
 
 # define RESET   "\033[0m"
 # define BLACK   "\033[30m"
@@ -38,11 +39,20 @@ void	tokenization(char *input, t_shell *shell);
 //=============PARSE==================
 
 //Expands handling funcs. 
-size_t	skip_expansion(char *str);
+//size_t	skip_expansion(char *str);
 char	*lookup_key(t_env *env_lst, const char *key);
 char	*expansion(char *str, t_shell *shell, size_t end);
-char	*process_expand(char *str, size_t *i, size_t *prev, t_shell *shell);
-char	*handle_expands(char *str, size_t len, t_shell *shell);
+//char	*process_expand(char *str, size_t *i, size_t *prev, t_shell *shell);
+//char	*handle_expands(char *str, size_t len, t_shell *shell);
+size_t	handle_expands(char *str, t_shell *shell, t_quotok **tok);
+
+//Handle token helper funcs including tokenize strings and handle quote and expands.
+int			create_quotok_node(char *value, t_quotok **head);
+size_t		find_stop(char *str, t_quote *status);
+size_t		check_quote(t_quote *status, char *str);
+size_t		next_index(char *str, t_quotok **tok, t_quote *status, bool hd);
+t_quotok	*tokenize_quote(char *value, t_shell *shell, bool heredoc);
+
 
 //helper functions for parsing commands
 size_t	calculate_cmd_len(t_token *token);
@@ -51,7 +61,8 @@ void	create_cmd_node(t_shell *shell, char **cmd);
 
 //helper funcs
 void	update_cmd_redir(t_redir *redir, t_shell *shell);
-char	*handle_dquote(char *str, size_t len, t_shell *shell);
+//char	*handle_dquote(char *str, size_t len, t_shell *shell);
+char	*remove_quote(char *value, t_shell *shell, bool hdoc);
 char	*handle_token(t_type t, t_token *token, t_shell *shell);
 t_token	*handle_redir(t_token *token, t_redir **redir, t_shell *shell);
 

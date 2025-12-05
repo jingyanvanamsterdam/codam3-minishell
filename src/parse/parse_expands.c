@@ -4,26 +4,6 @@
 #include <stdlib.h>
 #include <stdio.h> // for printf
 
-/** 
- */
-char	*process_expand(char *str, size_t *i, size_t *prev, t_shell *shell)
-{
-	char	*res;
-	size_t	exp_len;
-
-	res = NULL;
-	res = append_to_str(res, ft_substr(str, *prev, (*i) - (*prev)));
-	if (!res)
-		return (NULL);
-	exp_len = skip_expansion(str + (*i));;
-	res = append_to_str(res, expansion(str + (*i), shell, exp_len - 1));
-	if (!res)
-		return (NULL);
-	(*i) += exp_len;
-	*prev = *i;
-	return (res);
-}
-
 char	*lookup_key(t_env *env_lst, const char *key)
 {
 	char	*value;
@@ -40,25 +20,10 @@ char	*lookup_key(t_env *env_lst, const char *key)
 	return (value);
 }
 
-/** 
- * string begin the the index 0 of first char after $,
- * return the length of the name of expands */
-size_t	skip_expansion(char *str)
-{
-	size_t	i;
-
-	//skip the $
-	i = 1;
-	if (str[i] == '?')
-		return (++i);
-	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
-		i++;
-	return (i);
-}
-
 /**
  * end = length of the name of the expands. expands length contains 1 as $. 
  * if expansion variable doesn't exist or env_lst == NULL, it would be returned an empty string.
+ * Here will handle $? and anything after ? will be conected with the exit code unless there is space.
  */
 char	*expansion(char *str, t_shell *shell, size_t end)
 {
@@ -67,17 +32,10 @@ char	*expansion(char *str, t_shell *shell, size_t end)
 
 	expansion = NULL;
 	key = NULL;
-	if (end == 0)
-		expansion = ft_strdup("$");
-	else if (str[1] == '?')
-		expansion = ft_itoa(shell->prev_exit);
-	else
-	{
-		key = ft_substr(str, 1, end);
-		if (!key)
-			return (NULL);
-		expansion = lookup_key(shell->env_lst, key);
-	}
+	key = ft_substr(str, 1, end - 1);
+	if (!key)
+		return (NULL);
+	expansion = lookup_key(shell->env_lst, key);
 	if (key)
 		free(key);
 	if (!expansion)
@@ -85,31 +43,30 @@ char	*expansion(char *str, t_shell *shell, size_t end)
 	return (expansion);
 }
 
-char	*handle_expands(char *str, size_t len, t_shell *shell)
+size_t	handle_expands(char *str, t_shell *shell, t_quotok **tok)
 {
-	char	*res;
-	char	*tmp;
-	size_t	prev;
-	size_t	i;
+	char	*value;
+	size_t	end;
 
-	prev = 0;
-	i = 0;
-	res = NULL;
-	while (i < len)
+	value = NULL;
+	end = 1;
+	if (!str[end] 
+		|| (!ft_isalnum(str[end]) && str[end] != '_' && str[end] != '?'))
+		value = ft_strdup("$");
+	else if (str[end] == '?')
 	{
-		if (str[i] == '$')
-		{
-			tmp = process_expand(str, &i, &prev, shell);
-			if (!tmp)
-				return (NULL);
-			res = append_to_str(res, tmp);
-			if (!res)
-				return (NULL);
-		}
-		else
-			i++;
+		value = ft_itoa(shell->prev_exit);
+		end++;
 	}
-	if (prev < len)
-		res = append_to_str(res, ft_substr(str, prev, len - prev));
-	return (res);
+	else
+	{
+		while (str[end] && (ft_isalnum(str[end]) || str[end] == '_'))
+			end++;
+		value = expansion(str, shell, end);
+	}
+	if (!value)
+		return (-1);
+	if (create_quotok_node(value, tok) == -1)
+		return (-1);
+	return (end);
 }

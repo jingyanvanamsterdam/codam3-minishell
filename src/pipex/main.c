@@ -152,7 +152,7 @@ int	main(int argc, char **argv, char **envp)
 		print_parsed_cmd(shell->cmd);
 		free_token_lst(&(shell->token));
 		//excusion cmds
-		//heredoc(shell, test_for_heredoc(shell), 1);
+		heredoc(shell, test_for_heredoc(shell), 1);
 		//execusion(shell);
 		shell->prev_exit = shell->exit;
 		shell->exit = 0;

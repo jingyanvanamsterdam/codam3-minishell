@@ -28,20 +28,26 @@ char	*append_to_str(char *dst, char *src)
 	size_t	src_len;
 	char	*new;
 
-	if (!src)
-		return (NULL);
 	dst_len = 0;
 	if (dst)
 		dst_len = ft_strlen(dst);
 	src_len = ft_strlen(src);
 	new = malloc(dst_len + src_len + 1);
-	if (!new)
-		return (free(src), NULL);
+	if (!new || !src)
+	{
+		if (dst)
+			free(dst);
+		if (src)
+			free(src);
+		return (NULL);
+	}
 	if (dst)
 		ft_strlcpy(new, dst, dst_len + 1);
 	else
 		new[0] = '\0';
 	ft_strlcat(new, src, dst_len + src_len + 1);
+	if (dst)
+		free(dst);
 	return (free(src), new);
 }
 
@@ -62,6 +68,7 @@ void	create_token_node(char *value, t_shell *shell, t_type type)
 	if (!node->value)
 	{
 		free(value);
+		free(node);
 		ft_malloc_failure("tokenization.\n", shell);
 	}
 	node->type = type;

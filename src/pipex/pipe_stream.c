@@ -1,4 +1,5 @@
 #include "pipe.h" // change to minishell
+#include "parse.h"
 #include "struct.h"
 #include "libft.h"
 #include <stdio.h>	
@@ -9,6 +10,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <signal.h> //for g_sig
+#include <stdbool.h>
 
 int	open_infile(char *file)
 {
@@ -40,71 +42,93 @@ int	open_outfile(char *file)
 	return (fd);
 }
 
-//int	contain_quote(char *file, char *delimiter)
+//char	*handle_delimiter(char *file, t_shell *shell, bool quoted)
 //{
-//	int	i;
-//	int flag;
-//	int j;
+//	size_t		i;
+//	size_t		quote_end;
+//	char		*delimiter;
 
 //	i = 0;
-//	flag = 0;
-//	while (file[i] && (file[i] != '\'' || file[i] != '\"'))
-//		i++;
-//	if (file[i])
+//	quote_end = 0;
+//	delimiter = NULL;
+//	if (quoted)
 //	{
-//		if (i = 0)
-//			delimiter = ft_substr(file, )
+//		while (i < ft_strlen(file))
+//		{
+//			quote_end = remove_quote(file, &delimiter, shell, false);
+//			if (quote_end == -1)
+//				ft_malloc_failure("heredoc\n", shell);
+//			i = quote_end + 1 + i;
+//		}
 //	}
-//	if (flag == 1)
-//	{
-//		if (i > 0)
-//			delimiter = ft_substr(file, 0, i);
-//		delimiter = append_to_str
-//	}
-		
-
-//	return (0);
+//	else
+//		delimiter = ft_strdup(file);	
+//	if (!delimiter)
+//		ft_malloc_failure("heredoc\n", shell);
 //}
+
+bool	contain_quote(char *file)
+{
+	int	i;
+
+	i = 0;
+	while (file[i] && (file[i] != '\'' || file[i] != '\"'))
+		i++;
+	if (file[i] && (file[i] == '\'' || file[i] == '\"'))
+		return (true);
+	else
+		return (false);
+}
 
 void	heredoc(t_shell *shell, t_redir *redir, int readin)
 {
-	char	*input;
-	char	*res;
-	//char	*delimiter;
+	//char	*input;
+	//char	*res;
+	bool	quoted;
+	char	*delimiter;
 
-	//flag = contain_quote(redir->file, delimiter);
+	//flag = contain_quote(redir->file, delimiter, shell);
 	// readline and make a tmp open file(?);
-	res = NULL;
-	input = NULL;
-	while (1)
-	{
-		input = readline("> ");
-		if (!input)
-		{
-			//ft_warning_printing("minishell: warning: here-document at line %d delimited by end -of-file (wanted \%s')", linenumber, redir->file);
-			printf("warning\n");
-			break ;
-		}
-		//Handle input
-		/**
-		 * if meat delimiter; break;
-		 * if contain_quote is false: check for expansion -> input = handle_expansion(input);
-		 * else: take input literally.
-		 * res = append_to_str(res, input)
-		 */
-		//if (meet_delimiter(delimiter, input))
-		//{
-		//	break;
-		//}
-		//if (!contain_quote(redir->file))
-		//{
-		//	input = handle_expands(input);
-		//}
-		//res = append_to_str(res, input);//input is free in the function.
-	}
-	printf("%s\n", redir->file);
-	write(1, shell->cmd->cmd[0], 3);
-	write(readin, res, ft_strlen(res));
+	//res = NULL;
+	//input = NULL;
+	quoted = contain_quote(redir->file);
+	delimiter = remove_quote(redir->file, shell, true);
+	if (!delimiter)
+		ft_malloc_failure("heredoc\n", shell);
+	if (quoted)
+		printf("quoted, delimiter = %s\n", delimiter);
+	else
+		printf("no quote, delimiter = %s\n", delimiter);
+	write(readin, "", 1);
+	//while (1)
+	//{
+	//	input = readline("> ");
+	//	if (!input)
+	//	{
+	//		//ft_warning_printing("minishell: warning: here-document at line %d delimited by end -of-file (wanted \%s')", linenumber, redir->file);
+	//		printf("warning\n");
+	//		break ;
+	//	}
+	//	//Handle input
+	//	/**
+	//	 * if meat delimiter; break;
+	//	 * if contain_quote is false: check for expansion -> input = handle_expansion(input);
+	//	 * else: take input literally.
+	//	 * res = append_to_str(res, input)
+	//	 */
+	//	//if (meet_delimiter(delimiter, input))
+	//	//{
+	//	//	break;
+	//	//}
+	//	//if (!contain_quote(redir->file))
+	//	//{
+	//	//	input = handle_expands(input);
+	//	//}
+	//	//res = append_to_str(res, input);//input is free in the function.
+	//}
+	//printf("%s\n", redir->file);
+	//write(1, shell->cmd->cmd[0], 3);
+	//write(readin, res, ft_strlen(res));
 }
 
 void	output_append(t_shell *shell, t_redir *redir, int readout)

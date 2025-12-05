@@ -44,7 +44,10 @@ size_t	find_close_quote(char *str, size_t start, size_t end, t_shell *shell)
 				break ;
 	}
 	if (end < start && str[start])
-		return (++start);
+	{
+		start += find_end(str + start);
+		return (start);
+	}
 	else if (end == start || !str[start])
 	{
 		ft_input_error("unclosed quote\n", "", shell);

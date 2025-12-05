@@ -3,6 +3,7 @@
 
 # include "struct.h"
 # include <signal.h>
+#include <stdbool.h>
 
 # define ERROR_FILE 1
 # define ERROR_SYS 2
@@ -42,12 +43,13 @@ void	free_shell(t_shell *shell);
 //new free func:
 void	free_pipes(int **pipes, int n);
 void	ft_free_exit(int **pipes, t_shell *shell);
+void	free_quotok(t_quotok **lst);
 
 
 //stream funcs
 int		open_infile(char *file);
 int		open_outfile(char *file);
-int		contain_quote(char *delimiter);
+bool	contain_quote(char *file);
 void	heredoc(t_shell *shell, t_redir *redir, int readin);
 void	redir_file(t_shell *shell, int *file, int i);
 

@@ -95,6 +95,20 @@ void	free_shell(t_shell *shell)
 	free(shell);
 }
 // new function
+void	free_quotok(t_quotok **lst)
+{
+	t_quotok	*tmp;
+
+	while (*lst)
+	{
+		tmp = (*lst)->next;
+		if ((*lst)->value)
+			free((*lst)->value);
+		free((*lst));
+		*lst = tmp;
+	}
+}
+
 void	free_pipes(int **pipes, int n)
 {
 	int	i;
