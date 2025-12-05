@@ -23,5 +23,7 @@ Need to change makefile:
 4. echo arg$x.c"$x.c"abc << here'doc'
 5. echo arg$ arg2 arg3$ << here$
 6. echo arg1$| grep arg<< here$
+7. echo << here"$doc"
+8. echo << here"$doc"abc here"$doc"abc
 
 

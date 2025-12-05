@@ -76,3 +76,16 @@ void	create_cmd_node(t_shell *shell, char **cmd)
 	node->next = NULL;
 	append_to_cmd_lst(&(shell->cmd), node);
 }
+
+void	update_cmd_redir(t_redir *redir, t_shell *shell)
+{
+	t_cmd	*cmd;
+
+	cmd = shell->cmd;
+	while (cmd)
+	{
+		if (!cmd->next)
+			cmd->redir = redir;
+		cmd = cmd->next;
+	}
+}

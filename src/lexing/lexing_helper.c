@@ -20,38 +20,6 @@ static void	append_to_lst(t_token **head, t_token *node)
 }
 
 /**
- * This function copy the dst string and cat the src string into a new string and free the dst and src, return the new pointer. 
- */
-char	*append_to_str(char *dst, char *src)
-{
-	size_t	dst_len;
-	size_t	src_len;
-	char	*new;
-
-	dst_len = 0;
-	if (dst)
-		dst_len = ft_strlen(dst);
-	src_len = ft_strlen(src);
-	new = malloc(dst_len + src_len + 1);
-	if (!new || !src)
-	{
-		if (dst)
-			free(dst);
-		if (src)
-			free(src);
-		return (NULL);
-	}
-	if (dst)
-		ft_strlcpy(new, dst, dst_len + 1);
-	else
-		new[0] = '\0';
-	ft_strlcat(new, src, dst_len + src_len + 1);
-	if (dst)
-		free(dst);
-	return (free(src), new);
-}
-
-/**
  * check if value = "", not create token node.
  * ft_substr might create empty string if it is only a stop symbol < > | 
  */

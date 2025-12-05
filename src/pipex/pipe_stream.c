@@ -72,12 +72,13 @@ bool	contain_quote(char *file)
 	int	i;
 
 	i = 0;
-	while (file[i] && (file[i] != '\'' || file[i] != '\"'))
+	while (file[i])
+	{
+		if (file[i] == '\'' || file[i] == '\"')
+			return (true);
 		i++;
-	if (file[i] && (file[i] == '\'' || file[i] == '\"'))
-		return (true);
-	else
-		return (false);
+	}
+	return (false);
 }
 
 void	heredoc(t_shell *shell, t_redir *redir, int readin)

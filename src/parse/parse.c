@@ -4,6 +4,30 @@
 #include <stdlib.h>
 #include <stdio.h> // printf
 
+//void	print_quotok(t_quotok *head)
+//{
+//	while (head)
+//	{
+//		printf("printing quotok %s\n", head->value);
+//		head = head->next;
+//	}
+//	printf("==========finish printing==========\n");
+//}
+
+char	*handle_token(t_type t, t_token *token, t_shell *shell)
+{
+	char	*value;
+	
+	value = NULL;
+	if (t == HEREDOC)
+		value = ft_strdup(token->value);
+	else
+		value = remove_quote(token->value, shell, false);
+	if (!value)
+		ft_malloc_failure("parsing\n", shell);
+	return (value);
+}
+
 /**
  * This function parse tokens by types and update to the next token.
  * if there is input error, the shell will cleaned up and return NULL. 
