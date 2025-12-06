@@ -4,7 +4,25 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static t_env	*create_node(char **key_value, t_shell *shell)
+static void	free_2d_arr(char **arr)
+{
+	int	i;
+
+	if (!arr)
+		return ;
+	i = 0;
+	while (arr[i])
+	{
+		free(arr[i]);
+		arr[i] = NULL;
+		++i;
+	}
+	free(arr);
+	arr = NULL;
+
+}
+
+static t_env	*create_node2(char **key_value, t_shell *shell)
 {
 	t_env	*node;
 
@@ -69,7 +87,7 @@ static void	add_or_update_env(t_env **env, char *key, char *value, t_shell *shel
 	else
 		kv[1] = "";
 	kv[2] = NULL;
-	append_to_env_lst(env, create_node(kv, shell));
+	append_to_env_lst(env, create_node2(kv, shell));
 }
 
 static void	ft_export_env_list(t_env *env)

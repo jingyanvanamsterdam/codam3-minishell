@@ -1,6 +1,7 @@
 #include "minishell.h"
 #include "builtins.h"
 #include "libft.h"
+#include <unistd.h>
 
 // return 0 if the function successes, return 1 otherwise
 int	ft_pwd(char **argv, t_shell *shell)

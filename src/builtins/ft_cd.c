@@ -1,6 +1,44 @@
 
+#include <unistd.h>
+#include <stdio.h>
 #include "libft.h"
 #include "minishell.h"
+
+static t_env	*create_node3(const char *key, const char *value, t_shell *shell)
+{
+	t_env	*node;
+
+	node = (t_env *)malloc(sizeof(t_env));
+	// should use the ft_malloc_failure() implementation in JD's branch
+	(void)shell;
+	// if (!node)
+	// 	ft_malloc_failure("Failure at malloc env.\n", shell);
+	node->key = ft_strdup(key);
+	// if (!node->key)
+	// 	ft_malloc_failure("Failure at malloc env.\n", shell);
+	if (value)
+		node->value = ft_strdup(value);
+	else
+		node->value = NULL;
+	node->next = NULL;
+	return (node);
+}
+// TODO: 也许用JD做的那些个libft的添加env node的函数？？？
+
+static void	append_to_env_lst(t_env **head, t_env *node)
+{
+	t_env	*cur;
+
+	if (*head == NULL)
+	{
+		*head = node;
+		return ;
+	}
+	cur = *head;
+	while (cur->next)
+		cur = cur->next;
+	cur->next = node;
+}
 
 // need functions like: ft_getenv() & update_env_value()
 char	*ft_getenv(t_env *env, const char *key)
@@ -14,10 +52,11 @@ char	*ft_getenv(t_env *env, const char *key)
 	return (NULL);
 }
 
-void	update_env_value(t_shell *shell, const char *key, const char *value)
+void	update_env_value(t_shell *shell, const char *key, char *value)
 {
 	t_env	*cur;
 
+	cur = shell->env_lst;
 	while (cur)
 	{
 		if (!ft_strcmp(cur->key, key))
@@ -28,12 +67,12 @@ void	update_env_value(t_shell *shell, const char *key, const char *value)
 		}
 		cur = cur->next;
 	}
-	add_env_node(&shell->env_lst, key, value);
+	append_to_env_lst(&shell->env_lst, create_node3(key, value, shell));
 }
 
 void	print_cd_error(const char *path)
 {
-	ft_pustr_fd("cd: ", 2);
+	ft_putstr_fd("cd: ", 2);
 	perror(path);
 }
 
