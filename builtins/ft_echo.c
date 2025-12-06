@@ -16,13 +16,12 @@ static int	is_newline_flag(char *str)
 		return (1);
 	return (0);
 }
-
-int	ft_echo(char **argv, t_env *env)
+int	ft_echo(char **argv, t_shell *shell)
 {
 	int	i;
 	int	newline;
 	
-	(void)env;
+	(void)shell;
 	i = 1;
 	newline = 0;
 	while (argv[i] && is_newline_flag(argv[i]))

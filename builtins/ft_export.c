@@ -4,61 +4,73 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static	t_env *
+static t_env	*create_node(char **key_value, t_shell *shell)
+{
+	t_env	*node;
+
+	node = (t_env *)malloc(sizeof(t_env));
+	if (!node)
+	{
+		free_2d_arr(key_value);
+		ft_malloc_failure("Failure at malloc env.\n", shell);
+	}
+	node->key = ft_strdup(key_value[0]);
+	if (!node->key)
+	{
+		free_2d_arr(key_value);
+		ft_malloc_failure("Failure at malloc env.\n", shell);
+	}
+	if (key_value[1])
+		node->value = ft_strdup(key_value[1]);
+	else
+		node->value = NULL;
+	node->next = NULL;
+	return (node);
+}
 // TODO: 也许用JD做的那些个libft的添加env node的函数？？？
 
-static void	add_or_update_env(t_env **env, char *key, char *value)
+static void	append_to_env_lst(t_env **head, t_env *node)
 {
 	t_env	*cur;
 
-	cur = *env;
-	while (cur)
+	if (*head == NULL)
 	{
-		if (!ft_strcmp(cur->key, key))
-		{
-			if (value)
-			{
-				free(cur->value);
-				cur->value = ft_strdup(value);
-			}
-			return ;
-		}
-		cur = cur->next;
-	}
-	new = malloc(sizeof(t_env));		// TODO: get a function to shorten the length?
-
-}
-
-static void	add_or_update_env(t_env **env, char *key, char *value)
-{
-	t_env	*cur;
-	t_env	*new;
-
-	cur = *env;
-	while (cur)
-	{
-		if (!ft_strcmp(cur->key, key))
-		{
-			if (value)
-			{
-				free(cur->value);
-				cur->value = ft_strdup(value);
-			}
-			return ;
-		}
-		cur = cur->next;
-	}
-	new = malloc(sizeof(t_env));
-	if (!new)
+		*head = node;
 		return ;
-	new->key = ft_strdup(key);
-	new->value = NULL;
-	if (value)
-		new->value = ft_strdup(value);
-	new->next = *env;
-	*env = new;
+	}
+	cur = *head;
+	while (cur->next)
+		cur = cur->next;
+	cur->next = node;
 }
 
+static void	add_or_update_env(t_env **env, char *key, char *value, t_shell *shell)
+{
+	t_env	*cur;
+	char	*kv[3];
+
+	cur = *env;
+	while (cur)
+	{
+		if (!ft_strcmp(cur->key, key))
+		{
+			if (value)
+			{
+				free(cur->value);
+				cur->value = ft_strdup(value);
+			}
+			return ;
+		}
+		cur = cur->next;
+	}
+	kv[0] = key;
+	if (value)
+		kv[1] = value;
+	else
+		kv[1] = "";
+	kv[2] = NULL;
+	append_to_env_lst(env, create_node(kv, shell));
+}
 
 static void	ft_export_env_list(t_env *env)
 {
@@ -73,27 +85,25 @@ static void	ft_export_env_list(t_env *env)
 }
 
 // "export [key=value] [key=value]"
-int	ft_export(char **argv, t_env *env)
+int	ft_export(char **argv, t_shell *shell)
 {
 	int	i;
 	char	*sep;
-	t_env	*existing;
 
-	(void)env;
 	i = 1;
 	if (!argv[i])
-		return (ft_export_env_list(env), 0);
+		return (ft_export_env_list(shell->env_lst), 0);
 	while (argv[i])
 	{
 		sep = ft_strchr(argv[i], '=');
 		if (sep)
 		{
 			*sep = '\0';
-			add_or_update_env();
+			add_or_update_env(&(shell->env_lst), argv[i], sep + 1, shell);
 			*sep = '=';
 		}
 		else
-			add_or_update_env();
+			add_or_update_env(&(shell->env_lst), argv[i], NULL, shell);
 		++i;
 	}
 	return (0);

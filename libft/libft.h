@@ -6,7 +6,7 @@
 /*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 16:15:55 by ray               #+#    #+#             */
-/*   Updated: 2025/11/10 07:13:27 by kuyu             ###   ########.fr       */
+/*   Updated: 2025/12/02 18:02:56 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,9 @@ int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strchr(const char *s, int c);
 
 int		ft_isspace(int c);
+int		ft_isdigit(int c);
+int		ft_isalpha(int c);
+int		ft_isalnum(int c);
+int		ft_atoi(const char *nptr);
 
 #endif
