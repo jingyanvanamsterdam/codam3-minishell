@@ -11,7 +11,7 @@ void	free_env_list(t_env *env_list);
 
 
 // error_handle.c
-void	ft_malloc_failure(char	*s, t_env *env_list);
+void	ft_malloc_failure(char	*s, t_shell *shell);
 
 //-------Initialization:
 //init env:

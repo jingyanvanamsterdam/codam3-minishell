@@ -26,7 +26,7 @@ int	ft_exit(char **argv, t_shell *shell)
 	ft_putstr_fd("exit\n", 2);
 	if (!argv[1])
 		exit(shell->status);
-	if (!ft_is_number(argv[1]))
+	if (!is_numeric(argv[1]))
 	{
 		ft_putstr_fd("minishell: exit: numeric argument required\n", 2);
 		exit(2);

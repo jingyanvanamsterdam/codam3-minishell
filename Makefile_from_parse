@@ -24,7 +24,9 @@ endif
 LIBFT = $(LIBFT_DIR)/libft.a
 
 # ========== Testing SRC ============
-BUILTINS_SRC = $(shell find ./src/builtins -iname "*.c")
+# lexing module
+LEX_SRC = $(shell find ./src/lexing -iname "*.c")
+PARSE_SRC = $(shell find ./src/parse -iname "*.c")
 
 all: buildlib $(NAME)
 
@@ -52,9 +54,9 @@ re: fclean all
 
 # ================= Test rules ===================
 #  Example: make env -> compile only env/*.c + test_env.c into ./env executable
-builtin: buildlib
-	@echo "Compiling builtin testing module..."
-	cc $(FLAGS) $(HEADERS) $(BUILTINS_SRC) $(LIBFT) $(RLFLAG) -o builtins
-	@echo "✅ Built test executable: ./builtins"
+parse: buildlib
+	@echo "Compiling parse testing module..."
+	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(LIBFT) $(RLFLAG) -o parse
+	@echo "✅ Built test executable: ./parse"
 
 .PHONY: all buildlib clean fclean re

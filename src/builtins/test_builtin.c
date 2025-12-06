@@ -1,142 +1,162 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "minishell.h"   // Your real header — keep as is
+#include <unistd.h>
 
-void add_env(t_shell *shell, char *key, char *value)
+#include "../libft/libft.h"
+#include "../include/minishell.h"
+#include "../include/struct.h"
+#include "../include/builtins.h"
+
+// -------------------------
+// Helper to create env list
+// -------------------------
+t_env *create_env_node(char *key, char *value)
 {
-    // adapt to your env struct
-    t_env *new = malloc(sizeof(t_env));
-    new->key = strdup(key);
-    new->value = value ? strdup(value) : NULL;
-    new->next = shell->env;
-    shell->env = new;
+    t_env *node = malloc(sizeof(t_env));
+    if (!node)
+        return NULL;
+
+    node->key = ft_strdup(key);
+    node->value = value ? ft_strdup(value) : NULL;
+    node->next = NULL;
+    return node;
 }
 
-void print_env(t_shell *shell)
+t_env *init_env_list(char **envp)
 {
-    t_env *cur = shell->env;
-    printf("---- ENV DUMP ----\n");
-    while (cur)
+    t_env *head = NULL;
+    t_env *cur = NULL;
+
+    for (int i = 0; envp[i]; i++)
     {
-        printf("%s=%s\n", cur->key, cur->value ? cur->value : "(null)");
-        cur = cur->next;
+        char **kv = ft_split(envp[i], '=');
+        if (!kv)
+            continue;
+
+        t_env *new = create_env_node(kv[0], kv[1] ? kv[1] : "");
+        free_split(kv);
+
+        if (!head)
+            head = new;
+        else
+            cur->next = new;
+
+        cur = new;
     }
-    printf("------------------\n");
+    return head;
 }
 
-void test_echo(t_shell *shell)
+// -------------------------
+// Shell initializer
+// -------------------------
+void init_shell(t_shell *shell, char **envp)
 {
-    printf("\n== Testing echo ==\n");
-
-    char *a1[] = {"echo", "hello", "world", NULL};
-    printf("CMD: echo hello world\n");
-    ft_echo(a1, shell);
-
-    char *a2[] = {"echo", "-n", "hi", NULL};
-    printf("\nCMD: echo -n hi\n");
-    ft_echo(a2, shell);
-
-    char *a3[] = {"echo", "-n", "-n", "test", NULL};
-    printf("\nCMD: echo -n -n test\n");
-    ft_echo(a3, shell);
-
-    char *a4[] = {"echo", "-nabc", "test", NULL};
-    printf("\nCMD: echo -nabc test\n");
-    ft_echo(a4, shell);
-
-    printf("\nStatus: %d\n", shell->status);
+    shell->env_lst = init_env_list(envp);
+    shell->token = NULL;
+    shell->cmd = NULL;
+    shell->status = 0;
+    shell->prev_exit = 0;
 }
 
-void test_pwd(t_shell *shell)
+// -------------------------
+// Utility: print prompt
+// -------------------------
+void print_help()
 {
-    printf("\n== Testing pwd ==\n");
-
-    char *argv[] = {"pwd", NULL};
-    int status = ft_pwd(argv, shell);
-
-    printf("\n-- returned status = %d\n", status);
+    printf("\nAvailable tests:\n");
+    printf(" 1) echo\n");
+    printf(" 2) pwd\n");
+    printf(" 3) env\n");
+    printf(" 4) export\n");
+    printf(" 5) unset\n");
+    printf(" 6) exit\n");
+    printf(" q) quit\n");
 }
 
-void test_export(t_shell *shell)
+// -------------------------
+// Convert input → argv array
+// -------------------------
+char **str_to_argv(char *input)
 {
-    printf("\n== Testing export ==\n");
-
-    char *a1[] = {"export", "A=1", NULL};
-    ft_export(a1, shell);
-
-    char *a2[] = {"export", "B=hello", NULL};
-    ft_export(a2, shell);
-
-    char *a3[] = {"export", "A=updated", NULL};
-    ft_export(a3, shell);
-
-    print_env(shell);
+    // remove trailing newline
+    input[strcspn(input, "\n")] = '\0';
+    return ft_split(input, ' ');
 }
 
-void test_unset(t_shell *shell)
+// -------------------------
+// Main test loop
+// -------------------------
+int main(int argc, char **argv, char **envp)
 {
-    printf("\n== Testing unset ==\n");
-
-    char *u1[] = {"unset", "A", NULL};
-    ft_unset(u1, shell);
-    print_env(shell);
-
-    char *u2[] = {"unset", "1INVALID", NULL};
-    ft_unset(u2, shell);      // Bash: silently ignore invalid
-    print_env(shell);
-}
-
-void test_env(t_shell *shell)
-{
-    printf("\n== Testing env ==\n");
-
-    char *e1[] = {"env", NULL};
-    ft_env(e1, shell);
-
-    char *e2[] = {"env", "hello", NULL};  // should print error
-    ft_env(e2, shell);
-}
-
-void test_exit(t_shell *shell)
-{
-    printf("\n== Testing exit ==\n");
-
-    char *x1[] = {"exit", NULL};
-    ft_exit(x1, shell);
-
-    char *x2[] = {"exit", "123", NULL};
-    ft_exit(x2, shell);
-
-    char *x3[] = {"exit", "abc", NULL};     // should print error + 255
-    ft_exit(x3, shell);
-
-    char *x4[] = {"exit", "1", "2", NULL};  // should NOT exit, return 1
-    ft_exit(x4, shell);
-}
-
-int main(void)
-{
+	(void)argc;
+	(void)argv;
+	
     t_shell shell;
-    shell.env = NULL;
-    shell.status = 0;
+    init_shell(&shell, envp);
 
-    // Setup initial environment
-    add_env(&shell, "PWD", "/home/test");
-    add_env(&shell, "OLDPWD", "/home/old");
-    add_env(&shell, "HOME", "/home/test");
+    char input[1024];
+    char **args;
+    int choice;
 
-    printf("\n===== START BUILTIN TESTS =====\n");
+    printf("=== Minishell Built-in Tester ===\n");
+    print_help();
 
-    test_echo(&shell);
-    test_pwd(&shell);
-    test_export(&shell);
-    test_unset(&shell);
-    test_env(&shell);
-    test_exit(&shell);
+    while (1)
+    {
+        printf("\nSelect test: ");
+        fflush(stdout);
 
-    printf("===== END TESTS =====\n");
+        if (!fgets(input, sizeof(input), stdin))
+            break;
+
+        if (input[0] == 'q')
+            break;
+
+        choice = atoi(&input[0]);
+        printf("\n");
+
+        if (choice == 1) {
+            printf("echo> ");
+            fgets(input, sizeof(input), stdin);
+            args = str_to_argv(input);
+            ft_echo(args, &shell);
+            free_split(args);
+        }
+        else if (choice == 2) {
+            char *tmp[] = {"pwd", NULL};
+            ft_pwd(tmp, &shell);
+        }
+        else if (choice == 3) {
+            char *tmp[] = {"env", NULL};
+            ft_env(tmp, &shell);
+        }
+        else if (choice == 4) {
+            printf("export> ");
+            fgets(input, sizeof(input), stdin);
+            args = str_to_argv(input);
+            ft_export(args, &shell);
+            free_split(args);
+        }
+        else if (choice == 5) {
+            printf("unset> ");
+            fgets(input, sizeof(input), stdin);
+            args = str_to_argv(input);
+            ft_unset(args, &shell);
+            free_split(args);
+        }
+        else if (choice == 6) {
+            printf("exit> ");
+            fgets(input, sizeof(input), stdin);
+            args = str_to_argv(input);
+            ft_exit(args, &shell);
+            free_split(args);
+        }
+        else {
+            print_help();
+        }
+    }
+
+    printf("Goodbye!\n");
     return 0;
 }
-
