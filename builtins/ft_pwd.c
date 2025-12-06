@@ -3,12 +3,12 @@
 #include "libft.h"
 
 // return 0 if the function successes, return 1 otherwise
-int	ft_pwd(char **argv, t_env *env)
+int	ft_pwd(char **argv, t_shell *shell)
 {
 	char	*cwd;
 	
 	(void)argv;
-	(void)env;
+	(void)shell;
 	cwd = NULL;
 	cwd = getcwd(cwd, 0);
 	if (!cwd)
