@@ -46,3 +46,9 @@ void	ft_pipe_error(t_shell *shell, char *str, int **pipes, int n)
 	free_shell(shell);
 	exit(EXIT_FAILURE);
 }
+
+// sh has no warning. bash has long warning message. decide whether do warning. 
+void	ft_warning_printing(void)
+{
+	ft_putstr_fd(ERROR "minishell: warning: heredoc delimited by end of file\n" RESET, 2);
+}

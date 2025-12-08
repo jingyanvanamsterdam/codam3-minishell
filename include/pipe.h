@@ -32,6 +32,7 @@ void	ft_malloc_failure(char *s, t_shell *shell);
 // new error func:
 void	ft_pipe_error(t_shell *shell, char *str, int **pipes, int n);
 void	ft_error_printing(char *mes);
+void	ft_warning_printing(void);
 
 //FREE:
 void	free_2d_arr(char **arr);
@@ -49,7 +50,6 @@ void	free_quotok(t_quotok **lst);
 //stream funcs
 int		open_infile(char *file);
 int		open_outfile(char *file);
-bool	contain_quote(char *file);
 void	heredoc(t_shell *shell, t_redir *redir, int readin);
 void	redir_file(t_shell *shell, int *file, int i);
 
