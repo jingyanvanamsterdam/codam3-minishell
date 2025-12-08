@@ -15,8 +15,6 @@
 static size_t	update_index(char *input, t_quotok **tok)
 {
 	size_t	i;
-	size_t	end;
-	size_t	exp_i;
 	char	*value;
 
 	value = NULL;
@@ -31,7 +29,7 @@ static size_t	update_index(char *input, t_quotok **tok)
 	return (free(value), i);
 }
 
-static char	*handle_exp_input(char *input, t_shell *shell, size_t len)
+static char	*handle_exp_input(char *input, t_shell *shell, size_t len, char *res)
 {
 	size_t	start;
 	size_t	increase;
@@ -51,33 +49,40 @@ static char	*handle_exp_input(char *input, t_shell *shell, size_t len)
 			return (free_quotok(&tok), NULL);
 		start += increase;
 	}
-	value = joint_quotok(tok);
+	value = join_quotok(tok);
 	free_quotok(&tok);
 	if (!value)
 		return (NULL);
-	return (value);
+	return (ft_strjoin(res, value));
 }
 
 static char	*handle_hd_input(bool quoted, char *input, char *res, t_shell *shell)
 {
-	char	new_res;
+	char	*tmp;
 	int		exp_i;
 	int		len;
 
-	new_res = NULL;
 	exp_i = 0;
+	tmp = res;
 	len = ft_strlen(input);
 	if (!quoted)
 		exp_i = find_index(input, len, '$');
-	if (quoted || exp_i == len)
-		new_res = ft_strjoin(res, input);
+	if (!res)
+		tmp = ft_strdup("");
 	else
-		new_res = handle_exp_input(input, shell, len);
-	if (!new_res)
-		return (NULL);
-	return (new_res);
+		tmp = ft_strjoin(tmp, "\n");
+	if (!tmp)
+		return (free(res), NULL);
+	if (quoted || exp_i == len)
+		res = ft_strjoin(tmp, input);
+	else
+		res = handle_exp_input(input, shell, len, tmp);
+	free(tmp);
+	return (res);
 }
-
+/**
+ * tmp is previous result, res is updated by handle_hd_input() and tmp is being freed inside;
+ */
 static char	*do_hd_loop(bool quoted, char *delimiter, t_shell *shell)
 {
 	char	*input;
@@ -99,7 +104,6 @@ static char	*do_hd_loop(bool quoted, char *delimiter, t_shell *shell)
 			break ;
 		tmp = res;
 		res = handle_hd_input(quoted, input, tmp, shell);
-		free(tmp);
 		free(input);
 		if (!res)
 			return (NULL);
@@ -130,5 +134,7 @@ void	heredoc(t_shell *shell, t_redir *redir, int readin)
 	if (!res)
 		ft_malloc_failure("heredoc\n", shell);
 	free(delimiter);
-	write(readin, res, ft_strlen(res));
+	printf("%d: %s\n", readin, res);
+	printf("finished heredoc\n");
+	//write(readin, res, ft_strlen(res));
 }
