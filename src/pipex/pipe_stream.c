@@ -36,16 +36,28 @@ int	open_outfile(char *file)
 	if (access(file, F_OK) == 0 && access(file, W_OK) == -1)
 		ft_error_printing(file);
 	else
+	{
 		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd == -1)
-		perror("open file\n");
+		if (fd == -1)
+			perror("open file\n");
+	}
 	return (fd);
 }
 
-void	output_append(t_shell *shell, t_redir *redir, int readout)
+int	output_append(char *file)
 {
-	write(1, shell->cmd->cmd[0], 3);
-	write(readout, redir->file, ft_strlen(redir->file));
+	int	fd;
+
+	fd = -1;
+	if (access(file, F_OK) == 0 && access(file, W_OK) == -1)
+		ft_error_printing(file);
+	else
+	{
+		fd = open(file, O_WRONLY | O_CREAT | O_APPEND);
+		if (fd == -1)
+			perror("open file\n");
+	}
+	return (fd);
 }
 
 void	redir_file(t_shell *shell, int *file, int i)
@@ -66,10 +78,9 @@ void	redir_file(t_shell *shell, int *file, int i)
 		else if (redir->type == REDIR_OUT)
 			file[1] = open_outfile(redir->file);
 		else if (redir->type == APPEND)
-			output_append(shell, redir, file[1]);
+			file[1] = output_append(redir->file);
 		else if (redir->type == HEREDOC)
 			heredoc(shell, redir, file[0]);
 		redir = redir->next;
 	}
 }
-

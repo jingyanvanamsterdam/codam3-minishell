@@ -3,9 +3,6 @@
 #include "libft.h"
 #include <stdlib.h>
 #include <stdio.h> // printf
-#include <stdbool.h>
-
-
 
 static void	append_to_rdir_lst(t_redir **head, t_redir *node)
 {
@@ -23,9 +20,8 @@ static void	append_to_rdir_lst(t_redir **head, t_redir *node)
 }
 
 /**
- * update the token to next one, if it is NULL or != WORD, means after redir symbol, there is an input error.
+ * Return value = next token, if it is NULL or != WORD, means after redir symbol, there is an input error.
  * ft_input_error() will clean up shell's cmd, token and env_lst. 
- * so if shell->token == NULL, means there is input error and cleaned up shell and enter next readline loop.
  */
 t_token	*handle_redir(t_token *token, t_redir **redir, t_shell *shell)
 {
@@ -42,7 +38,10 @@ t_token	*handle_redir(t_token *token, t_redir **redir, t_shell *shell)
 	if (!node)
 		ft_malloc_failure("parsing.\n", shell);
 	node->type = t;
-	node->file = handle_token(t, token, shell);
+	if (t == HEREDOC)
+		node->file = ft_strdup(token->value);
+	else
+		node->file = remove_quote(token->value, shell, false);
 	if (!node->file)
 		ft_malloc_failure("parsing.\n", shell);
 	node->next = NULL;

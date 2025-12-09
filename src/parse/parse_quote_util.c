@@ -51,19 +51,16 @@ size_t	find_stop(char *str, t_quote *status)
 	{
 		while (str[i] && str[i] != '\'')
 			i++;
-		printf("sq: find stop i = %zu\n", i);
 	}
 	else if (*status == DOUBLE_QUOTE)
 	{
 		while (str[i] && str[i] != '\"')
 			i++;
-		printf("dq: find stop i = %zu\n", i);
 	}
 	else
 	{
 		while (str[i] && str[i] != '\'' && str[i] != '\"')
 			i++;
-		printf("find stop i = %zu\n", i);
 	}
 	return (i);
 }

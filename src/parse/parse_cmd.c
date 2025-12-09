@@ -19,6 +19,56 @@ static void	append_to_cmd_lst(t_cmd **head, t_cmd *node)
 	tmp->next = node;
 }
 
+/**
+ * Function will remove quote symbol and accordingly handle expands if there is any.
+ */
+void	update_cmds_arr(char **cmd, t_token *token, t_shell *shell)
+{
+	size_t	i;
+
+	i = 0;
+	while (cmd[i])
+		i++;
+	cmd[i] = remove_quote(token->value, shell, false);
+	if (!cmd[i])
+		ft_malloc_failure("parsing.\n", shell);
+}
+
+void	update_cmd_redir(t_redir *redir, t_shell *shell)
+{
+	t_cmd	*cmd;
+
+	cmd = shell->cmd;
+	while (cmd)
+	{
+		if (!cmd->next)
+			cmd->redir = redir;
+		cmd = cmd->next;
+	}
+}
+
+/**
+ * There is possibility that cmd len = 0 because only redirection info.
+ * It is not input error or something need to be ignored to create node. 
+ * cmd's path = NULL; change during execution process. 
+ */
+void	init_cmd_node(t_shell *shell, char **cmd)
+{
+	t_cmd	*node;
+
+	node = (t_cmd *)malloc(sizeof(t_cmd));
+	if (!node)
+	{
+		free_2d_arr(cmd);
+		ft_malloc_failure("parsing.\n", shell);
+	}
+	node->cmd = cmd;
+	node->path = NULL;
+	node->redir = NULL;
+	node->next = NULL;
+	append_to_cmd_lst(&(shell->cmd), node);
+}
+
 size_t	calculate_cmd_len(t_token *token)
 {
 	size_t	len;
@@ -38,54 +88,4 @@ size_t	calculate_cmd_len(t_token *token)
 		token = token->next;
 	}
 	return (len);
-}
-/**
- * Function will remove the quote from cmds. 
- */
-void	append_to_cmd(char **cmd, t_token *token, t_shell *shell)
-{
-	size_t	i;
-
-	i = 0;
-	while (cmd[i])
-		i++;
-	cmd[i] = handle_token(WORD, token, shell);
-	if (!cmd[i])
-		ft_malloc_failure("parsing.\n", shell);
-}
-
-
-/**
- * There is possibility that cmd len = 0 because only redirection info.
- * It is not input error or something need to be ignored to create node. 
- * cmd's path = NULL; change during execution process. 
- */
-void	create_cmd_node(t_shell *shell, char **cmd)
-{
-	t_cmd	*node;
-
-	node = (t_cmd *)malloc(sizeof(t_cmd));
-	if (!node)
-	{
-		free_2d_arr(cmd);
-		ft_malloc_failure("parsing.\n", shell);
-	}
-	node->cmd = cmd;
-	node->path = NULL;
-	node->redir = NULL;
-	node->next = NULL;
-	append_to_cmd_lst(&(shell->cmd), node);
-}
-
-void	update_cmd_redir(t_redir *redir, t_shell *shell)
-{
-	t_cmd	*cmd;
-
-	cmd = shell->cmd;
-	while (cmd)
-	{
-		if (!cmd->next)
-			cmd->redir = redir;
-		cmd = cmd->next;
-	}
 }

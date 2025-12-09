@@ -50,6 +50,7 @@ void	free_quotok(t_quotok **lst);
 //stream funcs
 int		open_infile(char *file);
 int		open_outfile(char *file);
+int		output_append(char *file);
 void	heredoc(t_shell *shell, t_redir *redir, int readin);
 void	redir_file(t_shell *shell, int *file, int i);
 

@@ -14,23 +14,10 @@
 //	printf("==========finish printing==========\n");
 //}
 
-char	*handle_token(t_type t, t_token *token, t_shell *shell)
-{
-	char	*value;
-	
-	value = NULL;
-	if (t == HEREDOC)
-		value = ft_strdup(token->value);
-	else
-		value = remove_quote(token->value, shell, false);
-	if (!value)
-		ft_malloc_failure("parsing\n", shell);
-	return (value);
-}
-
 /**
  * This function parse tokens by types and update to the next token.
- * if there is input error, the shell will cleaned up and return NULL. 
+ * if there is input error in redir, shell->token will be NULL, the shell will cleaned up and return NULL.
+ *  
  */
 t_token	*parse_token(t_token *token, t_shell *shell, char **cmd)
 {
@@ -52,7 +39,7 @@ t_token	*parse_token(t_token *token, t_shell *shell, char **cmd)
 				return (NULL);
 		}
 		else
-			append_to_cmd(cmd, token, shell);
+			update_cmds_arr(cmd, token, shell);
 		token = token->next;
 	}
 	update_cmd_redir(redir, shell);
@@ -78,7 +65,7 @@ void	parsing(t_shell *shell)
 		cmd = ft_calloc(size, sizeof(char *));
 		if (!cmd)
 			ft_malloc_failure("parsing.\n", shell);
-		create_cmd_node(shell, cmd);
+		init_cmd_node(shell, cmd);
 		token = parse_token(token, shell, cmd);
 		if (!shell->token)
 			return ;

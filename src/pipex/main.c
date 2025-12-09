@@ -90,6 +90,25 @@ t_redir	*test_for_heredoc(t_shell *shell)
 	return (redir);
 }
 
+char	*test_for_outappend(t_shell *shell)
+{
+	t_cmd *cmd = shell->cmd;
+	t_redir *redir = NULL;
+
+	while (cmd)
+	{
+		redir = cmd->redir;
+		while (redir)
+		{
+			if (redir->type == APPEND)
+				return redir->file;
+			redir = redir->next;
+		}
+		cmd = cmd->next;
+	}
+	return (NULL);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	(void)argc;
@@ -152,7 +171,14 @@ int	main(int argc, char **argv, char **envp)
 		print_parsed_cmd(shell->cmd);
 		free_token_lst(&(shell->token));
 		//excusion cmds
-		heredoc(shell, test_for_heredoc(shell), 1);
+		//heredoc(shell, test_for_heredoc(shell), 1);
+		char *filename = test_for_outappend(shell);
+		int fd = -1;
+		if (filename)
+			fd = output_append(filename);
+		write(fd, "hello\n", 6);
+		printf("fd = %d\n", fd);
+
 		//execusion(shell);
 		shell->prev_exit = shell->exit;
 		shell->exit = 0;

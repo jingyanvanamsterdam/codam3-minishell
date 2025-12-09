@@ -68,15 +68,18 @@ static char	*handle_hd_input(bool quoted, char *input, char *res, t_shell *shell
 	if (!quoted)
 		exp_i = find_index(input, len, '$');
 	if (!res)
+	{
 		tmp = ft_strdup("");
-	else
-		tmp = ft_strjoin(tmp, "\n");
-	if (!tmp)
-		return (free(res), NULL);
+		if (!tmp)
+			return (NULL);
+	}
 	if (quoted || exp_i == len)
 		res = ft_strjoin(tmp, input);
 	else
 		res = handle_exp_input(input, shell, len, tmp);
+	free(tmp);
+	tmp = res;
+	res = ft_strjoin(tmp, "\n");
 	free(tmp);
 	return (res);
 }
@@ -134,7 +137,6 @@ void	heredoc(t_shell *shell, t_redir *redir, int readin)
 	if (!res)
 		ft_malloc_failure("heredoc\n", shell);
 	free(delimiter);
-	printf("%d: %s\n", readin, res);
-	printf("finished heredoc\n");
-	//write(readin, res, ft_strlen(res));
+	//printf("%d: %s\n", readin, res);
+	write(readin, res, ft_strlen(res));
 }

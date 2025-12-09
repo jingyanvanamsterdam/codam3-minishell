@@ -49,7 +49,6 @@ size_t	find_stop(char *str, t_quote *status);
 int		create_quotok_node(char *value, t_quotok **head);
 
 //quote main funcs.
-size_t		next_index(char *str, t_quotok **tok, t_quote *status, bool hd);
 t_quotok	*tokenize_quote(char *value, t_shell *shell, bool heredoc);
 char		*join_quotok(t_quotok *quotok);
 char		*remove_quote(char *value, t_shell *shell, bool hdoc);
@@ -58,14 +57,13 @@ char		*remove_quote(char *value, t_shell *shell, bool hdoc);
 //REDIR funcs #2
 t_token	*handle_redir(t_token *token, t_redir **redir, t_shell *shell);
 
-//T_CMD funcs #5
-size_t	calculate_cmd_len(t_token *token);
-void	append_to_cmd(char **cmd, t_token *token, t_shell *shell);
-void	create_cmd_node(t_shell *shell, char **cmd);
+//T_CMD creation funcs #5
 void	update_cmd_redir(t_redir *redir, t_shell *shell);
+void	update_cmds_arr(char **cmd, t_token *token, t_shell *shell);
+void	init_cmd_node(t_shell *shell, char **cmd);
+size_t	calculate_cmd_len(t_token *token);
 
 //void	print_quotok(t_quotok *head)
-char	*handle_token(t_type t, t_token *token, t_shell *shell);
 t_token	*parse_token(t_token *token, t_shell *shell, char **cmd);
 void	parsing(t_shell *shell);
 //====================================

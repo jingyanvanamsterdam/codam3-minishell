@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h> 
 
-size_t	next_index(char *str, t_quotok **tok, t_quote *status, bool hd)
+static size_t	next_index(char *str, t_quotok **tok, t_quote *status, bool hd)
 {
 	size_t		start;
 	size_t		end;
@@ -35,7 +35,6 @@ size_t	next_index(char *str, t_quotok **tok, t_quote *status, bool hd)
 	}
 	return (free(value), end);
 }
-
 
 t_quotok	*tokenize_quote(char *value, t_shell *shell, bool hd)
 {
@@ -93,6 +92,10 @@ char	*join_quotok(t_quotok *quotok)
 	return (value);
 }
 
+/**The function process string (parsing value and heredoc's delimiter) which might contain quotes and expands. 
+ * It will seperate string into token linked list by quotes and expands.
+ * After tokenization, it will join all the linkedlist value into one string.
+ */
 char	*remove_quote(char *value, t_shell *shell, bool hdoc)
 {
 	t_quotok *quotok;
