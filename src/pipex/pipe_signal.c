@@ -1,13 +1,14 @@
-#include <signal.h>
+#define _GNU_SOURCE
 //#include "parse.h"
 #include "pipe.h"
 //#include "struct.h"
 //#include "libft.h"
 #include <stdio.h>	
 #include <stdlib.h>
-#define _GNU_SOURCE
+
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <signal.h>
 #include <unistd.h>
 
 void	handle_sigint(int sig)
@@ -19,7 +20,9 @@ void	handle_sigint(int sig)
 	rl_on_new_line();
 	rl_redisplay();
 }
-
+/** addtoset means to ignore - SIGQUIT 
+ * sa_flags = 0 => default symplest setting
+*/
 void	setup_signal(void)
 {
 	struct sigaction	sa;
@@ -32,6 +35,10 @@ void	setup_signal(void)
 	sigaction(SIGQUIT, &sa, NULL);
 }
 
+/**
+ * SIG_DFL default signal handler: use default behavior. 
+ * ctrl + c will terninate the process.
+ */
 void	setup_child_signal(void)
 {
 	struct sigaction	sa;

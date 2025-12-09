@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #define _GNU_SOURCE
+#include <signal.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <unistd.h> // for sleep
@@ -172,14 +173,14 @@ int	main(int argc, char **argv, char **envp)
 		free_token_lst(&(shell->token));
 		//excusion cmds
 		//heredoc(shell, test_for_heredoc(shell), 1);
-		char *filename = test_for_outappend(shell);
-		int fd = -1;
-		if (filename)
-			fd = output_append(filename);
-		write(fd, "hello\n", 6);
-		printf("fd = %d\n", fd);
+		//char *filename = test_for_outappend(shell);
+		//int fd = -1;
+		//if (filename)
+		//	fd = output_append(filename);
+		//write(fd, "hello\n", 6);
+		//printf("fd = %d\n", fd);
 
-		//execusion(shell);
+		execusion(shell);
 		shell->prev_exit = shell->exit;
 		shell->exit = 0;
 		free_cmd_lst(&(shell->cmd));

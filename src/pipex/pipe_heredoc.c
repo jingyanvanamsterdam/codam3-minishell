@@ -113,7 +113,9 @@ static char	*do_hd_loop(bool quoted, char *delimiter, t_shell *shell)
 	}
 	return (res);
 }
-
+/**TO DO run heredoc in a child process, handle signal differently
+ * create a temperate file for heredoc fd.
+ */
 void	heredoc(t_shell *shell, t_redir *redir, int readin)
 {
 	char	*res;

@@ -1,9 +1,10 @@
 #ifndef PIPE_H
 # define PIPE_H
 
+# define _GNU_SOURCE
 # include "struct.h"
 # include <signal.h>
-#include <stdbool.h>
+# include <stdbool.h>
 
 # define ERROR_FILE 1
 # define ERROR_SYS 2

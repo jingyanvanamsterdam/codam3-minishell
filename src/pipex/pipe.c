@@ -116,6 +116,7 @@ int	create_process(t_shell *shell, int **pipes, int	*file)
 		{
 			//run_child_process
 			setup_child_signal();
+			printf("set child singal\n");
 			if (dup_files(shell, file, pipes, i) == 0)
 				execve_cmd(shell, i);
 			ft_free_exit(pipes, shell);
