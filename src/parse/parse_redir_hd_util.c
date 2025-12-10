@@ -1,16 +1,10 @@
-#include "pipe.h" // change to minishell
+# define _GNU_SOURCE
 #include "parse.h"
 #include "struct.h"
 #include "libft.h"
-#include <stdio.h>	
-#include <stdlib.h>
+#include <stdio.h> // printf
 #include <readline/readline.h>
 #include <readline/history.h>
-#include <fcntl.h>
-#include <string.h>
-#include <unistd.h>
-#include <signal.h> //for g_sig
-#include <stdbool.h>
 
 static size_t	update_index(char *input, t_quotok **tok)
 {
@@ -86,7 +80,7 @@ static char	*handle_hd_input(bool quoted, char *input, char *res, t_shell *shell
 /**
  * tmp is previous result, res is updated by handle_hd_input() and tmp is being freed inside;
  */
-static char	*do_hd_loop(bool quoted, char *delimiter, t_shell *shell)
+char	*do_hd_loop(bool quoted, char *delimiter, t_shell *shell)
 {
 	char	*input;
 	char	*res;
@@ -112,33 +106,4 @@ static char	*do_hd_loop(bool quoted, char *delimiter, t_shell *shell)
 			return (NULL);
 	}
 	return (res);
-}
-/**TO DO run heredoc in a child process, handle signal differently
- * create a temperate file for heredoc fd.
- */
-void	heredoc(t_shell *shell, t_redir *redir, int readin)
-{
-	char	*res;
-	bool	quoted;
-	char	*delimiter;
-	int		i;
-
-	res = NULL;
-	quoted = false;
-	i = 0;
-	while (redir->file[i])
-	{
-		if (redir->file[i] == '\'' || redir->file[i] == '\"')
-			quoted = true;
-		i++;
-	}
-	delimiter = remove_quote(redir->file, shell, true);
-	if (!delimiter)
-		ft_malloc_failure("heredoc\n", shell);
-	res = do_hd_loop(quoted, delimiter, shell);
-	if (!res)
-		ft_malloc_failure("heredoc\n", shell);
-	free(delimiter);
-	//printf("%d: %s\n", readin, res);
-	write(readin, res, ft_strlen(res));
 }

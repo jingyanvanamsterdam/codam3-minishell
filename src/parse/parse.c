@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h> // printf
 
+
 //void	print_quotok(t_quotok *head)
 //{
 //	while (head)
@@ -13,6 +14,26 @@
 //	}
 //	printf("==========finish printing==========\n");
 //}
+
+void	finish_set_tcmd(t_shell *shell)
+{
+	t_cmd	*cmd;
+	char	**env_paths;
+
+	cmd = shell->cmd;
+	env_paths = create_env_path(shell->env_lst);
+	if (!env_paths)
+		ft_malloc_failure("env path creation", shell);
+	while (cmd)
+	{
+		cmd->path = set_cmd_path(cmd->cmd[0], env_paths);
+		if (!cmd->path)
+			ft_malloc_failure("path creation", shell);
+		if (cmd->redir)
+			handle_redir_fd(shell, cmd->redir);
+		cmd = cmd->next;
+	}
+}
 
 /**
  * This function parse tokens by types and update to the next token.
@@ -70,4 +91,5 @@ void	parsing(t_shell *shell)
 		if (!shell->token)
 			return ;
 	}
+	finish_set_tcmd(shell);
 }

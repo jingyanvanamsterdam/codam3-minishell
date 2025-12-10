@@ -62,10 +62,11 @@ void print_parsed_cmd(t_cmd *head)
 			t_redir *redir = head->redir;
 			while (redir)
 			{
-				printf("redirect type = %d, file is %s\n", redir->type, redir->file);
+				printf("redirect type = %d, file is %s, fd = %d\n", redir->type, redir->file, redir->fd);
 				redir = redir->next;
 			}
 		}
+		printf("path = %s\n", head->path);
 		printf("\n======================End the cmd:===========================\n\n");
 		head = head->next;
 		i++;
@@ -180,7 +181,7 @@ int	main(int argc, char **argv, char **envp)
 		//write(fd, "hello\n", 6);
 		//printf("fd = %d\n", fd);
 
-		execusion(shell);
+		//execusion(shell);
 		shell->prev_exit = shell->exit;
 		shell->exit = 0;
 		free_cmd_lst(&(shell->cmd));

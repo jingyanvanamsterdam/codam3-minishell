@@ -19,9 +19,8 @@ int	dup_files(t_shell *shell, int *file, int **pipes, int i)
 {
 	int	count;
 
-	init_file(file, pipes, i, shell);
+	redirect_fd(file, pipes, i, shell);
 	count = count_cmd(shell->cmd);
-	redir_file(shell, file, i);
 	if (file[0] == -1 || file[1] == -1)
 		return (shell->exit);
 	if (dup2(file[0], STDIN_FILENO) < 0)

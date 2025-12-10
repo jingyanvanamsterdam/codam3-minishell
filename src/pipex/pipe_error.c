@@ -7,7 +7,6 @@
 #include <errno.h>
 #include <unistd.h>
 
-
 void	ft_malloc_failure(char *s, t_shell *shell)
 {
 	ft_putstr_fd(ERROR "minishell: " RESET, 2);

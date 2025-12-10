@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "parse.h" //change to minishell.h after combin
 #include "pipe.h"
+#include <unistd.h> // close
 
 // Changed name from free_split() 
 void	free_2d_arr(char **arr)
@@ -61,6 +62,8 @@ void	free_redir_lst(t_redir **lst)
 		temp = (*lst)->next;
 		if ((*lst)->file)
 			free((*lst)->file);
+		if ((*lst)->fd != -1)
+			close((*lst)->fd);
 		free(*lst);
 		*lst = temp;
 	}

@@ -17,7 +17,7 @@ int	count_cmd(t_cmd *cmd)
 	return (count);
 }
 
-void	init_file(int *file, int **pipes, int i, t_shell *shell)
+void	redirect_fd(int *file, int **pipes, int i, t_shell *shell)
 {
 	int	count;
 

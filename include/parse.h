@@ -54,8 +54,18 @@ char		*join_quotok(t_quotok *quotok);
 char		*remove_quote(char *value, t_shell *shell, bool hdoc);
 //============
 
-//REDIR funcs #2
+//REDIR funcs 
+int		open_infile(char *file);
+int		open_outfile(char *file);
+int		output_append(char *file);
+char	*do_hd_loop(bool quoted, char *delimiter, t_shell *shell);
+int		heredoc(t_shell *shell, t_redir *redir);
+void	handle_redir_fd(t_shell *shell, t_redir *redir);
 t_token	*handle_redir(t_token *token, t_redir **redir, t_shell *shell);
+
+//ENV_PATH AND PATH
+void	*create_env_path(t_env *env_lst);
+char	*set_cmd_path(char *cmd, char **env_paths);
 
 //T_CMD creation funcs #5
 void	update_cmd_redir(t_redir *redir, t_shell *shell);
