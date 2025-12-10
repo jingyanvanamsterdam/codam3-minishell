@@ -27,3 +27,7 @@ Need to change makefile:
 8. echo << here"$doc"abc here"$doc"abc
 
 
+## Memo for todo
+1. how to handle signal for heredoc
+2. how to handle non interactive and interactive minishell, signal differnece.
+3. infile and outfile not check access? infile not exist how to pass to next pipeline?
