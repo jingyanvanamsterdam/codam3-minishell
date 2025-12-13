@@ -88,13 +88,28 @@ int	ft_cd(char **argv, t_shell *shell)
 		if (!target)
 			return (ft_putstr_fd("cd: HOME not set\n", 2), 1);
 	}
+	else if (!ft_strcmp(argv[1], "-"))
+	{
+		target = ft_getenv(shell->env_lst, "OLDPWD");
+		if (!target)
+			return (ft_putstr_fd("cd: OLDPWD not set\n", 2), 1);
+		// ft_putendl_fd(target, 1);
+		ft_putstr_fd(target, 1);
+		ft_putstr_fd("\n", 1);
+	}
+	else
 		target = argv[1];
+
 	oldpwd = getcwd(NULL, 0);
+	if (!oldpwd)
+		oldpwd = ft_strdup("");
+
 	if (chdir(target) == -1)
 	{
 		free(oldpwd);
 		return (print_cd_error(target), 1);
 	}
+
 	update_env_value(shell, "OLDPWD", oldpwd);
 	free(oldpwd);
 	newpwd = getcwd(NULL, 0);

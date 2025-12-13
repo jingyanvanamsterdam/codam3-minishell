@@ -54,7 +54,7 @@ re: fclean all
 #  Example: make env -> compile only env/*.c + test_env.c into ./env executable
 builtin: buildlib
 	@echo "Compiling builtin testing module..."
-	cc $(FLAGS) $(HEADERS) $(BUILTINS_SRC) $(LIBFT) $(RLFLAG) -o builtins
+	cc $(FLAGS) $(HEADERS) $(BUILTINS_SRC) ./src/ft_free.c $(LIBFT) $(RLFLAG) -o builtins
 	@echo "✅ Built test executable: ./builtins"
 
 .PHONY: all buildlib clean fclean re
