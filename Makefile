@@ -16,7 +16,7 @@ RLFLAG = -lreadline
 HEADERS := -Iinclude -I$(LIBFT_DIR)
 
 ifeq ($(OS),Darwin)
-	RL_DIR = /opt/homebrew/Cellar/readline/8.3.1
+	RL_DIR = $(shell brew --prefix readline)
 	RLFLAG += -L$(RL_DIR)/lib
 	HEADERS += -I$(RL_DIR)/include
 endif
