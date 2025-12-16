@@ -45,7 +45,7 @@ void	free_cmd_lst(t_cmd **lst);
 void	free_shell(t_shell *shell);
 //new free func:
 void	free_pipes(int **pipes, int n);
-void	ft_free_exit(int **pipes, t_shell *shell);
+void	ft_free_exit_process(int **pipes, t_shell *shell);
 void	free_quotok(t_quotok **lst);
 
 

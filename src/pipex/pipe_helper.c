@@ -68,3 +68,4 @@ void	parent_close_file(t_shell *shell, int i, int **pipes, int *file)
 	else if (file[1] != -1)
 		close(file[1]);
 }
+

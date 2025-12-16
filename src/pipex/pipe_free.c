@@ -127,7 +127,7 @@ void	free_pipes(int **pipes, int n)
 	pipes = NULL;
 }
 
-void	ft_free_exit(int **pipes, t_shell *shell)
+void	ft_free_exit_process(int **pipes, t_shell *shell)
 {
 	int	n;
 

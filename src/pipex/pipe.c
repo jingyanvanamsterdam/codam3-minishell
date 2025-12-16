@@ -3,68 +3,41 @@
 #include "struct.h"
 #include "libft.h"
 #include <stdio.h>	
-#include <stdlib.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <fcntl.h>
-#include <string.h>
-#include <unistd.h>
-#include <errno.h> 
-#include <sys/types.h>
-#include <sys/wait.h>
+//#include <stdlib.h>
+//#include <fcntl.h>
+//#include <string.h>
+//#include <unistd.h>
+//#include <errno.h> 
+//#include <sys/types.h>
+//#include <sys/wait.h>
 
-extern char		**environ; // delete and replace with shell->env_lst later. 
 
-int	dup_files(t_shell *shell, int *file, int **pipes, int i)
+int	create_process(t_shell *shell, int **pipes, int	*file)
 {
-	int	count;
+	int		i;
+	pid_t	pid;
+	int		count;
+	t_cmd	*cmd;
 
-	redirect_fd(file, pipes, i, shell);
+	i = 0;
 	count = count_cmd(shell->cmd);
-	if (file[0] == -1 || file[1] == -1)
-		return (shell->exit);
-	if (dup2(file[0], STDIN_FILENO) < 0)
-		ft_error_printing("dup2 input fail");
-	if (dup2(file[1], STDOUT_FILENO) < 0)
-	{
-		ft_error_printing("dup2 output fail");
-		shell->exit = 1;
-		close_pipes(pipes, (count - 1));
-		close_files(file);
-		return (shell->exit);
-	}
-	close_pipes(pipes, (count - 1));
-	close_files(file);
-	return (shell->exit);
-}
-
-void	execve_cmd(t_shell *shell, int i)
-{
-	t_cmd *cmd;
-	int j;
-
-	j = 0;
 	cmd = shell->cmd;
-	while (j++ < i)
+	while (i < count)
+	{
+		pid = fork();
+		if (pid < 0)
+			return (perror("sh: fork"), -1);
+		else if (pid == 0)
+		{
+			run_child_process(shell, pipes, i, cmd);
+		}
+		else
+			parent_close_file(shell, i, pipes, file);
+		i++;
 		cmd = cmd->next;
-	if (!cmd->cmd)
-	{
-		shell->exit = 0;
-		return ;
 	}
-	if (!cmd->path)
-	{
-		shell->exit = EXIT_NOCMD;
-		return ;
-	}
-	//env_lst is a list, but execve need a char **enviorn
-	if (execve(cmd->path, cmd->cmd, environ) == -1)
-	{
-		ft_error_printing(cmd->cmd[0]);
-		shell->exit = EXIT_CMD_NOEXC;
-	}
+	return (pid);
 }
-
 
 int	**create_pipes(t_shell *shell)
 {
@@ -88,43 +61,6 @@ int	**create_pipes(t_shell *shell)
 		i++;
 	}
 	return (pipes);
-}
-
-//void	run_child_process(t_shell *shell, int *file, int **pipes, int i)
-//{
-//	setup_child_signal();
-//	if (dup_files(shell, file, pipes, i) == 0)
-//		execve_cmd(shell, i);
-//	ft_free_exit(pipes, shell);
-//}
-
-int	create_process(t_shell *shell, int **pipes, int	*file)
-{
-	int		i;
-	pid_t	pid;
-	int		count;
-
-	i = 0;
-	count = count_cmd(shell->cmd);
-	while (i < count)
-	{
-		pid = fork();
-		if (pid < 0)
-			return (perror("sh: fork"), -1);
-		else if (pid == 0)
-		{
-			//run_child_process
-			setup_child_signal();
-			printf("set child singal\n");
-			if (dup_files(shell, file, pipes, i) == 0)
-				execve_cmd(shell, i);
-			ft_free_exit(pipes, shell);
-		}
-		else
-			parent_close_file(shell, i, pipes, file);
-		i++;
-	}
-	return (pid);
 }
 
 void	execusion(t_shell *shell)
@@ -157,8 +93,8 @@ void	execusion(t_shell *shell)
 	}
 	while (wait(NULL) > 0)
 		;
-	ft_free_exit(pipes, shell);
 	printf("only for use of pid. %d", pid);
+	return ;
 }
 
 /** Question:
