@@ -112,21 +112,6 @@ void	free_quotok(t_quotok **lst)
 	}
 }
 
-void	free_pipes(int **pipes, int n)
-{
-	int	i;
-
-	i = 0;
-	while (i < n)
-	{
-		free(pipes[i]);
-		pipes[i] = NULL;
-		i++;
-	}
-	free(pipes);
-	pipes = NULL;
-}
-
 void	ft_free_exit_process(int **pipes, t_shell *shell)
 {
 	int	n;

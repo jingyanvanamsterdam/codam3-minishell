@@ -72,6 +72,7 @@ void	execusion(t_shell *shell)
 	int	status;
 	// handle cmd execution path. 
 	count = count_cmd(shell->cmd);
+
 	pipes = NULL;
 	if (count > 1)
 		pipes = create_pipes(shell);
@@ -102,3 +103,24 @@ void	execusion(t_shell *shell)
  * if in the process, there is other redirection, will be the latest redirection being considered as the redirection source?
 
  */
+
+
+void	executor(t_shell *shell)
+{
+	int	status;
+	t_pipe	pipe_params;		// TODO: Put it into the t_shell?
+
+	pipe_params = (t_pipe){0};
+	pipe_params.count = count_cmd(shell->cmd);
+	pipes_initializer(&pipe_params);
+
+	// Now should be the pipe_handler
+
+	pipe_handler(shell, &pipe_params);
+
+	status = wait_handler(&pipe_params);
+
+	// for pipex program, the main takes (int argc, char **argv, char **envp)
+
+	
+}

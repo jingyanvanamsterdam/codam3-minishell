@@ -32,19 +32,6 @@ void	redirect_fd(int *file, int **pipes, int i, t_shell *shell)
 		file[1] = pipes[i][1];
 }
 
-void	close_pipes(int **pipes, int n)
-{
-	int	i;
-
-	i = 0;
-	while (i < n)
-	{
-		close(pipes[i][0]);
-		close(pipes[i][1]);
-		i++;
-	}
-}
-
 void	close_files(int *file)
 {
 	if (file[0] != -1)

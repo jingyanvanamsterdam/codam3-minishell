@@ -24,13 +24,6 @@ typedef struct	s_quotok
 	struct s_quotok	*next;
 }				t_quotok;
 
-typedef struct	s_token
-{
-	char			*value;
-	t_type			type;
-	struct s_token	*next;
-}				t_token;
-
 typedef struct	s_redir
 {
 	t_type			type;
@@ -40,6 +33,19 @@ typedef struct	s_redir
 
 }				t_redir;
 
+typedef struct	s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}				t_env;
+
+typedef struct	s_token
+{
+	char			*value;
+	t_type			type;
+	struct s_token	*next;
+}				t_token;
 
 typedef struct	s_cmd
 { 
@@ -48,13 +54,6 @@ typedef struct	s_cmd
 	t_redir			*redir;
 	struct s_cmd	*next;
 }				t_cmd;
-
-typedef struct	s_env
-{
-	char			*key;
-	char			*value;
-	struct s_env	*next;
-}				t_env;
 
 typedef struct	s_shell
 {
@@ -65,5 +64,12 @@ typedef struct	s_shell
 	int				exit;
 	// more to add
 }				t_shell;
+
+typedef struct s_pipe
+{
+	int	count;
+	int	**pipes;
+	int	*pids;
+}	t_pipe;
 
 #endif
