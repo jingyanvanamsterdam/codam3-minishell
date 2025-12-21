@@ -71,6 +71,7 @@ int	wait_handler(t_pipe *params)
 	int	last_status;
 
 	i = 0;
+	
 	while (i < params->count)
 	{
 		waitpid(params->pids[i], &status, 0);

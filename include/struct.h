@@ -67,7 +67,7 @@ typedef struct	s_shell
 
 typedef struct s_pipe
 {
-	int	count;
+	int	cmd_count;
 	int	**pipes;
 	int	*pids;
 }	t_pipe;
