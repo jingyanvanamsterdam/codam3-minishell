@@ -73,6 +73,33 @@ void	free_pipes(t_pipe *params)
 	return ;
 }
 
+void	apply_rediction(t_redir *r)
+{
+	while (r)
+	{
+		if (r->type == REDIR_IN)
+		{
+			r->fd = open(r->file, O_RDONLY);
+			dup2(r->fd, STDIN_FILENO);
+			close(r->fd);
+		}
+		else if (r->type == REDIR_OUT)
+		{
+			r->fd = open(r->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			dup2(r->fd, STDOUT_FILENO);
+			close(r->fd);
+		}
+		else if (r->type == APPEND)
+		{
+			r->fd = open(r->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+			dup2(r->fd, STDOUT_FILENO);
+			close(r->fd);
+		}
+		// HEREDOC handled earlier
+		r = r->next;
+	}
+}
+
 void	child_process(t_shell *shell, t_cmd *cmd, t_pipe *param, int i)
 {
 	if (i > 0)
@@ -80,6 +107,13 @@ void	child_process(t_shell *shell, t_cmd *cmd, t_pipe *param, int i)
 	if (i < param->cmd_count - 1)
 		dup2(param->pipes[i][1], STDOUT_FILENO);
 	if (cmd->redir)
+		apply_redirection();
+
+	close_pipes(param);
+	free_pipes(param);
+
+	// execve(path, argv, envp)
+	execve(cmd->path, cmd->cmd, );		// TODO: Need a function that generate a envp variable
 
 }
 
