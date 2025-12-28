@@ -3,9 +3,6 @@
 
 # include "struct.h"
 
-// ======= env_error.c =======
-void	ft_malloc_failure(char	*s, t_env *env_list);
-
 // ======= env_free.c =======
 void	free_env_list(t_env *env_list);
 

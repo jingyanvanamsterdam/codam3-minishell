@@ -3,6 +3,8 @@
 #include "libft.h"
 #include <stdio.h>	// for printf
 #include <stdlib.h>
+#include "utils.h"
+
 
 static void	append_to_lst(t_token **head, t_token *node)
 {

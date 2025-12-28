@@ -1,5 +1,5 @@
-#ifndef PIPE_H
-# define PIPE_H
+#ifndef EXECUTOR_H
+# define EXECUTOR_H
 
 # define _GNU_SOURCE
 # include "struct.h"
@@ -17,16 +17,9 @@
 
 extern volatile sig_atomic_t g_sig;  // 只声明，不定义
 
-// pipe.c
+// executor.c
 void	executor(t_shell *shell);
-
-// pipe_helper.c
 int		count_cmd(t_cmd *cmd);
-
-// pipes_handler.c
 void	pipes_initializer(t_pipe *params);
-void	pipe_handler(t_shell *shell, t_pipe *params);
-
-// pipe
 
 #endif

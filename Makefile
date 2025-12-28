@@ -24,10 +24,8 @@ endif
 LIBFT = $(LIBFT_DIR)/libft.a
 
 # ========== Testing SRC ============
-<<<<<<< HEAD
 # env module
 ENV_SRC = $(shell find ./src/env -iname "*.c")
-=======
 # lexing module
 LEX_SRC = $(shell find ./src/lexing -iname "*.c")
 PARSE_SRC = $(shell find ./src/parse -iname "*.c")
@@ -59,23 +57,18 @@ re: fclean all
 
 # ================= Test rules ===================
 #  Example: make env -> compile only env/*.c + test_env.c into ./env executable
-<<<<<<< HEAD
 env: buildlib
 	@echo "Compiling env testing module..."
 	cc $(FLAGS) $(HEADERS) $(ENV_SRC) $(LIBFT) -o env
 	@echo "✅ Built test executable: ./env"
-=======
 lex: buildlib
 	@echo "Compiling lex testing module..."
 	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(LIBFT) $(RLFLAG) -o lex
 	@echo "✅ Built test executable: ./lex"
->>>>>>> 497fd4c (Update lexing file from codam. 11.4)
-=======
 parse: buildlib
 	@echo "Compiling parse testing module..."
 	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(LIBFT) $(RLFLAG) -o parse
 	@echo "✅ Built test executable: ./parse"
-=======
 heredoc: buildlib
 	@echo "Compiling heredoc testing module..."
 	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(HEREDOC_SRC) $(LIBFT) $(RLFLAG) -o heredoc

@@ -3,8 +3,9 @@
 
 # include "struct.h"
 # include <stdlib.h>
-# include "pipe.h"
-#include <stdbool.h>
+// # include "pipe.h"
+# include "executor.h"
+# include <stdbool.h>
 
 # define RESET   "\033[0m"
 # define BLACK   "\033[30m"

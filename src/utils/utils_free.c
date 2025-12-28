@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "parse.h" //change to minishell.h after combin
-#include "pipe.h"
+#include "utils.h"
 #include <unistd.h> // close
 
 // Changed name from free_split() 

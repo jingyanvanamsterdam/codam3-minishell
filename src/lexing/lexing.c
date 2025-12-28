@@ -4,6 +4,7 @@
 #include <stdbool.h> // for boolean functions 
 #include <stdio.h>	// for printf
 #include <stdlib.h>
+#include "utils.h"
 
 /**
  * quote_i == end, means there is no quote

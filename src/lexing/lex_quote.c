@@ -1,6 +1,7 @@
 #include "parse.h" 
 #include "libft.h"
 #include "struct.h"
+#include "utils.h"
 #include <stdlib.h>
 #include <stdio.h> // for printf
 
