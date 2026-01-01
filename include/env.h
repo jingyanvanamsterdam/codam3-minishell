@@ -11,8 +11,10 @@ void	env_set(t_env **env, const char *key, const char *value);
 void	env_unset(t_env **env, const char *key);
 
 //  ======= env_init.c =======
-t_env	*create_node(char **key_value, t_env *env_list);
-t_env	*init_env(char **envp);
+// t_env	*create_node(char **key_value, t_env *env_list);
+t_env	*create_node(char **key_value, t_shell *shell);
+
+t_env	*init_env(char **envp, t_shell *shell);
 
 //  ======= env_utils.c =======
 t_env	*env_find(t_env *env, const char *key);

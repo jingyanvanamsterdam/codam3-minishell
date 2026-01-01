@@ -7,12 +7,24 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_env	*env;
 	char	*val;
+	t_shell	*shell;
 
 	(void)argc;
 	(void)argv;
 
+	shell = (t_shell *)malloc(sizeof(t_shell));
+	if (!shell)
+		return (1);
+	shell->env_lst = NULL;
+	shell->token = NULL;
+	shell->cmd = NULL;
+	shell->prev_exit = 0;
+	shell->exit = 0;
+
+	env = shell->env_lst;
+
 	/* Initialize env linked list */
-	env = init_env(envp);
+	env = init_env(envp, shell);
 	printf("=== Original env ===\n");
 	char **arr = env_to_array(env);
 	for (int i = 0; arr[i]; i++)

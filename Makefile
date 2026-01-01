@@ -26,6 +26,8 @@ LIBFT = $(LIBFT_DIR)/libft.a
 # ========== Testing SRC ============
 # env module
 ENV_SRC = $(shell find ./src/env -iname "*.c")
+# utils module
+UTILS_SRC = $(shell find ./src/utils -iname "*.c")
 # lexing module
 LEX_SRC = $(shell find ./src/lexing -iname "*.c")
 PARSE_SRC = $(shell find ./src/parse -iname "*.c")
@@ -59,7 +61,7 @@ re: fclean all
 #  Example: make env -> compile only env/*.c + test_env.c into ./env executable
 env: buildlib
 	@echo "Compiling env testing module..."
-	cc $(FLAGS) $(HEADERS) $(ENV_SRC) $(LIBFT) -o env
+	cc $(FLAGS) $(HEADERS) $(ENV_SRC) $(UTILS_SRC) $(LIBFT) -o env
 	@echo "✅ Built test executable: ./env"
 lex: buildlib
 	@echo "Compiling lex testing module..."
@@ -71,7 +73,7 @@ parse: buildlib
 	@echo "✅ Built test executable: ./parse"
 heredoc: buildlib
 	@echo "Compiling heredoc testing module..."
-	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(HEREDOC_SRC) $(LIBFT) $(RLFLAG) -o heredoc
+	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(HEREDOC_SRC) $(UTILS_SRC) $(LIBFT) $(RLFLAG) -o heredoc
 	@echo "✅ Built test executable: ./heredoc"
 
 .PHONY: all buildlib clean fclean re env lex parse heredoc

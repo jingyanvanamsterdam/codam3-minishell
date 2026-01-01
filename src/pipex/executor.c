@@ -3,6 +3,7 @@
 #include <stdlib.h>		// for EXIT_FAILURE
 #include <sys/wait.h>
 #include <unistd.h>		// for STDIN_FILENO
+#include "utils.h"
 
 int	count_cmd(t_cmd *cmd)
 {
@@ -55,21 +56,6 @@ void	close_pipes(t_pipe *params)
 		close(params->pipes[i][1]);
 		++i;
 	}
-	return ;
-}
-
-void	free_pipes(t_pipe *params)
-{
-	int	i;
-
-	i = 0;
-	while (i < params->cmd_count - 1)
-	{
-		free(params->pipes[i]);
-		params->pipes[i++] = NULL;
-	}
-	free(params->pipes);
-	params->pipes = NULL;
 	return ;
 }
 

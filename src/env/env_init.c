@@ -3,11 +3,13 @@
 #include <stdlib.h>
 #include "libft.h"
 #include "env.h"
+#include "utils.h"
 
 #include <stdio.h>		// for testing purpose
 
 // t_env	*create_node(char *key, char *value, t_env *env_list)
-t_env	*create_node(char **key_value, t_env *env_list)
+// t_env	*create_node(char **key_value, t_env *env_list)
+t_env	*create_node(char **key_value, t_shell *shell)
 {
 	t_env	*node;
 
@@ -15,7 +17,7 @@ t_env	*create_node(char **key_value, t_env *env_list)
 	if (!node)
 	{
 		free_split(key_value);
-		ft_malloc_failure("Failture at malloc env.\n", env_list);
+		ft_malloc_failure("Failture at malloc env.\n", shell);
 	}
 	node->key = ft_strdup(key_value[0]);
 	if (key_value[1])
@@ -25,13 +27,13 @@ t_env	*create_node(char **key_value, t_env *env_list)
 	if (!node->key || !node->value)
 	{
 		free_split(key_value);
-		ft_malloc_failure("Failure at malloc env.\n", env_list);
+		ft_malloc_failure("Failure at malloc env.\n", shell);
 	}
 	node->next = NULL;
 	return (node);
 }
 
-t_env	*init_env(char **envp)
+t_env	*init_env(char **envp, t_shell *shell)
 {
 	int		i;
 	t_env	*head;
@@ -46,8 +48,8 @@ t_env	*init_env(char **envp)
 	{
 		key_value = ft_split(envp[i], '=');
 		if (!key_value)
-			ft_malloc_failure("Failture at malloc env.\n", head);
-		node = create_node(key_value, head);
+			ft_malloc_failure("Failture at malloc env.\n", shell);
+		node = create_node(key_value, shell);
 		if (i != 0)
 			prev_node->next = node;
 		else

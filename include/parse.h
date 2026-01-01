@@ -6,6 +6,7 @@
 // # include "pipe.h"
 # include "executor.h"
 # include <stdbool.h>
+# include "utils.h"
 
 # define RESET   "\033[0m"
 # define BLACK   "\033[30m"

@@ -3,9 +3,21 @@
 
 # include "struct.h"
 
-void	ft_input_error(char *errmes, char *s, t_shell *shell);
+// utils_error.c
 void	ft_malloc_failure(char *s, t_shell *shell);
-void	free_shell(t_shell *shell);
+void	ft_input_error(char *errmes, char *s, t_shell *shell);
+void	ft_error_printing(char *mes);
+void	ft_warning_printing(void);
 
+// utils_free.c
+void	free_2d_arr(char **arr);
+void	free_token_lst(t_token **lst);
+void	free_env_lst(t_env **lst);
+void	free_redir_lst(t_redir **lst);
+void	free_cmd_lst(t_cmd **lst);
+void	free_shell(t_shell *shell);
+void	free_quotok(t_quotok **lst);
+void	ft_free_exit_process(int **pipes, t_shell *shell);
+void	free_pipes(t_pipe *params);
 
 #endif
