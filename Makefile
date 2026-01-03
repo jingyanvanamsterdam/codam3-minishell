@@ -69,7 +69,7 @@ lex: buildlib
 	@echo "✅ Built test executable: ./lex"
 parse: buildlib
 	@echo "Compiling parse testing module..."
-	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(LIBFT) $(RLFLAG) -o parse
+	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(UTILS_SRC) $(LIBFT) $(RLFLAG) -o parse
 	@echo "✅ Built test executable: ./parse"
 heredoc: buildlib
 	@echo "Compiling heredoc testing module..."
