@@ -61,6 +61,7 @@ int		create_process(t_shell *shell, int **pipes, int	*file);
 void	execusion(t_shell *shell);
 
 // pipes handler
-void	pipes_initializer(t_pipeparams *params)
+// void	pipes_initializer(t_pipeparams *params);
 
 
+#endif

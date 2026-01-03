@@ -11,7 +11,6 @@
 //#include <sys/types.h>
 //#include <sys/wait.h>
 
-
 int	create_process(t_shell *shell, int **pipes, int	*file)
 {
 	int		i;
@@ -28,9 +27,7 @@ int	create_process(t_shell *shell, int **pipes, int	*file)
 		if (pid < 0)
 			return (perror("sh: fork"), -1);
 		else if (pid == 0)
-		{
 			run_child_process(shell, pipes, i, cmd);
-		}
 		else
 			parent_close_file(shell, i, pipes, file);
 		i++;
@@ -101,9 +98,7 @@ void	execusion(t_shell *shell)
 /** Question:
  * if the main process open or deal the redirection process, does it mean there will be only one input and one output file or source?
  * if in the process, there is other redirection, will be the latest redirection being considered as the redirection source?
-
  */
-
 
 void	executor(t_shell *shell)
 {
@@ -115,12 +110,8 @@ void	executor(t_shell *shell)
 	pipes_initializer(&pipe_params);
 
 	// Now should be the pipe_handler
-
 	pipe_handler(shell, &pipe_params);
 
 	status = wait_handler(&pipe_params);
-
 	// for pipex program, the main takes (int argc, char **argv, char **envp)
-
-	
 }

@@ -1,5 +1,4 @@
 #include "parse.h" //change to minishell.h after combin
-#include "pipe.h"
 #include "struct.h"
 #include "libft.h"
 #include <stdio.h>	
