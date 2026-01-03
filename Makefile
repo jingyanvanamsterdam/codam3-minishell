@@ -32,7 +32,7 @@ UTILS_SRC = $(shell find ./src/utils -iname "*.c")
 # lexing module
 LEX_SRC = $(shell find ./src/lexing -iname "*.c")
 PARSE_SRC = $(shell find ./src/parse -iname "*.c")
-HEREDOC_SRC = $(shell find ./src/pipex -iname "*.c")
+EXECUTION_SRC = $(shell find ./src/execution -iname "*.c")
 
 all: buildlib $(NAME) 
 
@@ -72,9 +72,9 @@ parse: buildlib
 	@echo "Compiling parse testing module..."
 	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(UTILS_SRC) $(LIBFT) $(RLFLAG) -o parse
 	@echo "✅ Built test executable: ./parse"
-heredoc: buildlib
-	@echo "Compiling heredoc testing module..."
-	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(HEREDOC_SRC) $(UTILS_SRC) $(LIBFT) $(RLFLAG) -o heredoc
-	@echo "✅ Built test executable: ./heredoc"
+execution: buildlib
+	@echo "Compiling execution testing module..."
+	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(EXECUTION_SRC) $(UTILS_SRC) $(LIBFT) $(RLFLAG) -o execution
+	@echo "✅ Built test executable: ./execution"
 
-.PHONY: all buildlib clean fclean re env lex parse heredoc
+.PHONY: all buildlib clean fclean re env lex parse execution
