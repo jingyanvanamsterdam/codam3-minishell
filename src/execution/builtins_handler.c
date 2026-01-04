@@ -1,5 +1,6 @@
 
 #include "minishell.h"
+#include <stdio.h>
 
 int	is_builtin(char *command)
 {
@@ -22,19 +23,27 @@ int	is_builtin(char *command)
 
 void	execve_builtin(t_shell *shell, int command_type, t_cmd *cmd)
 {
-	if (command_type == 1)
-		ft_echo(cmd->cmd, shell);
-	if (command_type == 2)
-		ft_cd(cmd->cmd, shell);
-	if (command_type == 3)
-		ft_pwd(cmd->cmd, shell);
-	if (command_type == 4)
-		ft_export(cmd->cmd, shell);
-	if (command_type == 5)
-		ft_unset(cmd->cmd, shell);
-	if (command_type == 6)
-		ft_env(cmd->cmd, shell);
-	if (command_type == 7)
-		ft_exit(cmd->cmd, shell);
+	(void)cmd;
+	(void)command_type;
+	
+	// Temporary just set exit status to 0 for now
+	// shell->exit needs to be set properly after the builtin function is implemented
+	shell->exit = 0;
+	printf("This is a builtin function\n");
+	// TODO: implement the builtin functions
+	// if (command_type == 1)
+	// 	ft_echo(cmd->cmd, shell);
+	// if (command_type == 2)
+	// 	ft_cd(cmd->cmd, shell);
+	// if (command_type == 3)
+	// 	ft_pwd(cmd->cmd, shell);
+	// if (command_type == 4)
+	// 	ft_export(cmd->cmd, shell);
+	// if (command_type == 5)
+	// 	ft_unset(cmd->cmd, shell);
+	// if (command_type == 6)
+	// 	ft_env(cmd->cmd, shell);
+	// if (command_type == 7)
+	// 	ft_exit(cmd->cmd, shell);
 }
 

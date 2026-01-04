@@ -1,10 +1,8 @@
-#include "struct.h"
+#include "minishell.h"
 #include <fcntl.h>		// for pid_t
 #include <stdlib.h>		// for EXIT_FAILURE
 #include <sys/wait.h>
 #include <unistd.h>		// for STDIN_FILENO
-#include "utils.h"
-#include "env.h"
 
 int	count_cmd(t_cmd *cmd)
 {
@@ -34,14 +32,28 @@ void	pipes_initializer(t_pipe *params)
 	{
 		params->pipes[i] = malloc(2 * sizeof(int));
 		if (!params->pipes[i])
-			return ;		// TODO: replace it with proper exiter
+		{
+			// Free already allocated pipes
+			while (--i >= 0)
+				free(params->pipes[i]);
+			free(params->pipes);
+			perror("pipe array allocation");
+			exit(1);
+		}		// TODO: replace it with proper exiter
 		++i;
 	}
 	i = 0;
 	while (i < params->cmd_count - 1)
 	{
 		if (pipe(params->pipes[i]) == -1)
-			return ;		// TODO: replace it with proper exiter
+		{
+			// Free already allocated pipes
+			perror("pipe");
+			while (i >= 0)
+				free(params->pipes[i--]);
+			free(params->pipes);
+			exit(1);
+		}		// TODO: replace it with proper exiter
 		++i;
 	}
 }
@@ -60,48 +72,96 @@ void	close_pipes(t_pipe *params)
 	return ;
 }
 
-void	apply_rediction(t_redir *r)
+// redirection for parent process
+int	apply_redirection_parent(t_redir *r)
 {
 	while (r)
 	{
 		if (r->type == REDIR_IN)
-		{
 			r->fd = open(r->file, O_RDONLY);
-			dup2(r->fd, STDIN_FILENO);
-			close(r->fd);
-		}
 		else if (r->type == REDIR_OUT)
-		{
 			r->fd = open(r->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			dup2(r->fd, STDOUT_FILENO);
-			close(r->fd);
-		}
 		else if (r->type == APPEND)
-		{
 			r->fd = open(r->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-			dup2(r->fd, STDOUT_FILENO);
-			close(r->fd);
+		
+		if (r->fd < 0)
+		{
+			perror(r->file);
+			return (1);  // Return error - shell continues!
 		}
-		// HEREDOC handled earlier
+		
+		if (r->type == REDIR_IN || r->type == HEREDOC)
+			dup2(r->fd, STDIN_FILENO);
+		else if (r->type == APPEND || r->type == REDIR_OUT)
+			dup2(r->fd, STDOUT_FILENO);
+		close(r->fd);
+		r = r->next;
+	}
+	return (0);  // Success
+}
+
+// This function only used in child process
+void	apply_redirection(t_redir *r)
+{
+	while (r)
+	{
+		if (r->type == REDIR_IN)
+			r->fd = open(r->file, O_RDONLY);
+		else if (r->type == REDIR_OUT)
+			r->fd = open(r->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		else if (r->type == APPEND)
+			r->fd = open(r->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (r->fd < 0)
+		{
+			// error handling
+			perror(r->file);
+			exit(1);
+		}
+		if (r->type == REDIR_IN || r->type == HEREDOC)
+			dup2(r->fd, STDIN_FILENO);
+		else if (r->type == APPEND || r->type == REDIR_OUT)
+			dup2(r->fd, STDOUT_FILENO);
+		close(r->fd);
 		r = r->next;
 	}
 }
 
 void	child_process(t_shell *shell, t_cmd *cmd, t_pipe *param, int i)
 {
+	int	command_type;
+
 	if (i > 0)
 		dup2(param->pipes[i - 1][0], STDIN_FILENO);
 	if (i < param->cmd_count - 1)
 		dup2(param->pipes[i][1], STDOUT_FILENO);
 	if (cmd->redir)
-		apply_redirection();
+		apply_redirection(cmd->redir);
 
 	close_pipes(param);
 	free_pipes(param);
-
-	// execve(path, argv, envp)
-	execve(cmd->path, cmd->cmd, env_to_array(shell->env_lst));
-
+	
+	// TODO: dealing with builtin functions
+	if (cmd->cmd && cmd->cmd[0])
+	{
+		command_type = is_builtin(cmd->cmd[0]);
+		if (command_type > 0)
+		{
+			execve_builtin(shell, command_type, cmd);
+			exit(shell->exit);
+		}
+	}
+	if (!cmd->path)
+	{
+		ft_putstr_fd(cmd->cmd[0], 2);
+		ft_putstr_fd(" : command not found\n", 2);
+		exit(127);
+	}
+	if (execve(cmd->path, cmd->cmd, env_to_array(shell->env_lst)) == -1)
+	{
+		perror(cmd->cmd[0]);
+		exit(126);
+	}
+	// TODO: error handling after execve, 
 }
 
 void	pipe_executor(t_shell *shell, t_pipe *params)
@@ -110,18 +170,24 @@ void	pipe_executor(t_shell *shell, t_pipe *params)
 	int	i;
 
 	params->pids = ft_calloc(params->cmd_count, sizeof(pid_t));
+	// TODO: error handling
 	cmd = shell->cmd;
 	i = 0;
 	while (cmd)
 	{
 		params->pids[i] = fork();
-		// TODO: success check
-		// if (params->pids[i] == -1)
-		// {
-		// 	perror("fork");
-		// 	params_cleaner(params);
-		// 	exit(EXIT_FAILURE);
-		// }
+		// TODO: success checka
+
+		if (params->pids[i] == -1)
+		{
+			perror("fork");
+			// 	params_cleaner(params);
+			close_pipes(params);
+			free_pipes(params);
+			while (--i >= 0)
+				kill(params->pids[i], SIGKILL);		// TODO: 这是啥？
+			exit(EXIT_FAILURE);
+		}
 		if (params->pids[i] == 0)
 			child_process(shell, cmd, params, i);
 		cmd = cmd->next;
@@ -140,10 +206,12 @@ void	wait_handler(t_shell *shell, t_pipe *param)
 	while (i < param->cmd_count)
 	{
 		waitpid(param->pids[i], &status, 0);
-		if (i == param->cmd_count)
+		if (i == param->cmd_count - 1)
 		{
 			if (WIFEXITED(status))
 				shell->prev_exit = WEXITSTATUS(status);		// TODO: need JD to confirm
+			else if (WIFSIGNALED(status))
+				shell->prev_exit = 128 + WTERMSIG(status);
 		}
 		++i;
 	}
@@ -153,19 +221,35 @@ void	wait_handler(t_shell *shell, t_pipe *param)
 
 void	executor(t_shell *shell)
 {
-	int	status;
 	t_pipe	params;
+	int	command_type;
 
 	params = (t_pipe){0};
-	params.cmd_count = count_cmd(shell->cmd);	// or - 1?
+	params.cmd_count = count_cmd(shell->cmd);
 
-	pipes_initializer(&params);
+	if (params.cmd_count == 1 && shell->cmd->cmd && shell->cmd->cmd[0])
+	{
+		command_type = is_builtin(shell->cmd->cmd[0]);
+		if (command_type > 0)
+		{
+			if (shell->cmd->redir)
+			{
+				if (apply_redirection_parent(shell->cmd->redir) != 0)
+				{
+					shell->exit = 1;
+					return ;
+				}
+			}
+			execve_builtin(shell, command_type, shell->cmd);
+			return ;
+		}
+	}
 
-	// execute pipeline
+	if (params.cmd_count > 1)
+		pipes_initializer(&params);
+	else
+		params.pipes = NULL;
 	pipe_executor(shell, &params);
-
 	wait_handler(shell, &params);
-
 	// TODO: clean the params, t_pipe and ?t_shell?
-
 }

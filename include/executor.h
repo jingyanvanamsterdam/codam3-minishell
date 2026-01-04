@@ -21,5 +21,14 @@ extern volatile sig_atomic_t g_sig;  // 只声明，不定义
 void	executor(t_shell *shell);
 int		count_cmd(t_cmd *cmd);
 void	pipes_initializer(t_pipe *params);
+void	close_pipes(t_pipe *params);
+void	apply_redirection(t_redir *r);
+void	child_process(t_shell *shell, t_cmd *cmd, t_pipe *param, int i);
+void	pipe_executor(t_shell *shell, t_pipe *params);
+void	wait_handler(t_shell *shell, t_pipe *param);
+
+// builtins_handler.c
+int		is_builtin(char *command);
+void	execve_builtin(t_shell *shell, int command_type, t_cmd *cmd);
 
 #endif
