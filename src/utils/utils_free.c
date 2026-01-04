@@ -37,6 +37,7 @@ void	free_token_lst(t_token **lst)
 	}
 }
 
+/** only call when program need to get exit clean */
 void	free_env_lst(t_env **lst)
 {
 	t_env	*temp;
@@ -87,6 +88,7 @@ void	free_cmd_lst(t_cmd **lst)
 	}
 }
 
+/** need to check whether we need to free env_lst. only free when there is failutre. */
 void	free_shell(t_shell *shell)
 {
 	if (shell->token)
@@ -112,15 +114,15 @@ void	free_quotok(t_quotok **lst)
 	}
 }
 
-// void	ft_free_exit_process(int **pipes, t_shell *shell)
-// {
-// 	int	n;
+void	ft_free_exit_process(int **pipes, t_shell *shell)
+{
+	int	n;
 
-// 	n = count_cmd(shell->cmd) - 1;
-// 	free_pipes(pipes, n);
-// 	//exit process?
-// 	exit(shell->exit);
-// }
+	n = count_cmd(shell->cmd) - 1;
+	free_pipes(pipes, n);
+	//exit process, to change, shouldn't be shell->exit.
+	exit(shell->exit);
+}
 
 void	free_pipes(t_pipe *params)
 {

@@ -11,6 +11,24 @@
 //#include <sys/types.h>
 //#include <sys/wait.h>
 
+void	find_file_redir(t_cmd *cmd, int *file)
+{
+	t_redir *redir;
+
+	redir = cmd->redir;
+	while (redir)
+	{
+		if (redir->type == REDIR_IN || redir->type == HEREDOC)
+			file[0] = redir->fd;
+		else if (redir->type == REDIR_OUT || redir->type == APPEND)
+			file[1] = redir->fd;
+		redir = redir->next;
+	}
+}
+/** find file redir() is change in/out fd if there is redirection in each cmd 
+ * parent_close_file() not sure do it seperately like now or all at once after while.
+ * run_child_process() should be reintergrate with KL code.
+*/
 int	create_process(t_shell *shell, int **pipes, int	*file)
 {
 	int		i;
@@ -18,19 +36,19 @@ int	create_process(t_shell *shell, int **pipes, int	*file)
 	int		count;
 	t_cmd	*cmd;
 
-	i = 0;
+	i = -1;
 	count = count_cmd(shell->cmd);
 	cmd = shell->cmd;
-	while (i < count)
+	while (++i < count)
 	{
+		find_file_redir(cmd, file);
 		pid = fork();
 		if (pid < 0)
 			return (perror("sh: fork"), -1);
 		else if (pid == 0)
-			run_child_process(shell, pipes, i, cmd);
+			run_child_process(shell, file, pipes, cmd);
 		else
-			parent_close_file(shell, i, pipes, file);
-		i++;
+			parent_close_file(shell, i, pipes, file, cmd); // close cmd redir files.
 		cmd = cmd->next;
 	}
 	return (pid);
@@ -73,7 +91,7 @@ void	execusion(t_shell *shell)
 	pipes = NULL;
 	if (count > 1)
 		pipes = create_pipes(shell);
-	// handle redirection including heredoc.
+
 	file[0] = 0;
 	file[1] = 1;
 	pid = create_process(shell, pipes, file);
@@ -96,9 +114,8 @@ void	execusion(t_shell *shell)
 }
 
 /** Question:
- * if the main process open or deal the redirection process, does it mean there will be only one input and one output file or source?
- * if in the process, there is other redirection, will be the latest redirection being considered as the redirection source?
- */
+ * TODO: jd: signal on child process. kl: reinterragete execusion part. 
+*/
 
 void	executor(t_shell *shell)
 {

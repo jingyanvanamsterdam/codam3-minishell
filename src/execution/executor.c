@@ -3,6 +3,8 @@
 #include <stdlib.h>		// for EXIT_FAILURE
 #include <sys/wait.h>
 #include <unistd.h>		// for STDIN_FILENO
+#include <stdio.h>		// for perror()
+#include "libft.h"
 
 int	count_cmd(t_cmd *cmd)
 {
@@ -72,7 +74,7 @@ void	close_pipes(t_pipe *params)
 	return ;
 }
 
-// redirection for parent process
+// delete
 int	apply_redirection_parent(t_redir *r)
 {
 	while (r)
@@ -106,7 +108,7 @@ void	apply_redirection(t_redir *r)
 	while (r)
 	{
 		if (r->type == REDIR_IN)
-			r->fd = open(r->file, O_RDONLY);
+			r->fd = open(r->file, O_RDONLY);		// already opened
 		else if (r->type == REDIR_OUT)
 			r->fd = open(r->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else if (r->type == APPEND)
@@ -177,7 +179,6 @@ void	pipe_executor(t_shell *shell, t_pipe *params)
 	{
 		params->pids[i] = fork();
 		// TODO: success checka
-
 		if (params->pids[i] == -1)
 		{
 			perror("fork");
@@ -209,7 +210,7 @@ void	wait_handler(t_shell *shell, t_pipe *param)
 		if (i == param->cmd_count - 1)
 		{
 			if (WIFEXITED(status))
-				shell->prev_exit = WEXITSTATUS(status);		// TODO: need JD to confirm
+				shell->prev_exit = WEXITSTATUS(status);		// TODO: need JD to confirm should be shell->exit. bc we have reset shell after execution
 			else if (WIFSIGNALED(status))
 				shell->prev_exit = 128 + WTERMSIG(status);
 		}

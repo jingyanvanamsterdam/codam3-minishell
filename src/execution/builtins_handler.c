@@ -1,6 +1,7 @@
 
 #include "minishell.h"
 #include <stdio.h>
+#include "libft.h"
 
 int	is_builtin(char *command)
 {
@@ -21,6 +22,9 @@ int	is_builtin(char *command)
 	return (0);
 }
 
+
+// TODO: builtin funciton need to set the shell->exit when it fail and need to exit
+// builtin function exit(shell->exit); shell->exit is changed when it fails 
 void	execve_builtin(t_shell *shell, int command_type, t_cmd *cmd)
 {
 	(void)cmd;

@@ -1,10 +1,6 @@
 #include "minishell.h"
-#include "struct.h"
 #include <stdlib.h>
 #include "libft.h"
-#include "env.h"
-#include "utils.h"
-
 #include <stdio.h>		// for testing purpose
 
 // t_env	*create_node(char *key, char *value, t_env *env_list)
@@ -33,30 +29,67 @@ t_env	*create_node(char **key_value, t_shell *shell)
 	return (node);
 }
 
-t_env	*init_env(char **envp, t_shell *shell)
+static void	append_to_env_lst(t_env **head, t_env *node)
+{
+	t_env	*tmp;
+
+	//if (!head || !node)
+	//	return ;
+	if (*head == NULL)
+	{
+		*head = node;
+		return ;
+	}
+	tmp = *head;
+	while(tmp->next)
+		tmp = tmp->next;
+	tmp->next = node;
+}
+
+void	init_env(char **envp, t_shell *shell)
 {
 	int		i;
-	t_env	*head;
-	t_env	*node;
-	t_env	*prev_node;
-	char	**key_value;
-
-	head = NULL;
+	t_env	*node;		// store the newly created node
+	char	**key_value;	// store the splitted result
+	
 	// TODO: what if envp is empty? 也许可以让ft_split在输入是“”和NULL时都返回NULL，来应对？
 	i = 0;
 	while (envp[i] != NULL)
 	{
 		key_value = ft_split(envp[i], '=');
 		if (!key_value)
-			ft_malloc_failure("Failture at malloc env.\n", shell);
+			ft_malloc_failure("setting enviroment values.\n", shell);
 		node = create_node(key_value, shell);
-		if (i != 0)
-			prev_node->next = node;
-		else
-			head = node;
-		prev_node = node;
-		free_split(key_value);
+		append_to_env_lst(&(shell->env_lst), node);
+		free_2d_arr(key_value);
 		i++;
 	}
-	return (head);
 }
+
+// t_env	*init_env(char **envp, t_shell *shell)
+// {
+// 	int		i;
+// 	t_env	*head;
+// 	t_env	*node;
+// 	t_env	*prev_node;
+// 	char	**key_value;
+
+// 	head = NULL;
+// 	// TODO: what if envp is empty? 也许可以让ft_split在输入是“”和NULL时都返回NULL，来应对？
+// 	i = 0;
+// 	while (envp[i] != NULL)
+// 	{
+// 		key_value = ft_split(envp[i], '=');
+// 		if (!key_value)
+// 			ft_malloc_failure("Failture at malloc env.\n", shell);
+// 		node = create_node(key_value, shell);
+// 		if (i != 0)
+// 			prev_node->next = node;
+// 		else
+// 			head = node;
+// 		prev_node = node;
+// 		free_split(key_value);
+// 		i++;
+// 	}
+// 	return (head);
+// }

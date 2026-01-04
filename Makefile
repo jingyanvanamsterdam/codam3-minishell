@@ -70,11 +70,11 @@ lex: buildlib
 	@echo "✅ Built test executable: ./lex"
 parse: buildlib
 	@echo "Compiling parse testing module..."
-	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(UTILS_SRC) $(LIBFT) $(RLFLAG) -o parse
+	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(ENV_SRC) $(UTILS_SRC) $(LIBFT) $(RLFLAG) -o parse
 	@echo "✅ Built test executable: ./parse"
 execution: buildlib
 	@echo "Compiling execution testing module..."
-	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(EXECUTION_SRC) $(UTILS_SRC) $(LIBFT) $(RLFLAG) -o execution
+	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(EXECUTION_SRC) $(ENV_SRC) $(UTILS_SRC) $(LIBFT) $(RLFLAG) -o execution
 	@echo "✅ Built test executable: ./execution"
 
 .PHONY: all buildlib clean fclean re env lex parse execution

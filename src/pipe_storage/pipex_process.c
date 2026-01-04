@@ -1,14 +1,14 @@
-#include "pipe.h" // change to minishell
+// #include "pipe.h" // change to minishell
 #include "parse.h"
 #include "struct.h"
 #include "libft.h"
-//#include <stdio.h>	
-//#include <stdlib.h>
-//#include <fcntl.h>
-//#include <string.h>
-//#include <unistd.h>
+#include <stdio.h>	
+#include <stdlib.h>
+#include <fcntl.h>
+#include <string.h>
+#include <unistd.h>
 
-int	dup_files(t_shell *shell, int *file, int **pipes, int i)
+int	dup_files(t_shell *shell, int *file, int **pipes, t_cmd *cmd)
 {
 	int	count;
 
@@ -23,11 +23,11 @@ int	dup_files(t_shell *shell, int *file, int **pipes, int i)
 		ft_error_printing("dup2 output fail");
 		shell->exit = 1;
 		close_pipes(pipes, (count - 1));
-		close_files(file);
+		close_files(cmd, file);
 		return (shell->exit);
 	}
 	close_pipes(pipes, (count - 1));
-	close_files(file);
+	close_files(cmd, file);
 	return (shell->exit);
 }
 
@@ -47,11 +47,7 @@ void	execve_cmd(t_shell *shell, int i, t_cmd *cmd)
 		shell->exit = EXIT_NOCMD;
 		return ;
 	}
-	//TO-DO env_lst is a list, but execve need a char **enviorn
-	//environ = create_environ(shell->env_lst);
-	//if (!enviorn)
-	//	ft_malloc_failure("create enviorn\n", shell);
-	if (execve(cmd->path, cmd->cmd, environ) == -1)
+	if (execve(cmd->path, cmd->cmd, env_to_array(shell->env_lst)) == -1)
 	{
 		ft_error_printing(cmd->cmd[0]);
 		shell->exit = EXIT_CMD_NOEXC;
@@ -103,14 +99,12 @@ void	run_child_process(t_shell *shell, int **pipes, int i, t_cmd *cmd)
 	if (cmd->cmd)
 	{
 		command = is_builtin(cmd->cmd[0]);
-		if (command > 0)
+		if (dup_files(shell, cmd, pipes, i) == 0)
 		{
-			if (dup_files(shell, cmd, pipes, i) == 0)
+			// check success
+			if (command > 0)
 				execve_builtin(shell, cmd, command);
-		}
-		else
-		{
-			if (dup_files(shell, cmd, pipes, i) == 0)
+			else
 				execve_cmd(shell, i, cmd);
 		}
 	}

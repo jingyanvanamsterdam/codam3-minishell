@@ -27,7 +27,7 @@ void	setup_child_signal(void);
 int		count_cmd(t_cmd *cmd);
 void	redirect_fd(int *file, int **pipes, int i, t_shell *shell);
 void	close_pipes(int **pipes, int n);
-void	close_files(int *file);
+void	close_files(t_cmd *cmd, int *file);
 void	parent_close_file(t_shell *shell, int i, int **pipes, int *file);
 
 // ERROR:

@@ -149,7 +149,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		input = readline("Minishell: ");
 		//Only when ctrl + d is trigered when there is nothing on the readline
-		if (!input)
+		if (!input)		// This is the only exit of this program
 		{
 			if (g_sig == SIGINT)
 			{
