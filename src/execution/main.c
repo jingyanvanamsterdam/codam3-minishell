@@ -134,17 +134,15 @@ int	main(int argc, char **argv, char **envp)
 	shell->env_lst = NULL;
 	shell->token = NULL;
 	shell->cmd = NULL;
+	shell->pip_param = NULL;
 	shell->prev_exit = 0;
 	shell->exit = 0;
-
 	//shell->env_lst = init_env(envp, shell);
 	//shell->token = tokenization(argv[1], shell);
 	//print_tokens(shell->token);
 	//free_shell(shell);
-
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, SIG_IGN);
-
 	while (1)
 	{
 		input = readline("Minishell: ");
@@ -174,12 +172,10 @@ int	main(int argc, char **argv, char **envp)
 			free(input);
 			continue;
 		}
-
 		add_history(input);
 		// set up shell
 		init_env(envp, shell); 
 		tokenization(input, shell);
-		//print_tokens(shell->token);
 		if (!shell->token)
 		{
 			free_env_lst(&(shell->env_lst));
@@ -204,7 +200,6 @@ int	main(int argc, char **argv, char **envp)
 		//	fd = output_append(filename);
 		//write(fd, "hello\n", 6);
 		//printf("fd = %d\n", fd);
-
 		executor(shell);
 		shell->prev_exit = shell->exit;
 		shell->exit = 0;

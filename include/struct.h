@@ -54,6 +54,12 @@ typedef struct	s_cmd
 	t_redir			*redir;
 	struct s_cmd	*next;
 }				t_cmd;
+typedef struct s_pipe
+{
+	int	cmd_count;
+	int	**pipes;
+	int	*pids;
+}	t_pipe;
 
 typedef struct	s_shell
 {
@@ -62,14 +68,8 @@ typedef struct	s_shell
 	t_cmd			*cmd;
 	int				prev_exit;
 	int				exit;
+	t_pipe			*pip_param;
 	// more to add
 }				t_shell;
-
-typedef struct s_pipe
-{
-	int	cmd_count;
-	int	**pipes;
-	int	*pids;
-}	t_pipe;
 
 #endif
