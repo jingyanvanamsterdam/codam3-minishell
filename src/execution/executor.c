@@ -74,7 +74,7 @@ void	close_pipes(t_pipe *params)
 	return ;
 }
 
-// delete
+// Return 0 for success, 1 for error (shell continues)
 int	apply_redirection_parent(t_redir *r)
 {
 	while (r)
@@ -89,7 +89,7 @@ int	apply_redirection_parent(t_redir *r)
 		if (r->fd < 0)
 		{
 			perror(r->file);
-			return (1);  // Return error - shell continues!
+			return (1);
 		}
 		
 		if (r->type == REDIR_IN || r->type == HEREDOC)
@@ -99,7 +99,7 @@ int	apply_redirection_parent(t_redir *r)
 		close(r->fd);
 		r = r->next;
 	}
-	return (0);  // Success
+	return (0);
 }
 
 // This function only used in child process
@@ -220,14 +220,43 @@ void	wait_handler(t_shell *shell, t_pipe *param)
 	param->pids = NULL;
 }
 
-void	executor(t_shell *shell)
+// This function return 1 when the command is a single builtin command
+int	single_builtin_handler(t_shell *shell)
+{
+	t_pipe	*params;
+	int		command_type;
+
+	params = shell->pip_param;
+	if (params->cmd_count == 1 && shell->cmd->cmd && shell->cmd->cmd[0])
+	{
+		command_type = is_builtin(shell->cmd->cmd[0]);
+		if (command_type > 0)
+		{
+			if (shell->cmd->redir)
+			{
+				if (apply_redirection_parent() != 0)
+				{
+					shell->exit = 1;
+					return ;
+				}
+			}
+			execve_builtin(shell, command_type, shell->cmd);
+			return (1);
+		}
+	}
+	return (0);
+}
+
+// command such as "cd /tmp" needs to be executed in the parent process, 
+// otherwise the environment variable doesn't change
+void	executor2(t_shell *shell)
 {
 	t_pipe	params;
 	int	command_type;
 
+	command_type = 0;
 	params = (t_pipe){0};
 	params.cmd_count = count_cmd(shell->cmd);
-
 	if (params.cmd_count == 1 && shell->cmd->cmd && shell->cmd->cmd[0])
 	{
 		command_type = is_builtin(shell->cmd->cmd[0]);
@@ -245,7 +274,6 @@ void	executor(t_shell *shell)
 			return ;
 		}
 	}
-
 	if (params.cmd_count > 1)
 		pipes_initializer(&params);
 	else
@@ -253,4 +281,16 @@ void	executor(t_shell *shell)
 	pipe_executor(shell, &params);
 	wait_handler(shell, &params);
 	// TODO: clean the params, t_pipe and ?t_shell?
+}
+
+void	executor(t_shell *shell)
+{
+	t_pipe	params;
+
+	params = (t_pipe){0};
+	params.cmd_count = count_cmd(shell->cmd);
+	shell->pip_param = &params;
+
+	if (single_builtin_handler(shell))
+		return ;
 }

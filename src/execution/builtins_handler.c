@@ -25,6 +25,8 @@ int	is_builtin(char *command)
 
 // TODO: builtin funciton need to set the shell->exit when it fail and need to exit
 // builtin function exit(shell->exit); shell->exit is changed when it fails 
+// This function has to have the third arguement, t_cmd*, although *shell has cmd, as the third
+// arguement specify which command to be executed when there are multiple of them. 
 void	execve_builtin(t_shell *shell, int command_type, t_cmd *cmd)
 {
 	(void)cmd;
