@@ -127,7 +127,7 @@ void	apply_redirection(t_redir *r)
 		r = r->next;
 	}
 }
-
+/** Check out run_child_process() */
 void	child_process(t_shell *shell, t_cmd *cmd, t_pipe *param, int i)
 {
 	int	command_type;
@@ -166,6 +166,7 @@ void	child_process(t_shell *shell, t_cmd *cmd, t_pipe *param, int i)
 	// TODO: error handling after execve, 
 }
 
+/**checkout create_process() */
 void	pipe_executor(t_shell *shell, t_pipe *params)
 {
 	t_cmd	*cmd;

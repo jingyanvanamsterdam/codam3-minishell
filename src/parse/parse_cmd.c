@@ -63,6 +63,8 @@ void	init_cmd_node(t_shell *shell, char **cmd)
 		ft_malloc_failure("parsing.\n", shell);
 	}
 	node->cmd = cmd;
+	node->fd[0] = 0;
+	node->fd[1] = 1;
 	node->path = NULL;
 	node->redir = NULL;
 	node->next = NULL;

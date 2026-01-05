@@ -52,6 +52,7 @@ typedef struct	s_cmd
 	char			**cmd;
 	char			*path;
 	t_redir			*redir;
+	int				fd[2];
 	struct s_cmd	*next;
 }				t_cmd;
 typedef struct s_pipe
@@ -59,6 +60,7 @@ typedef struct s_pipe
 	int	cmd_count;
 	int	**pipes;
 	int	*pids;
+	int	*fd;
 }	t_pipe;
 
 typedef struct	s_shell

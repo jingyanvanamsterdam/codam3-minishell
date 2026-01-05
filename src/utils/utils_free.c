@@ -114,16 +114,6 @@ void	free_quotok(t_quotok **lst)
 	}
 }
 
-void	ft_free_exit_process(int **pipes, t_shell *shell)
-{
-	int	n;
-
-	n = count_cmd(shell->cmd) - 1;
-	free_pipes(pipes, n);
-	//exit process, to change, shouldn't be shell->exit.
-	exit(shell->exit);
-}
-
 void	free_pipes(t_pipe *params)
 {
 	int	i;
