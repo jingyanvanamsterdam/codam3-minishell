@@ -4,11 +4,6 @@
 // shell->env_lst ======> ? =====> char **envp
 // child process takes the 
 
-void	child_process()
-{
-	
-}
-
 void	child_process(char **argv, int i, char **envp, t_pipe *params)
 {
 	t_child	child;

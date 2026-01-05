@@ -74,45 +74,14 @@ void	close_pipes(t_pipe *params)
 	return ;
 }
 
-// Return 0 for success, 1 for error (shell continues)
-int	apply_redirection_parent(t_redir *r)
-{
-	while (r)
-	{
-		if (r->type == REDIR_IN)
-			r->fd = open(r->file, O_RDONLY);
-		else if (r->type == REDIR_OUT)
-			r->fd = open(r->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else if (r->type == APPEND)
-			r->fd = open(r->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		
-		if (r->fd < 0)
-		{
-			perror(r->file);
-			return (1);
-		}
-		
-		if (r->type == REDIR_IN || r->type == HEREDOC)
-			dup2(r->fd, STDIN_FILENO);
-		else if (r->type == APPEND || r->type == REDIR_OUT)
-			dup2(r->fd, STDOUT_FILENO);
-		close(r->fd);
-		r = r->next;
-	}
-	return (0);
-}
+
 
 // This function only used in child process
+// This function exit with 1when error occurs.
 void	apply_redirection(t_redir *r)
 {
 	while (r)
 	{
-		if (r->type == REDIR_IN)
-			r->fd = open(r->file, O_RDONLY);		// already opened
-		else if (r->type == REDIR_OUT)
-			r->fd = open(r->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else if (r->type == APPEND)
-			r->fd = open(r->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (r->fd < 0)
 		{
 			// error handling
@@ -221,33 +190,6 @@ void	wait_handler(t_shell *shell, t_pipe *param)
 	param->pids = NULL;
 }
 
-// This function return 1 when the command is a single builtin command
-int	single_builtin_handler(t_shell *shell)
-{
-	t_pipe	*params;
-	int		command_type;
-
-	params = shell->pip_param;
-	if (params->cmd_count == 1 && shell->cmd->cmd && shell->cmd->cmd[0])
-	{
-		command_type = is_builtin(shell->cmd->cmd[0]);
-		if (command_type > 0)
-		{
-			if (shell->cmd->redir)
-			{
-				if (apply_redirection_parent(shell->cmd->redir) != 0)
-				{
-					shell->exit = 1;
-					return ;
-				}
-			}
-			execve_builtin(shell, command_type, shell->cmd);
-			return (1);
-		}
-	}
-	return (0);
-}
-
 // command such as "cd /tmp" needs to be executed in the parent process, 
 // otherwise the environment variable doesn't change
 void	executor2(t_shell *shell)
@@ -284,14 +226,4 @@ void	executor2(t_shell *shell)
 	// TODO: clean the params, t_pipe and ?t_shell?
 }
 
-void	executor(t_shell *shell)
-{
-	t_pipe	params;
 
-	params = (t_pipe){0};
-	params.cmd_count = count_cmd(shell->cmd);
-	shell->pip_param = &params;
-
-	if (single_builtin_handler(shell))
-		return ;
-}
