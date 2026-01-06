@@ -6,19 +6,8 @@
 #include <stdio.h>		// for perror()
 #include "libft.h"
 
-int	count_cmd(t_cmd *cmd)
-{
-	int	count;
 
-	count = 0;
-	while (cmd)
-	{
-		count++;
-		cmd = cmd->next;
-	}
-	return (count);
-}
-/** Not sure still using? create_pipes() is shorter, with malloc pipe and pipe() at the same time. ft_pipe_error is handling free pipes and close pipes */
+
 void	pipes_initializer(t_pipe *params)
 {
 	int	i;

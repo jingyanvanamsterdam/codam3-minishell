@@ -29,16 +29,16 @@ int	is_builtin(char *command)
 // arguement specify which command to be executed when there are multiple of them. 
 void	execve_builtin(t_shell *shell, int command_type, t_cmd *cmd)
 {
-	(void)cmd;
-	(void)command_type;
-	
 	// Temporary just set exit status to 0 for now
 	// shell->exit needs to be set properly after the builtin function is implemented
-	shell->exit = 0;
-	printf("This is a builtin function\n");
 	// TODO: implement the builtin functions
-	// if (command_type == 1)
-	// 	ft_echo(cmd->cmd, shell);
+	if (command_type == 1)
+		ft_echo_test(cmd->cmd, shell);
+	else
+	{
+		shell->exit = 0;
+		printf("Builtin function not implemented yet\n");
+	}
 	// if (command_type == 2)
 	// 	ft_cd(cmd->cmd, shell);
 	// if (command_type == 3)

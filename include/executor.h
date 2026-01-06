@@ -32,4 +32,7 @@ void	wait_handler(t_shell *shell, t_pipe *param);
 int		is_builtin(char *command);
 void	execve_builtin(t_shell *shell, int command_type, t_cmd *cmd);
 
+// ft_echo_test.c
+int		ft_echo_test(char **argv, t_shell *shell);
+
 #endif

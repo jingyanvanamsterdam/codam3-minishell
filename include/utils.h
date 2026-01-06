@@ -19,5 +19,6 @@ void	free_shell(t_shell *shell);
 void	free_quotok(t_quotok **lst);
 void	ft_free_exit_process(int **pipes, t_shell *shell);
 void	free_pipes(t_pipe *params);
+void	free_pipes_n(int **pipes, int count);
 
 #endif
