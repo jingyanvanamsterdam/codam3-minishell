@@ -11,11 +11,6 @@
 
 int	dup_files(t_shell *shell, t_cmd *cmd, int stream[2])
 {
-	int	count;
-	int	**pipes;
-
-	count = shell->pip_param->cmd_count;
-	pipes = shell->pip_param->pipes;
 	if (dup2(stream[0], STDIN_FILENO) < 0)
 	{
 		shell->exit = 1;
@@ -56,20 +51,21 @@ void	execve_cmd(t_shell *shell, t_cmd *cmd)
 
 void	execve_builtin(t_shell *shell, int command_type, t_cmd *cmd)
 {
-	if (command_type == 1)
-		ft_echo(cmd->cmd, shell);
-	if (command_type == 2)
-		ft_cd(cmd->cmd, shell);
-	if (command_type == 3)
-		ft_pwd(cmd->cmd, shell);
-	if (command_type == 4)
-		ft_export(cmd->cmd, shell);
-	if (command_type == 5)
-		ft_unset(cmd->cmd, shell);
-	if (command_type == 6)
-		ft_env(cmd->cmd, shell);
-	if (command_type == 7)
-		ft_exit(cmd->cmd, shell);
+	printf("buildin %d %s %d\n", command_type, cmd->cmd[0], shell->exit);
+	//if (command_type == 1)
+	//	ft_echo(cmd->cmd, shell);
+	//if (command_type == 2)
+	//	ft_cd(cmd->cmd, shell);
+	//if (command_type == 3)
+	//	ft_pwd(cmd->cmd, shell);
+	//if (command_type == 4)
+	//	ft_export(cmd->cmd, shell);
+	//if (command_type == 5)
+	//	ft_unset(cmd->cmd, shell);
+	//if (command_type == 6)
+	//	ft_env(cmd->cmd, shell);
+	//if (command_type == 7)
+	//	ft_exit(cmd->cmd, shell);
 }
 
 int	is_builtin(char *command)
@@ -94,17 +90,15 @@ int	is_builtin(char *command)
 void	run_child_process(t_shell *shell, t_cmd *cmd, int stream[2])
 {
 	int	command;
-	int	**pipes;
 
-	setup_child_signal();
-	pipes = shell->pip_param->pipes;
+	//setup_child_signal();
 	if (cmd->cmd)
 	{
 		command = is_builtin(cmd->cmd[0]);
 		if (dup_files(shell, cmd, stream) == 0)
 		{
 			if (command > 0)
-				execve_builtin(shell, cmd, command);
+				execve_builtin(shell, command, cmd);
 			else
 				execve_cmd(shell, cmd);
 		}
@@ -225,7 +219,7 @@ void	close_pipes_i(t_pipe *params, int n)
 	return ;
 }
 
- void	ft_pipe_error(t_shell *shell, char *str, int **pipes, int n)
+ void	ft_pipe_error(t_shell *shell, char *str, int n)
  {
 	int	i;
 
@@ -257,8 +251,8 @@ int	**create_pipes(t_shell *shell)
 		pipes[i] = malloc(sizeof(int) * 2);
 		if (!pipes[i] || pipe(pipes[i]) == -1)
 		{
-			close_pipes_i(pipes, i);
-			ft_pipe_error(shell, "pipe: ", pipes, i);
+			close_pipes_i(shell->pip_param, i);
+			ft_pipe_error(shell, "pipe: ", i);
 		}
 		i++;
 	}
@@ -267,7 +261,6 @@ int	**create_pipes(t_shell *shell)
 
 void	executor_tmp(t_shell *shell)
 {
-	int	status;
 	t_pipe	params;		// TODO: Put it into the t_shell?
 
 	params = (t_pipe){0};
@@ -276,7 +269,7 @@ void	executor_tmp(t_shell *shell)
 	
 	// how to create pipes? tmp using a different function
 	create_pipes(shell);
-
+	create_process(shell); 
 	//status = wait_handler(&params);
 	// for pipex program, the main takes (int argc, char **argv, char **envp)
 }
