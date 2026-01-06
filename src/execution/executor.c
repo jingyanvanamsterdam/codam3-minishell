@@ -18,7 +18,7 @@ int	count_cmd(t_cmd *cmd)
 	}
 	return (count);
 }
-
+/** Not sure still using? create_pipes() is shorter, with malloc pipe and pipe() at the same time. ft_pipe_error is handling free pipes and close pipes */
 void	pipes_initializer(t_pipe *params)
 {
 	int	i;
@@ -235,7 +235,7 @@ int	single_builtin_handler(t_shell *shell)
 		{
 			if (shell->cmd->redir)
 			{
-				if (apply_redirection_parent() != 0)
+				if (apply_redirection_parent(shell->cmd->redir) != 0)
 				{
 					shell->exit = 1;
 					return ;

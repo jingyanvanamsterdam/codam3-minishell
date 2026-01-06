@@ -38,14 +38,6 @@ void	ft_error_printing(char *mes)
 	write(2, "\n", 1);
 }
 
-// void	ft_pipe_error(t_shell *shell, char *str, int **pipes, int n)
-// {
-// 	ft_error_printing(str);
-// 	free_pipes(pipes, n);
-// 	free_shell(shell);
-// 	exit(EXIT_FAILURE);
-// }
-
 // sh has no warning. bash has long warning message. decide whether do warning. 
 void	ft_warning_printing(void)
 {

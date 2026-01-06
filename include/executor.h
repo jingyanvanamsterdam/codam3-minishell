@@ -18,6 +18,7 @@
 extern volatile sig_atomic_t g_sig;  // 只声明，不定义
 
 // executor.c
+void	executor_tmp(t_shell *shell);
 void	executor(t_shell *shell);
 int		count_cmd(t_cmd *cmd);
 void	pipes_initializer(t_pipe *params);

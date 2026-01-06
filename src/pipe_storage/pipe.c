@@ -78,29 +78,29 @@
 //	return (pid);
 //}
 
-int	**create_pipes(t_shell *shell)
-{
-	int	i;
-	int	**pipes;
-	int	count;
+//int	**create_pipes(t_shell *shell)
+//{
+//	int	i;
+//	int	**pipes;
+//	int	count;
 
-	i = 0;
-	count = count_cmd(shell->cmd);
-	pipes = malloc(sizeof(int *) * (count - 1));
-	if (!pipes)
-		ft_malloc_failure("pipe malloc failure\n", shell);
-	while (i < (count - 1))
-	{
-		pipes[i] = malloc(sizeof(int) * 2);
-		if (!pipes[i] || pipe(pipes[i]) == -1)
-		{
-			close_pipes(pipes, i);
-			ft_pipe_error(shell, "pipe: ", pipes, i);
-		}
-		i++;
-	}
-	return (pipes);
-}
+//	i = 0;
+//	count = count_cmd(shell->cmd);
+//	pipes = malloc(sizeof(int *) * (count - 1));
+//	if (!pipes)
+//		ft_malloc_failure("pipe malloc failure\n", shell);
+//	while (i < (count - 1))
+//	{
+//		pipes[i] = malloc(sizeof(int) * 2);
+//		if (!pipes[i] || pipe(pipes[i]) == -1)
+//		{
+//			close_pipes(pipes, i);
+//			ft_pipe_error(shell, "pipe: ", pipes, i);
+//		}
+//		i++;
+//	}
+//	return (pipes);
+//}
 
 void	execusion(t_shell *shell)
 {
@@ -121,7 +121,7 @@ void	execusion(t_shell *shell)
 	pid = create_process(shell, pipes, file);
 	if (pid == -1)
 	{
-		close_pipes(pipes, count - 1);
+		close_pipes(pipes);
 		shell->exit = 1;
 	}
 	else if (waitpid(pid, &status, 0) > 0)
@@ -141,18 +141,18 @@ void	execusion(t_shell *shell)
  * TODO: jd: signal on child process. kl: reinterragete execusion part. 
 */
 
-void	executor(t_shell *shell)
+void	executor_tmp(t_shell *shell)
 {
 	int	status;
 	t_pipe	pipe_params;		// TODO: Put it into the t_shell?
 
 	pipe_params = (t_pipe){0};
-	pipe_params.count = count_cmd(shell->cmd);
+	pipe_params.cmd_count = count_cmd(shell->cmd);
 	pipes_initializer(&pipe_params);
 
 	// Now should be the pipe_handler
 	pipe_handler(shell, &pipe_params);
 
-	status = wait_handler(&pipe_params);
+	//status = wait_handler(&pipe_params);
 	// for pipex program, the main takes (int argc, char **argv, char **envp)
 }

@@ -1,5 +1,6 @@
 // #include "pipe.h" // change to minishell
 #include "parse.h"
+#include "env.h"
 #include "struct.h"
 #include "libft.h"
 #include <stdio.h>	
@@ -35,10 +36,7 @@ int	dup_files(t_shell *shell, t_cmd *cmd, int stream[2])
 
 void	execve_cmd(t_shell *shell, t_cmd *cmd)
 {
-	int 	j;
 	//char	**enviorn;
-
-	j = 0;
 	if (!cmd->cmd)
 	{
 		shell->exit = 0;
@@ -211,4 +209,74 @@ int	create_process(t_shell *shell)
 		cmd = cmd->next;
 	}
 	return (pid);
+}
+
+void	close_pipes_i(t_pipe *params, int n)
+{
+	int	i;
+
+	i = 0;
+	while (i < n)
+	{
+		close(params->pipes[i][0]);
+		close(params->pipes[i][1]);
+		++i;
+	}
+	return ;
+}
+
+ void	ft_pipe_error(t_shell *shell, char *str, int **pipes, int n)
+ {
+	int	i;
+
+	i = -1;
+ 	ft_error_printing(str);
+ 	while (++i < n)
+	{
+		free(shell->pip_param->pipes[i]);
+		shell->pip_param->pipes[i] = NULL;
+	}
+	free(shell->pip_param->pipes);
+ 	free_shell(shell);
+ 	exit(EXIT_FAILURE);
+ }
+
+int	**create_pipes(t_shell *shell)
+{
+	int	i;
+	int	**pipes;
+	int	count;
+
+	i = 0;
+	count = count_cmd(shell->cmd);
+	pipes = malloc(sizeof(int *) * (count - 1));
+	if (!pipes)
+		ft_malloc_failure("pipe malloc failure\n", shell);
+	while (i < (count - 1))
+	{
+		pipes[i] = malloc(sizeof(int) * 2);
+		if (!pipes[i] || pipe(pipes[i]) == -1)
+		{
+			close_pipes_i(pipes, i);
+			ft_pipe_error(shell, "pipe: ", pipes, i);
+		}
+		i++;
+	}
+	return (pipes);
+}
+
+void	executor_tmp(t_shell *shell)
+{
+	int	status;
+	t_pipe	params;		// TODO: Put it into the t_shell?
+
+	params = (t_pipe){0};
+	params.cmd_count = count_cmd(shell->cmd);
+	shell->pip_param = &params;
+	
+	// how to create pipes? tmp using a different function
+	create_pipes(shell);
+
+	//status = wait_handler(&params);
+	// for pipex program, the main takes (int argc, char **argv, char **envp)
 }
