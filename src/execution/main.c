@@ -130,11 +130,8 @@ void	ft_restart_safely(t_shell *shell)
 	shell->input = NULL;
 }
 
-void	*init_shell(t_shell *shell, char **envp)
+void	init_shell(t_shell *shell, char **envp)
 {
-	shell = (t_shell *)malloc(sizeof(t_shell));
-	if (!shell)
-		return (1);
 	shell->input = NULL;
 	shell->env_lst = NULL;
 	shell->token = NULL;
@@ -145,16 +142,16 @@ void	*init_shell(t_shell *shell, char **envp)
 	init_env(envp, shell);
 }
 /** return 0 if fails and need to free input and set as NULL; */
-int	*process_input(t_shell *shell)
+int	process_input(t_shell *shell)
 {
 	// this do check for tab, but it doesn't work for tab completion in readline.
 	if (*(shell->input) == '\0' || ft_strcheck(shell->input, ft_isspace))
 		return (0);
-
 	add_history(shell->input);
 	tokenization(shell);
 	if (!shell->token)
 		return (0);
+	printf("before parings\n");
 	parsing(shell);
 	if (!shell->cmd)
 		return (free_token_lst(&(shell->token)), 0);
@@ -166,7 +163,7 @@ int	*process_input(t_shell *shell)
 
 void	interactive_shell(t_shell *shell)
 {
-	set_signals();
+	//set_signals();
 	while (1)
 	{
 		shell->input = readline("Minishell: ");
@@ -198,22 +195,26 @@ void	interactive_shell(t_shell *shell)
 			shell->input = NULL;
 			continue;
 		}
-		executor_tmp(shell);
+		//executor_tmp(shell);
+		print_parsed_cmd(shell->cmd);
 		ft_restart_safely(shell);
 	}
+}
+
+void	noninteractive_shell(char **argv, t_shell *shell)
+{
+	printf("non interactive %s %p\n", argv[0], shell);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell *shell;
-	char	*input;
 
 	//Init t_shell 
 	shell = (t_shell *)malloc(sizeof(t_shell));
 	if (!shell)
-		return (1);
+		ft_malloc_failure("failed at creatint shell", shell);
 	init_shell(shell, envp);
-
 	if (argc != 1) // is not interactive
 		noninteractive_shell(argv, shell);
 	else

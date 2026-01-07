@@ -64,6 +64,9 @@ void	init_env(char **envp, t_shell *shell)
 		free_2d_arr(key_value);
 		i++;
 	}
+	if (envp[0] == NULL)
+		printf("no envp\n");
+	printf("init env, %s %s\n", shell->env_lst->key, shell->env_lst->value);
 }
 
 // t_env	*init_env(char **envp, t_shell *shell)

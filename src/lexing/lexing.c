@@ -27,7 +27,7 @@ size_t	update_start(char *str, t_shell *shell)
 	if (!value)
 		ft_malloc_failure("tokenization\n", shell);
 	create_token_node(value, shell, WORD);
-	//printf("value = %s\n", value);
+	printf("%zu\n", end);
 	free(value);
 	return (end);
 }
@@ -75,8 +75,8 @@ void	tokenization(t_shell *shell)
 	char	*input;
 
 	start = 0;
-	input_len = ft_strlen(input);
 	input = shell->input;
+	input_len = ft_strlen(input);
 	while (start < input_len)
 	{
 		increase = update_start(input + start, shell);

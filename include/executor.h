@@ -7,6 +7,7 @@
 # include <stdbool.h>
 # include <fcntl.h>
 # include <stdlib.h>
+# include <stdio.h> // for printf testing
 
 # define ERROR_FILE 1
 # define ERROR_SYS 2
@@ -27,7 +28,7 @@ extern volatile sig_atomic_t g_sig;  // 只声明，不定义
 
 // execute.c
 void	setup_stream(int stream[2], t_cmd *cmd, int i, t_shell *shell);
-int	dup_files(t_shell *shell, t_cmd *cmd, int stream[2]);
+int		dup_files(t_shell *shell, t_cmd *cmd, int stream[2]);
 void	execve_cmd(t_shell *shell, t_cmd *cmd);
 void	find_file_redir(t_cmd *cmd);
 int		apply_redir_parent(t_shell *shell, int savefd[2]);
@@ -49,5 +50,10 @@ void	execve_builtin(t_shell *shell, int command_type, t_cmd *cmd);
 
 // ft_echo_test.c
 int		ft_echo_test(char **argv, t_shell *shell);
+
+//jd_process.c
+void	close_pipes_i(t_pipe *params, int n);
+void	ft_pipe_error(t_shell *shell, char *str, int n);
+
 
 #endif
