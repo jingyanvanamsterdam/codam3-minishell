@@ -20,18 +20,21 @@ void	free_2d_arr(char **arr)
 	free(arr);
 	arr = NULL;
 }
-
+/** shell->token = NULL after the function */
 void	free_token_lst(t_token **lst)
 {
 	t_token	*temp;
 
-	if (!lst)
+	if (!lst || !(*lst))
 		return ;
 	while (*lst)
 	{
 		temp = (*lst)->next;
 		if ((*lst)->value)
+		{
 			free((*lst)->value);
+			(*lst)->value = NULL;
+		}
 		free(*lst);
 		*lst = temp;
 	}
@@ -42,13 +45,21 @@ void	free_env_lst(t_env **lst)
 {
 	t_env	*temp;
 
+	if (!lst || !(*lst))
+		return ;
 	while (*lst)
 	{
 		temp = (*lst)->next;
 		if ((*lst)->key)
+		{
 			free((*lst)->key);
+			(*lst)->key = NULL;
+		}
 		if ((*lst)->value)
+		{
 			free((*lst)->value);
+			(*lst)->value = NULL;
+		}
 		free(*lst);
 		*lst = temp;
 	}
@@ -58,11 +69,16 @@ void	free_redir_lst(t_redir **lst)
 {
 	t_redir	*temp;
 
+	if (!lst || !(*lst))
+		return ;
 	while (*lst)
 	{
 		temp = (*lst)->next;
 		if ((*lst)->file)
+		{
 			free((*lst)->file);
+			(*lst)->file = NULL;
+		}
 		if ((*lst)->fd != -1)
 			close((*lst)->fd);
 		free(*lst);
@@ -74,13 +90,18 @@ void	free_cmd_lst(t_cmd **lst)
 {
 	t_cmd	*temp;
 
+	if (!lst || !(*lst))
+		return ;
 	while (*lst)
 	{
 		temp = (*lst)->next;
 		if ((*lst)->cmd)
 			free_2d_arr((*lst)->cmd);
 		if ((*lst)->path)
+		{
 			free((*lst)->path);
+			(*lst)->path = NULL;
+		}
 		if ((*lst)->redir)
 			free_redir_lst(&((*lst)->redir));
 		free(*lst);
@@ -91,6 +112,11 @@ void	free_cmd_lst(t_cmd **lst)
 /** need to check whether we need to free env_lst. only free when there is failutre. */
 void	free_shell(t_shell *shell)
 {
+	if (shell->input)
+	{
+		free(shell->input);
+		shell->input = NULL;
+	}
 	if (shell->token)
 		free_token_lst(&(shell->token));
 	if (shell->env_lst)
@@ -101,17 +127,23 @@ void	free_shell(t_shell *shell)
 	if (shell->pip_param->pids)
 		free(shell->pip_param->pids);
 	free(shell);
+	shell = NULL;
 }
 // new function
 void	free_quotok(t_quotok **lst)
 {
 	t_quotok	*tmp;
 
+	if (!lst || !(*lst))
+		return ;
 	while (*lst)
 	{
 		tmp = (*lst)->next;
 		if ((*lst)->value)
+		{
 			free((*lst)->value);
+			(*lst)->value = NULL;
+		}
 		free((*lst));
 		*lst = tmp;
 	}

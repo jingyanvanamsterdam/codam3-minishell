@@ -65,6 +65,7 @@ typedef struct s_pipe
 
 typedef struct	s_shell
 {
+	char			*input;
 	t_env			*env_lst;
 	t_token			*token;
 	t_cmd			*cmd;

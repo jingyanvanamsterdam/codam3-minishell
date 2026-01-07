@@ -67,14 +67,16 @@ size_t	skip_space(char *str, size_t end)
 	return (end);
 }
 
-void tokenization(char *input, t_shell *shell)
+void	tokenization(t_shell *shell)
 {
 	size_t	start;
 	size_t	input_len;
 	size_t	increase;
+	char	*input;
 
 	start = 0;
 	input_len = ft_strlen(input);
+	input = shell->input;
 	while (start < input_len)
 	{
 		increase = update_start(input + start, shell);
