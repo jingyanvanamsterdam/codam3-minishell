@@ -201,7 +201,7 @@ int	main(int argc, char **argv, char **envp)
 		//write(fd, "hello\n", 6);
 		//printf("fd = %d\n", fd);
 		//executor(shell);
-		executor_tmp(shell);
+		//executor_tmp(shell);
 		shell->prev_exit = shell->exit;
 		shell->exit = 0;
 		free_cmd_lst(&(shell->cmd));

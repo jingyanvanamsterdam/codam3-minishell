@@ -174,7 +174,6 @@ int	single_builtin_handler(t_shell *shell)
 			return (1);
 		}
 	}
-	//check return value. if apply redirect parent failed, also return 1??
 	return (0);
 }
 
@@ -189,6 +188,12 @@ void	executor(t_shell *shell)
 
 	if (single_builtin_handler(shell))
 		return ;
+	//else
+	//{
+	//	create_pipes(shell);
+	//	create_process(shell);
+	//	wait_handler(shell);
+	//}
 
 	// 
 	// if (params.cmd_count > 1)

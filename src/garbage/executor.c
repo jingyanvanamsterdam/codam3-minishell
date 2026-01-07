@@ -214,5 +214,3 @@ void	executor2(t_shell *shell)
 	wait_handler(shell, &params);
 	// TODO: clean the params, t_pipe and ?t_shell?
 }
-
-
