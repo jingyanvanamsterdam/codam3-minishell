@@ -4,6 +4,7 @@
 # include "struct.h"
 
 // utils_error.c
+void	ft_shell_input_error(void);
 void	ft_malloc_failure(char *s, t_shell *shell);
 void	ft_input_error(char *errmes, char *s, t_shell *shell);
 void	ft_error_printing(char *mes);

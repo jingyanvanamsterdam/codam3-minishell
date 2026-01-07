@@ -130,9 +130,10 @@ void	ft_restart_safely(t_shell *shell)
 	shell->input = NULL;
 }
 
-void	init_shell(t_shell *shell, char **envp)
+void	init_shell(t_shell *shell, char **envp, int	interactive)
 {
 	shell->input = NULL;
+	shell->interactive = interactive;
 	shell->env_lst = NULL;
 	shell->token = NULL;
 	shell->cmd = NULL;
@@ -163,10 +164,11 @@ int	process_input(t_shell *shell)
 
 void	interactive_shell(t_shell *shell)
 {
-	//set_signals();
 	while (1)
 	{
+		// set_sig_interactive();
 		shell->input = readline("Minishell: ");
+		// set_sig_noninteractive();
 		//Only when ctrl + d is trigered when there is nothing on the readline
 		if (!shell->input) // This is the only exit of this program
 		{
@@ -206,16 +208,37 @@ void	noninteractive_shell(char **argv, t_shell *shell)
 	printf("non interactive %s %p\n", argv[0], shell);
 }
 
+int	check_args(int argc, char **argv)
+{
+	if (argc != 1 && argc != 3)
+		return (-1);
+	if (argc == 3)
+	{
+		if (ft_strcmp(argv[1], "-c") != 0)
+			return (-1);
+		else if (argv[2][0] == '\0' || ft_strcheck(argv[2], ft_isspace))
+			return (-1);
+		else
+			return (0);
+	}
+	else
+		return (1);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell *shell;
+	int		interactive;
 
+	interactive = check_args(argc, argv);
+	if (interactive == -1)
+		ft_shell_input_error();
 	//Init t_shell 
 	shell = (t_shell *)malloc(sizeof(t_shell));
 	if (!shell)
 		ft_malloc_failure("failed at creatint shell", shell);
-	init_shell(shell, envp);
-	if (argc != 1) // is not interactive
+	init_shell(shell, envp, interactive);
+	if (!interactive) // is not interactive
 		noninteractive_shell(argv, shell);
 	else
 		interactive_shell(shell);

@@ -6,13 +6,30 @@
 #include <errno.h>
 #include <unistd.h>
 #include <stdlib.h> 
+#define _GNU_SOURCE
+#include <signal.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+
+void	ft_shell_input_error(void)
+{
+	ft_putstr_fd("To run minishll, you can do: \n", 2);
+	ft_putstr_fd("./minishll\n or\n", 2);
+	ft_putstr_fd("./minishll -c \'commands\'", 2);
+	exit(EXIT_FAILURE);
+}
 
 void	ft_malloc_failure(char *s, t_shell *shell)
 {
+	int	clear_history;
+
+	clear_history = shell->interactive;
 	ft_putstr_fd(ERROR "minishell: " RESET, 2);
 	ft_putstr_fd("malloc failure at ", 2);
 	ft_putstr_fd(s, 2);
 	free_shell(shell);
+	if (clear_history)
+		rl_clear_history();
 	exit(EXIT_FAILURE);
 }
 
