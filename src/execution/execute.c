@@ -6,7 +6,8 @@
 #include <stdio.h>		// for perror()
 #include "libft.h"
 
-void	find_file_redir(t_cmd *cmd, int *file)
+/** The function close the previous redirect fd if there is any. This function can be used for execute single cmd or multiple cmds*/
+void	find_file_redir(t_cmd *cmd)
 {
 	t_redir *redir;
 
@@ -14,11 +15,67 @@ void	find_file_redir(t_cmd *cmd, int *file)
 	while (redir)
 	{
 		if (redir->type == REDIR_IN || redir->type == HEREDOC)
-			file[0] = redir->fd;
+		{
+			if (cmd->fd[0] > 0)
+				close(cmd->fd[0]);
+			cmd->fd[0] = redir->fd;
+		}
 		else if (redir->type == REDIR_OUT || redir->type == APPEND)
-			file[1] = redir->fd;
+		{
+			if (cmd->fd[1] != -1 && cmd->fd[1]!= 1)
+				close(cmd->fd[1]);
+			cmd->fd[1] = redir->fd;
+		}
 		redir = redir->next;
 	}
+}
+
+//void	find_file_redir(t_cmd *cmd, int *file)
+//{
+//	t_redir *redir;
+
+//	redir = cmd->redir;
+//	while (redir)
+//	{
+//		if (redir->type == REDIR_IN || redir->type == HEREDOC)
+//			file[0] = redir->fd;
+//		else if (redir->type == REDIR_OUT || redir->type == APPEND)
+//			file[1] = redir->fd;
+//		redir = redir->next;
+//	}
+//}
+
+// Return shell->exit; 0 for success, 1 for error (shell continues)
+// This function return 1 when error occurs.
+int	apply_redir_parent_example(t_shell *shell, int savefd[2])
+{
+	// since we only do this because there is only one cmd and it is builtin. we don't need to loop through t_cmd linked list
+
+	find_file_redir(shell->cmd);
+	// dup if it is necessary
+	if (shell->cmd->fd[0] != 0)
+	{
+		savefd[0] = dup(STDIN_FILENO);
+		if (dup2(shell->cmd->fd[0], STDIN_FILENO) < 0)
+		{
+			shell->exit = 1;
+			ft_error_printing("dup2 input fail");
+		}
+		if (shell->cmd->fd[0] != -1)
+			close(shell->cmd->fd[0]);
+	}
+	if (shell->cmd->fd[1] != 1)
+	{
+		savefd[1] = dup(STDIN_FILENO);
+		if (dup2(shell->cmd->fd[1], STDOUT_FILENO) < 0)
+		{
+			shell->exit = 1;
+			ft_error_printing("dup2 output fail");
+		}
+		if (shell->cmd->fd[1] != -1)
+			close(shell->cmd->fd[1]);
+	}
+	return (shell->exit);
 }
 
 // Return 0 for success, 1 for error (shell continues)
@@ -29,6 +86,8 @@ int	apply_redirection_parent(t_redir *r, int *saved_stdfd)
 
 	// fds[0] = STDIN_FILENO;
 	// fds[1] = STDOUT_FILENO;
+	//
+	// example code: check out apply_redir_parent_example()
 	// find_file_redir(r, fds);
 	while (r)
 	{
@@ -93,6 +152,15 @@ int	single_builtin_handler(t_shell *shell)
 		command_type = is_builtin(shell->cmd->cmd[0]);
 		if (command_type > 0)
 		{
+			// no need to check redir exist, if it exists, cmd->fd will be dup2; otherwise it will be kept as default(0 and 1), then saved_fd will be kept as -1;
+			// can call apply_redir_parent_example(shell, saved_stdfd);
+			/**
+			 * if (apply_redir_parent_example(shell, saved_stdfd) != 0)
+			 * 	return (shell->exit);
+			 * execve_builtin();
+			 * restore_parent_fd(saved_stdfd);
+			 * 
+			 */
 			if (shell->cmd->redir)
 			{
 				if (apply_redirection_parent(shell->cmd->redir, saved_stdfd) != 0)
@@ -106,6 +174,7 @@ int	single_builtin_handler(t_shell *shell)
 			return (1);
 		}
 	}
+	//check return value. if apply redirect parent failed, also return 1??
 	return (0);
 }
 
