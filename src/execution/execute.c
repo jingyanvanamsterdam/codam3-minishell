@@ -6,6 +6,35 @@
 #include <stdio.h>		// for perror()
 #include "libft.h"
 
+// Close all pipes in child process after dup2
+// After dup2, stdin/stdout have copies of the pipe FDs we need, so we can close all original pipe FDs
+void	close_unused_pipes(t_pipe *params, t_cmd *cmd)
+{
+	int	j;
+
+	if (!params || !params->pipes)
+		return ;
+	// Close all pipe file descriptors
+	j = 0;
+	while (j < params->cmd_count - 1)
+	{
+		close(params->pipes[j][0]);
+		close(params->pipes[j][1]);
+		++j;
+	}
+	// Close the original FDs we dup2'd from (if they were not stdin/stdout)
+	// After dup2, stdin/stdout point to them, so we can close the originals
+	if (cmd->fd[0] != STDIN_FILENO && cmd->fd[0] != -1)
+		close(cmd->fd[0]);
+	if (cmd->fd[1] != STDOUT_FILENO && cmd->fd[1] != -1)
+		close(cmd->fd[1]);
+	
+	//if (stream[0] != STDIN_FILENO && stream[0] != -1)
+	//	close(stream[0]);
+	//if (stream[1] != STDOUT_FILENO && stream[1] != -1)
+	//	close(stream[1]);
+}
+
 void	setup_stream(int stream[2], t_cmd *cmd, int i, t_shell *shell)
 {
 	int	count;
@@ -38,12 +67,12 @@ int	dup_files(t_shell *shell, t_cmd *cmd, int stream[2])
 		ft_error_printing("dup2 output fail");
 	}
 	// Close all pipes - after dup2, stdin/stdout have copies of what we need
-	close_unused_pipes(shell->pip_param, stream);
-	// Close original redirect FDs if they're not the same as what we dup2'd
-	if (cmd->fd[0] != -1 && cmd->fd[0] != stream[0])
-		close(cmd->fd[0]);
-	if (cmd->fd[1] != -1 && cmd->fd[1] != stream[1])
-		close(cmd->fd[1]);
+	close_unused_pipes(shell->pip_param, cmd);
+	//// Close original redirect FDs if they're not the same as what we dup2'd
+	//if (cmd->fd[0] != -1 && cmd->fd[0] != stream[0])
+	//	close(cmd->fd[0]);
+	//if (cmd->fd[1] != -1 && cmd->fd[1] != stream[1])
+	//	close(cmd->fd[1]);
 	return (shell->exit);
 }
 
@@ -410,26 +439,3 @@ void	close_pipes_i(t_pipe *params, int n)
 	return ;
 }
 
-// Close all pipes in child process after dup2
-// After dup2, stdin/stdout have copies of the pipe FDs we need, so we can close all original pipe FDs
-void	close_unused_pipes(t_pipe *params, int stream[2])
-{
-	int	j;
-
-	if (!params || !params->pipes)
-		return ;
-	// Close all pipe file descriptors
-	j = 0;
-	while (j < params->cmd_count - 1)
-	{
-		close(params->pipes[j][0]);
-		close(params->pipes[j][1]);
-		++j;
-	}
-	// Close the original FDs we dup2'd from (if they were not stdin/stdout)
-	// After dup2, stdin/stdout point to them, so we can close the originals
-	if (stream[0] != STDIN_FILENO && stream[0] != -1)
-		close(stream[0]);
-	if (stream[1] != STDOUT_FILENO && stream[1] != -1)
-		close(stream[1]);
-}
