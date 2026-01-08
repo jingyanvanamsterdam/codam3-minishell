@@ -125,7 +125,10 @@ void	free_shell(t_shell *shell)
 		free_cmd_lst(&(shell->cmd));
 	free_pipes(shell->pip_param);
 	if (shell->pip_param->pids)
+	{
 		free(shell->pip_param->pids);
+		shell->pip_param->pids = NULL;
+	}
 	free(shell);
 	shell = NULL;
 }
@@ -149,15 +152,14 @@ void	free_quotok(t_quotok **lst)
 	}
 }
 
-void	ft_free_exit_process(int **pipes, t_shell *shell)
-{
-	int	n;
+//void	ft_free_exit_process(int **pipes, t_shell *shell)
+//{
+//	int	n;
 
-	n = count_cmd(shell->cmd) - 1;
-	free_pipes_n(pipes, n);
-	//exit process, to change, shouldn't be shell->exit.
-	exit(shell->exit);
-}
+//	n = count_cmd(shell->cmd) - 1;
+//	free_pipes_n(pipes, n);
+//	exit(shell->exit);
+//}
 
 void	free_pipes_n(int **pipes, int count)
 {
@@ -190,3 +192,4 @@ void	free_pipes(t_pipe *params)
 	params->pipes = NULL;
 	return ;
 }
+

@@ -60,7 +60,6 @@ typedef struct s_pipe
 	int	cmd_count;
 	int	**pipes;
 	int	*pids;
-	int	*fd;
 }	t_pipe;
 
 typedef struct	s_shell
@@ -73,7 +72,6 @@ typedef struct	s_shell
 	int				prev_exit;
 	int				exit;
 	t_pipe			*pip_param;
-	// more to add
 }				t_shell;
 
 #endif

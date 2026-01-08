@@ -19,6 +19,7 @@ void	ft_shell_input_error(void)
 	exit(EXIT_FAILURE);
 }
 
+//不需要强制退出。最好的用户体验是：打印 "Memory error" -> 释放当前坏掉的命令内存 -> 重新显示 minishell$> 让用户输入下一条命令。 GNU C Library: Error Recovery 建议程序应尽可能尝试恢复而非直接崩溃。
 void	ft_malloc_failure(char *s, t_shell *shell)
 {
 	int	clear_history;
@@ -30,6 +31,7 @@ void	ft_malloc_failure(char *s, t_shell *shell)
 	free_shell(shell);
 	if (clear_history)
 		rl_clear_history();
+	// ft_reset_shell(shell, pipe_idx);
 	exit(EXIT_FAILURE);
 }
 
@@ -61,10 +63,94 @@ void	ft_warning_printing(void)
 	ft_putstr_fd(ERROR "minishell: warning: heredoc delimited by end of file\n" RESET, 2);
 }
 
+//不需要强制退出。fork 失败需要free所有的pipe，
 void	ft_pipe_error(t_shell *shell, char *str, int n)
 {
 	ft_error_printing(str);
-	free_pipes_n(shell->pip_param->pipes, n);
+	shell->exit = EXIT_FAILURE;
+	close_all_fds(shell, n);
+	ft_reset_shell(shell, n);
+}
+
+//void	ft_process_error_exit(t_shell *shell, char *mes)
+//{
+//	int	code;
+//	int	clear_history;
+
+//	code = shell->exit;
+//	clear_history = shell->interactive;
+//	ft_error_printing(mes);
+//	close_all_fds(shell, shell->pip_param->cmd_count);
+//	free_shell(shell);
+//	if (clear_history)
+//		rl_clear_history();
+//	exit(code);
+//}
+
+/**close_all_fds() make sure before calling this func, every fd is closed. */
+void	ft_process_exit(t_shell *shell)
+{
+	int	code;
+	int	clear_history;
+
+	code = shell->exit;
+	clear_history = shell->interactive;
 	free_shell(shell);
-	exit(EXIT_FAILURE);
+	if (clear_history)
+		rl_clear_history();
+	exit(code);
+}
+
+void	close_fd(int *fd)
+{
+	if (*fd != -1 && *fd != 0 && *fd != 1)
+		close(*fd);
+	*fd = -1;
+}
+
+void	close_all_fds(t_shell *shell, int pipe_idx)
+{
+	t_cmd	*cmd;
+	t_redir *redir;
+
+	cmd = shell->cmd;
+	while (cmd)
+	{
+		close_fd(&(cmd->fd[0]));
+		close_fd(&(cmd->fd[1]));
+		redir = cmd->redir;
+		while (redir)
+		{
+			close_fd(&(redir->fd));
+			redir = redir->next;
+		}
+		cmd = cmd->next;
+	}
+	if (shell->pip_param && pipe_idx != 0)
+		close_pipes_i(shell->pip_param, pipe_idx);
+}
+/** make sure close all the fds before calling this func */
+void	ft_reset_shell(t_shell *shell, int pipe_idx)
+{
+	if (shell->input)
+	{
+		free(shell->input);
+		shell->input = NULL;
+	}
+	if (shell->token)
+		free_token_lst(&(shell->token));
+	if (shell->cmd)
+		free_cmd_lst(&(shell->cmd));
+	if (shell->pip_param)
+	{
+		if (shell->pip_param->pipes)
+			free_pipes_n(shell->pip_param->pipes, pipe_idx);
+		if (shell->pip_param->pids)
+		{
+			free(shell->pip_param->pids);
+			shell->pip_param->pids = NULL;
+		}
+	}
+	shell->prev_exit = shell->exit;
+	shell->exit = 0;
 }

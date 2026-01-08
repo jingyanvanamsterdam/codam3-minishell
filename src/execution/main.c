@@ -152,7 +152,7 @@ int	process_input(t_shell *shell)
 	tokenization(shell);
 	if (!shell->token)
 		return (0);
-	printf("before parings\n");
+	//printf("before parings\n");
 	parsing(shell);
 	if (!shell->cmd)
 		return (free_token_lst(&(shell->token)), 0);
@@ -198,8 +198,8 @@ void	interactive_shell(t_shell *shell)
 			continue;
 		}
 		//executor_tmp(shell);
-		print_parsed_cmd(shell->cmd);
-		ft_restart_safely(shell);
+		//print_parsed_cmd(shell->cmd);
+		executor(shell);
 	}
 }
 

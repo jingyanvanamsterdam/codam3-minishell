@@ -11,6 +11,9 @@ void	ft_error_printing(char *mes);
 void	ft_warning_printing(void);
 void	ft_pipe_error(t_shell *shell, char *str, int n);
 
+void	ft_process_exit(t_shell *shell);
+void	ft_reset_shell(t_shell *shell, int pipe_idx);
+
 // utils_free.c
 void	free_2d_arr(char **arr);
 void	free_token_lst(t_token **lst);
@@ -19,11 +22,13 @@ void	free_redir_lst(t_redir **lst);
 void	free_cmd_lst(t_cmd **lst);
 void	free_shell(t_shell *shell);
 void	free_quotok(t_quotok **lst);
-void	ft_free_exit_process(int **pipes, t_shell *shell);
 void	free_pipes(t_pipe *params);
 void	free_pipes_n(int **pipes, int count);
 
 // utils_helper.c
 int		count_cmd(t_cmd *cmd);
 
+// close fd
+void	close_fd(int *fd);
+void	close_all_fds(t_shell *shell, int pipe_idx);
 #endif
