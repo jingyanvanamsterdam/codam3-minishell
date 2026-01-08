@@ -200,7 +200,7 @@ int	main(int argc, char **argv, char **envp)
 		//	fd = output_append(filename);
 		//write(fd, "hello\n", 6);
 		//printf("fd = %d\n", fd);
-		//executor(shell);
+		executor(shell);
 		//executor_tmp(shell);
 		shell->prev_exit = shell->exit;
 		shell->exit = 0;

@@ -14,10 +14,7 @@ void	pipes_initializer(t_pipe *params)
 
 	params->pipes = malloc((params->cmd_count - 1) * sizeof(int *));
 	if (!params->pipes)
-	{
-		perror("pipe array allocation");
-		exit(1);
-	}
+		ft_malloc_failure("pipe malloc failure\n", shell);
 	i = 0;
 	while (i < params->cmd_count - 1)
 	{
@@ -33,6 +30,8 @@ void	pipes_initializer(t_pipe *params)
 		}		// TODO: replace it with proper exiter
 		++i;
 	}
+
+	// 
 	i = 0;
 	while (i < params->cmd_count - 1)
 	{

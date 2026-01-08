@@ -43,3 +43,11 @@ void	ft_warning_printing(void)
 {
 	ft_putstr_fd(ERROR "minishell: warning: heredoc delimited by end of file\n" RESET, 2);
 }
+
+void	ft_pipe_error(t_shell *shell, char *str, int n)
+{
+	ft_error_printing(str);
+	free_pipes_n(shell->pip_param->pipes, n);
+	free_shell(shell);
+	exit(EXIT_FAILURE);
+}

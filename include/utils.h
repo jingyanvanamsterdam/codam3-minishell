@@ -8,6 +8,7 @@ void	ft_malloc_failure(char *s, t_shell *shell);
 void	ft_input_error(char *errmes, char *s, t_shell *shell);
 void	ft_error_printing(char *mes);
 void	ft_warning_printing(void);
+void	ft_pipe_error(t_shell *shell, char *str, int n);
 
 // utils_free.c
 void	free_2d_arr(char **arr);
@@ -20,5 +21,8 @@ void	free_quotok(t_quotok **lst);
 void	ft_free_exit_process(int **pipes, t_shell *shell);
 void	free_pipes(t_pipe *params);
 void	free_pipes_n(int **pipes, int count);
+
+// utils_helper.c
+int		count_cmd(t_cmd *cmd);
 
 #endif

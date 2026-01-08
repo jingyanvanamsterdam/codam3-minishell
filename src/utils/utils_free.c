@@ -143,6 +143,8 @@ void	free_pipes(t_pipe *params)
 {
 	int	i;
 
+	if (!params || !params->pipes)
+		return ;
 	i = 0;
 	while (i < params->cmd_count - 1)
 	{
