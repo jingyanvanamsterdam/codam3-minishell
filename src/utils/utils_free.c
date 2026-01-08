@@ -97,6 +97,9 @@ void	free_shell(t_shell *shell)
 		free_env_lst(&(shell->env_lst));
 	if (shell->cmd)
 		free_cmd_lst(&(shell->cmd));
+	free_pipes(shell->pip_param);
+	if (shell->pip_param->pids)
+		free(shell->pip_param->pids);
 	free(shell);
 }
 // new function

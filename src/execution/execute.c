@@ -310,6 +310,7 @@ void	parent_close_file(t_shell *shell, int i)
 void	run_child_process(t_shell *shell, t_cmd *cmd, int stream[2])
 {
 	int	command;
+	int	code;
 
 	//setup_child_signal();
 	if (cmd->cmd)
@@ -323,10 +324,12 @@ void	run_child_process(t_shell *shell, t_cmd *cmd, int stream[2])
 				execve_cmd(shell, cmd);
 		}
 	}
-	// TODO: need to close pipes? As pipes are malloced in parent process
-	free_pipes(shell->pip_param);
-	// TODO: need to free shell?
-	exit(shell->exit);
+	// TODO: need to close pipes? As pipes are malloced in parent process：pipes已经在dup files的时候全都关闭了，只需要free就可以; free_pipes 在free_shell 里；
+	// TODO: need to free shell? 我觉得的是的，因为child process继承了parent process的所有。所以退出之前应该free
+	code = shell->exit;
+	//printf("in child process after run\n");
+	free_shell(shell);
+	exit(code);
 }
 
 void	create_process(t_shell *shell)
@@ -372,12 +375,13 @@ void	wait_handler(t_shell *shell)
 		if (i == params->cmd_count - 1)
 		{
 			if (WIFEXITED(status))
-				shell->exit = WEXITSTATUS(status);		// TODO: need JD to confirm should be shell->exit. bc we have reset shell after execution
+				shell->exit = WEXITSTATUS(status);		// TODO: need JD to confirm should be shell->exit. bc we have reset  shell after execution	是的吧，run_child_process 返回一个exit code；然后这个shell->exit就是此次运行的最后一个command返回的exit code；execute（) 结束后，shell->prevexit = shell->exit. shell->exit = 0；
 			else if (WIFSIGNALED(status))
 				shell->exit = 128 + WTERMSIG(status);
 		}
 		++i;
 	}
+	free_pipes(params);
 	free(params->pids);
 	params->pids = NULL;
 }
