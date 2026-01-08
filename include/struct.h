@@ -55,23 +55,24 @@ typedef struct	s_cmd
 	int				fd[2];
 	struct s_cmd	*next;
 }				t_cmd;
+
 typedef struct s_pipe
 {
 	int	cmd_count;
 	int	**pipes;
 	int	*pids;
-	int	*fd;
 }	t_pipe;
 
 typedef struct	s_shell
 {
+	char			*input;
+	int				interactive;
 	t_env			*env_lst;
 	t_token			*token;
 	t_cmd			*cmd;
 	int				prev_exit;
 	int				exit;
 	t_pipe			*pip_param;
-	// more to add
 }				t_shell;
 
 #endif

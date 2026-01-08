@@ -34,7 +34,7 @@ size_t	quote_index(char *str, size_t end);
 size_t	update_start(char *str, t_shell *shell);
 size_t	handle_special_symbol(char *str, size_t end, t_shell *shell);
 size_t	skip_space(char *str, size_t end);
-void	tokenization(char *input, t_shell *shell);
+void	tokenization(t_shell *shell);
 //====================================
 
 //=============PARSE==================
