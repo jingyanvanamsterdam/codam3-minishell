@@ -20,20 +20,28 @@ void	ft_shell_input_error(void)
 }
 
 //不需要强制退出。最好的用户体验是：打印 "Memory error" -> 释放当前坏掉的命令内存 -> 重新显示 minishell$> 让用户输入下一条命令。 GNU C Library: Error Recovery 建议程序应尽可能尝试恢复而非直接崩溃。
-void	ft_malloc_failure(char *s, t_shell *shell)
+void	ft_malloc_error(char *s, t_shell *shell)
 {
-	int	clear_history;
-
-	clear_history = shell->interactive;
 	ft_putstr_fd(ERROR "minishell: " RESET, 2);
 	ft_putstr_fd("malloc failure at ", 2);
 	ft_putstr_fd(s, 2);
-	free_shell(shell);
-	if (clear_history)
-		rl_clear_history();
-	// ft_reset_shell(shell, pipe_idx);
-	exit(EXIT_FAILURE);
+	shell->exit = 1;
 }
+//void	ft_malloc_failure(char *s, t_shell *shell)
+//{
+//	int	clear_history;
+
+//	clear_history = shell->interactive;
+//	//ft_putstr_fd(ERROR "minishell: " RESET, 2);
+//	//ft_putstr_fd("malloc failure at ", 2);
+//	//ft_putstr_fd(s, 2);
+//	//free_shell(shell);
+//	if (clear_history)
+//		rl_clear_history();
+//	// ft_reset_shell(shell, pipe_idx);
+//	ft_reset_shell(shell, 0);
+//	exit(EXIT_FAILURE);
+//}
 
 void	ft_input_error(char *errmes, char *s, t_shell *shell)
 {
@@ -41,6 +49,16 @@ void	ft_input_error(char *errmes, char *s, t_shell *shell)
 	ft_putstr_fd(errmes, 2);
 	ft_putstr_fd(s, 2);
 	ft_putstr_fd("\n", 2);
+	if (shell->token)
+		free_token_lst(&(shell->token));
+	if (shell->cmd)
+		free_cmd_lst((&shell->cmd));
+}
+
+/** Special malloc failure handle fo parsing; using shell->token to check failure. so need to free them here first */
+void	ft_malloc_parsing(char *s, t_shell *shell)
+{
+	ft_malloc_error(s, shell);
 	if (shell->token)
 		free_token_lst(&(shell->token));
 	if (shell->cmd)
@@ -68,6 +86,13 @@ void	ft_pipe_error(t_shell *shell, char *str, int n)
 {
 	ft_error_printing(str);
 	shell->exit = EXIT_FAILURE;
+	close_all_fds(shell, n);
+	ft_reset_shell(shell, n);
+}
+
+void	ft_malloc_exe(char *s, t_shell *shell, int n)
+{
+	ft_malloc_error(s, shell);
 	close_all_fds(shell, n);
 	ft_reset_shell(shell, n);
 }
@@ -103,7 +128,7 @@ void	ft_process_exit(t_shell *shell)
 
 void	close_fd(int *fd)
 {
-	if (*fd != -1 && *fd != 0 && *fd != 1)
+	if (*fd != -1 && *fd != 0 && *fd != 1 && *fd != 2)
 		close(*fd);
 	*fd = -1;
 }
@@ -130,13 +155,10 @@ void	close_all_fds(t_shell *shell, int pipe_idx)
 		close_pipes_i(shell->pip_param, pipe_idx);
 }
 /** make sure close all the fds before calling this func */
-void	ft_reset_shell(t_shell *shell, int pipe_idx)
+void	ft_reset_shell(t_shell *shell, int pipe_count)
 {
 	if (shell->input)
-	{
-		free(shell->input);
-		shell->input = NULL;
-	}
+		free_charptr(&(shell->input));
 	if (shell->token)
 		free_token_lst(&(shell->token));
 	if (shell->cmd)
@@ -144,7 +166,7 @@ void	ft_reset_shell(t_shell *shell, int pipe_idx)
 	if (shell->pip_param)
 	{
 		if (shell->pip_param->pipes)
-			free_pipes_n(shell->pip_param->pipes, pipe_idx);
+			free_pipes_n(shell->pip_param, pipe_count);
 		if (shell->pip_param->pids)
 		{
 			free(shell->pip_param->pids);

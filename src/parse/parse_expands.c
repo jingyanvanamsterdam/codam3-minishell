@@ -43,6 +43,7 @@ char	*expansion(char *str, t_shell *shell, size_t end)
 	return (expansion);
 }
 
+/** return -1 meaans malloc fails */
 size_t	handle_expands(char *str, t_shell *shell, t_quotok **tok)
 {
 	char	*value;
@@ -65,8 +66,9 @@ size_t	handle_expands(char *str, t_shell *shell, t_quotok **tok)
 		value = expansion(str, shell, end);
 	}
 	if (!value)
-		return (-1);
+		return ((size_t)-1);
 	if (create_quotok_node(value, tok) == -1)
-		return (-1);
+		return ((size_t)-1);
+	free_charptr(&value);
 	return (end);
 }

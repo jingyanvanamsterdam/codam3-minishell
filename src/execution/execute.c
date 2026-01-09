@@ -204,12 +204,12 @@ int	create_pipes(t_shell *shell)
 	i = 0;
 	params->pipes = malloc(sizeof(int *) * (params->cmd_count - 1));
 	if (!params->pipes)
-		ft_malloc_failure("pipes malloc failure\n", shell);
+		return (ft_malloc_exe("pipes\n", shell, 0), 0);
 	while (i < params->cmd_count - 1)
 	{
 		params->pipes[i] = malloc(sizeof(int) * 2);
 		if (!params->pipes[i])
-			return (ft_pipe_error(shell, "malloc pipe: ", i), 0);
+			return (ft_malloc_exe("malloc pipe: ", shell, i), 0);
 		if (pipe(params->pipes[i]) == -1)
 			return (ft_pipe_error(shell, "pipe: ", i), 0);
 		++i;
@@ -267,7 +267,7 @@ int	create_process(t_shell *shell)
 	params = shell->pip_param;
 	params->pids = ft_calloc(params->cmd_count, sizeof(pid_t));
 	if (!params->pids)
-		return (ft_malloc_failure("failed at malloc pid array.", shell), 0);
+		return (ft_malloc_exe("pid", shell, shell->pip_param->cmd_count - 1), 0);
 	cmd = shell->cmd;
 	i = 0;
 	while (i < params->cmd_count)
@@ -313,26 +313,28 @@ void	wait_handler(t_shell *shell)
 	//free_pipes(params);
 	//free(params->pids);
 	//params->pids = NULL;
-	ft_reset_shell(shell, shell->pip_param->cmd_count);
+	ft_reset_shell(shell, shell->pip_param->cmd_count - 1);
 }
 
 // After calling this function, need to check the shell->exit to see if it is 1 or 0.
 void	executor(t_shell *shell)
 {
-	t_pipe	params;
-
-	params = (t_pipe){0};
-	params.cmd_count = count_cmd(shell->cmd);
-	params.pids = NULL;
-	params.pipes = NULL;
-	shell->pip_param = &params;
+	shell->pip_param = malloc(sizeof(t_pipe));
+	if (!shell->pip_param)
+	{
+		ft_malloc_error("executuion", shell);
+		close_all_fds(shell, 0);
+		ft_reset_shell(shell, 0);
+	}
+	shell->pip_param->cmd_count = count_cmd(shell->cmd);
+	shell->pip_param->pids = NULL;
+	shell->pip_param->pipes = NULL;
 	if (single_builtin_handler(shell))
 	{
 		close_all_fds(shell, 0);
 		return (ft_reset_shell(shell, 0));
 	}
-		
-	if (params.cmd_count > 1 && !create_pipes(shell))
+	if (shell->pip_param->cmd_count > 1 && !create_pipes(shell))
 		return ;
 	if (!create_process(shell))
 		return ;
@@ -364,8 +366,8 @@ void	close_pipes_i(t_pipe *params, int n)
 	i = 0;
 	while (i < n)
 	{
-		close(params->pipes[i][0]);
-		close(params->pipes[i][1]);
+		close_fd(&(params->pipes[i][0]));
+		close_fd(&(params->pipes[i][1]));
 		++i;
 	}
 	return ;

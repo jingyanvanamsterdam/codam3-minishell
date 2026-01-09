@@ -19,7 +19,10 @@ static void	append_to_rdir_lst(t_redir **head, t_redir *node)
 	tmp->next = node;
 }
 
-void	handle_redir_fd(t_shell *shell, t_redir *redir)
+/** heredoc has malloc. so need to return 0 if heredoc returned -1
+ * at this step, fd might opened, so exit need to close fds
+ */
+int	handle_redir_fd(t_shell *shell, t_redir *redir)
 {
 	while (redir)
 	{
@@ -32,16 +35,18 @@ void	handle_redir_fd(t_shell *shell, t_redir *redir)
 		else if (redir->type == HEREDOC)
 			redir->fd = heredoc(shell, redir);
 		if (redir->fd == -1 && redir->type == HEREDOC)
-			ft_error_printing("open heredoc");
+			return (close_all_fds(shell, 0), 0);
 		else if (redir->fd == -1)
 			ft_error_printing(redir->file);
 		redir = redir->next;
 	}
+	return (1);
 }
 
 /**
  * Return value = next token, if it is NULL or != WORD, means after redir symbol, there is an input error.
- * ft_input_error() will clean up shell's cmd, token and env_lst. 
+ * Check !shell->token; ft_malloc_parsing clean up token list and cmd list
+ * ft_input_error() will clean up shell's cmd, token. 
  */
 t_token	*handle_redir(t_token *token, t_redir **redir, t_shell *shell)
 {
@@ -56,14 +61,14 @@ t_token	*handle_redir(t_token *token, t_redir **redir, t_shell *shell)
 		return (ft_input_error("near upexpected token `", value, shell), NULL);
 	node = (t_redir *)malloc(sizeof(t_redir));
 	if (!node)
-		ft_malloc_failure("parsing.\n", shell);
+		return (ft_malloc_parsing("parsing.\n", shell), NULL);
 	node->type = t;
 	if (t == HEREDOC)
 		node->file = ft_strdup(token->value);
 	else
 		node->file = remove_quote(token->value, shell, false);
 	if (!node->file)
-		ft_malloc_failure("parsing.\n", shell);
+		return (ft_malloc_parsing("parsing.\n", shell), NULL);
 	node->fd = -1;
 	node->next = NULL;
 	append_to_rdir_lst(redir, node);

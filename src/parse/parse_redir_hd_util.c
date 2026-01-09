@@ -1,10 +1,13 @@
 # define _GNU_SOURCE
 #include "parse.h"
+#include "utils.h"
 #include "struct.h"
 #include "libft.h"
 #include <stdio.h> // printf
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 static size_t	update_index(char *input, t_quotok **tok)
 {
@@ -80,13 +83,13 @@ static char	*handle_hd_input(bool quoted, char *input, char *res, t_shell *shell
 /**
  * tmp is previous result, res is updated by handle_hd_input() and tmp is being freed inside;
  */
-char	*do_hd_loop(bool quoted, char *delimiter, t_shell *shell)
+
+void	run_heredoc_process(bool quoted, char *delimiter, t_shell *shell, t_redir *redir)
 {
 	char	*input;
 	char	*res;
 	char 	*tmp;
 
-	input = NULL;
 	res = NULL;
 	tmp = NULL;
 	while (1)
@@ -101,9 +104,40 @@ char	*do_hd_loop(bool quoted, char *delimiter, t_shell *shell)
 			break ;
 		tmp = res;
 		res = handle_hd_input(quoted, input, tmp, shell);
-		free(input);
+		free_charptr(&input);
 		if (!res)
-			return (NULL);
+			return (ft_error_printing("issues at heredoc"));
 	}
-	return (res);
+	write(redir->fd, res, ft_strlen(res));
+	free_charptr(&input);
+}
+/** return 0 if there is error and fails */
+int	do_hd_loop(bool quoted, char *delimiter, t_shell *shell, t_redir *redir)
+{
+	pid_t	pid;
+	int		status;
+
+	pid = fork();
+	if (pid < 0)
+		return (ft_pipe_error(shell, "fork", 0), 0);
+	else if (pid == 0)
+	{
+		// set_sig_heredoc();
+		redir->fd = open(redir->file, O_WRONLY|O_CREAT|O_EXCL|O_TRUNC, 0600);
+		if (redir->fd == -1)
+			ft_error_printing("open heredoc file");
+		else
+			run_heredoc_process(quoted, delimiter, shell, redir);
+		close_all_fds(shell, 0);
+		ft_process_exit(shell);
+		return (1);
+	}
+	else
+	{
+		// set_sig_normal()?
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
+			return (shell->exit = 130);
+		return (1);
+	}
 }

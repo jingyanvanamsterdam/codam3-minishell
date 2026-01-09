@@ -21,8 +21,9 @@ static void	append_to_cmd_lst(t_cmd **head, t_cmd *node)
 
 /**
  * Function will remove quote symbol and accordingly handle expands if there is any.
+ * return 0 if malloc fails
  */
-void	update_cmds_arr(char **cmd, t_token *token, t_shell *shell)
+int	update_cmds_arr(char **cmd, t_token *token, t_shell *shell)
 {
 	size_t	i;
 
@@ -31,7 +32,8 @@ void	update_cmds_arr(char **cmd, t_token *token, t_shell *shell)
 		i++;
 	cmd[i] = remove_quote(token->value, shell, false);
 	if (!cmd[i])
-		ft_malloc_failure("parsing.\n", shell);
+		return (ft_malloc_parsing("parsing.\n", shell), 0);
+	return (1);
 }
 
 void	update_cmd_redir(t_redir *redir, t_shell *shell)
@@ -51,17 +53,16 @@ void	update_cmd_redir(t_redir *redir, t_shell *shell)
  * There is possibility that cmd len = 0 because only redirection info.
  * It is not input error or something need to be ignored to create node. 
  * cmd's path = NULL; change during execution process. 
+ * return 1 success;
+ * return 0 malloc fail return the program;
  */
-void	init_cmd_node(t_shell *shell, char **cmd)
+int	init_cmd_node(t_shell *shell, char **cmd)
 {
 	t_cmd	*node;
 
 	node = (t_cmd *)malloc(sizeof(t_cmd));
 	if (!node)
-	{
-		free_2d_arr(cmd);
-		ft_malloc_failure("parsing.\n", shell);
-	}
+		return (ft_malloc_error("parsing.\n", shell), 0);
 	node->cmd = cmd;
 	node->fd[0] = 0;
 	node->fd[1] = 1;
@@ -69,6 +70,7 @@ void	init_cmd_node(t_shell *shell, char **cmd)
 	node->redir = NULL;
 	node->next = NULL;
 	append_to_cmd_lst(&(shell->cmd), node);
+	return (1);
 }
 
 size_t	calculate_cmd_len(t_token *token)

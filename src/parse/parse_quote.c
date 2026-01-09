@@ -31,11 +31,12 @@ static size_t	next_index(char *str, t_quotok **tok, t_quote *status, bool hd)
 	if (*status != GENERAL && (str[end] == '\'' || str[end] == '\"'))
 	{
 		*status = GENERAL;
-		return (free(value), ++end);
+		return (free_charptr(&value), ++end);
 	}
-	return (free(value), end);
+	return (free_charptr(&value), end);
 }
 
+/** Return t_quotok, NULL means malloc fails */
 t_quotok	*tokenize_quote(char *value, t_shell *shell, bool hd)
 {
 	size_t		start;
@@ -55,10 +56,7 @@ t_quotok	*tokenize_quote(char *value, t_shell *shell, bool hd)
 		else
 			increase = next_index(value + start, &tok, &status, hd);
 		if (increase == (size_t)-1)
-		{
-			free_quotok(&tok);
-			ft_malloc_failure("at quote token\n", shell);
-		}
+			return (free_quotok(&tok), NULL);
 		start += increase;
 		//printf("increase = %zu, len = %zu, start = %zu\n", increase, len, start);
 	}
@@ -104,6 +102,9 @@ char	*remove_quote(char *value, t_shell *shell, bool hdoc)
 	quotok = NULL;
 	res = NULL;
 	quotok = tokenize_quote(value, shell, hdoc);
+	if (!quotok)
+		return (NULL);
+	// check somthing to see whether continue or return ;
 	//print_quotok(quotok);
 	res = join_quotok(quotok);
 	free_quotok(&quotok);

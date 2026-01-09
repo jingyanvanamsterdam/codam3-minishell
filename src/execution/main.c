@@ -1,4 +1,6 @@
-#include "minishell.h" 
+#include "minishell.h"
+#include "utils.h"
+#include "parse.h"
 #include "struct.h"
 #include "libft.h"
 #include <stdio.h>	
@@ -72,16 +74,6 @@ void print_parsed_cmd(t_cmd *head)
 	}
 }
 
-void	handle_sigint(int sig)
-{
-	(void)sig;
-	g_sig = SIGINT;
-	write(1, "\n", 1);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-}
-
 t_redir	*test_for_heredoc(t_shell *shell)
 {
 	t_cmd *cmd = shell->cmd;
@@ -120,16 +112,6 @@ char	*test_for_outappend(t_shell *shell)
 	return (NULL);
 }
 
-void	ft_restart_safely(t_shell *shell)
-{
-	shell->prev_exit = shell->exit;
-	shell->exit = 0;
-	free_cmd_lst(&(shell->cmd));
-	//free_pip_params();
-	free(shell->input);
-	shell->input = NULL;
-}
-
 void	init_shell(t_shell *shell, char **envp, int	interactive)
 {
 	shell->input = NULL;
@@ -140,25 +122,25 @@ void	init_shell(t_shell *shell, char **envp, int	interactive)
 	shell->pip_param = NULL;
 	shell->prev_exit = 0;
 	shell->exit = 0;
-	init_env(envp, shell);
+	if (!init_env(envp, shell))
+		ft_process_exit(shell);
 }
-/** return 0 if fails and need to free input and set as NULL; */
+/** return 0 if fails, and run ft_reset_shell 
+ * return 1 if not, shell->token is freed. 
+*/
 int	process_input(t_shell *shell)
 {
 	// this do check for tab, but it doesn't work for tab completion in readline.
 	if (*(shell->input) == '\0' || ft_strcheck(shell->input, ft_isspace))
 		return (0);
 	add_history(shell->input);
-	tokenization(shell);
+	if (!tokenization(shell))
+		return (0);
 	if (!shell->token)
 		return (0);
-	//printf("before parings\n");
-	parsing(shell);
-	if (!shell->cmd)
-		return (free_token_lst(&(shell->token)), 0);
+	if (!parsing(shell))
+		return (0);
 	free_token_lst(&(shell->token));
-	free(shell->input);
-	shell->input = NULL;
 	return (1);
 }
 
@@ -166,22 +148,21 @@ void	interactive_shell(t_shell *shell)
 {
 	while (1)
 	{
-		// set_sig_interactive();
+		set_sig_interactive();
 		shell->input = readline("Minishell: ");
-		// set_sig_noninteractive();
-		//Only when ctrl + d is trigered when there is nothing on the readline
+		set_sig_noninteractive();
+		//Oyly when ctrl + d is trigered when there is nothing on the readline
 		if (!shell->input) // This is the only exit of this program
 		{
-			if (g_sig == SIGINT)
-			{
-				g_sig = 0;
-				shell->prev_exit = 130;
-				continue;
-			}
+			//if (g_sig == SIGINT)
+			//{
+			//	g_sig = 0;
+			//	shell->prev_exit = 130;
+			//	continue;
+			//}
 			// EOF returns null; ctrl+d
 			write(1, "exit\n", 6);
-			free_shell(shell);
-			exit(0);
+			ft_process_exit(shell);
 		}
 		if (g_sig == SIGINT)
 		{
@@ -193,13 +174,14 @@ void	interactive_shell(t_shell *shell)
 		}
 		if (!process_input(shell))
 		{
-			free(shell->input);
-			shell->input = NULL;
+			ft_reset_shell(shell, 0);
 			continue;
 		}
-		//executor_tmp(shell);
 		//print_parsed_cmd(shell->cmd);
+		//free_charptr(&(shell->input));
+		//free_cmd_lst(&(shell->cmd));
 		executor(shell);
+		//ft_reset_shell(shell, 0);
 	}
 }
 
@@ -233,10 +215,9 @@ int	main(int argc, char **argv, char **envp)
 	interactive = check_args(argc, argv);
 	if (interactive == -1)
 		ft_shell_input_error();
-	//Init t_shell 
 	shell = (t_shell *)malloc(sizeof(t_shell));
 	if (!shell)
-		ft_malloc_failure("failed at creatint shell", shell);
+		return (ft_malloc_error("failed at creating shell", shell), 1);
 	init_shell(shell, envp, interactive);
 	if (!interactive) // is not interactive
 		noninteractive_shell(argv, shell);

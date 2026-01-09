@@ -5,6 +5,9 @@
 
 // utils_error.c
 void	ft_shell_input_error(void);
+void	ft_malloc_error(char *s, t_shell *shell);
+void	ft_malloc_parsing(char *s, t_shell *shell);
+void	ft_malloc_exe(char *s, t_shell *shell, int n);
 void	ft_malloc_failure(char *s, t_shell *shell);
 void	ft_input_error(char *errmes, char *s, t_shell *shell);
 void	ft_error_printing(char *mes);
@@ -22,8 +25,9 @@ void	free_redir_lst(t_redir **lst);
 void	free_cmd_lst(t_cmd **lst);
 void	free_shell(t_shell *shell);
 void	free_quotok(t_quotok **lst);
-void	free_pipes(t_pipe *params);
-void	free_pipes_n(int **pipes, int count);
+//void	free_pipes(t_pipe *params);
+void	free_pipes_n(t_pipe *params, int count);
+void	free_charptr(char **ptr);
 
 // utils_helper.c
 int		count_cmd(t_cmd *cmd);

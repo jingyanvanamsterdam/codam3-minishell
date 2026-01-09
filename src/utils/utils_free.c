@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "parse.h" //change to minishell.h after combin
 #include "utils.h"
 #include <unistd.h> // close
@@ -109,29 +110,31 @@ void	free_cmd_lst(t_cmd **lst)
 	}
 }
 
-/** need to check whether we need to free env_lst. only free when there is failutre. */
+/** Only call free_shell when the minishell is exiting*/
 void	free_shell(t_shell *shell)
 {
 	if (shell->input)
-	{
-		free(shell->input);
-		shell->input = NULL;
-	}
-	if (shell->token)
-		free_token_lst(&(shell->token));
+		free_charptr(&(shell->input));
 	if (shell->env_lst)
 		free_env_lst(&(shell->env_lst));
+	if (shell->token)
+		free_token_lst(&(shell->token));
 	if (shell->cmd)
 		free_cmd_lst(&(shell->cmd));
-	free_pipes(shell->pip_param);
-	if (shell->pip_param->pids)
+	if (shell->pip_param)
 	{
-		free(shell->pip_param->pids);
-		shell->pip_param->pids = NULL;
+		if (shell->pip_param->pipes)
+			free_pipes_n(shell->pip_param, shell->pip_param->cmd_count);
+		if (shell->pip_param->pids)
+		{
+			free(shell->pip_param->pids);
+			shell->pip_param->pids = NULL;
+		}
 	}
 	free(shell);
 	shell = NULL;
 }
+
 // new function
 void	free_quotok(t_quotok **lst)
 {
@@ -152,38 +155,12 @@ void	free_quotok(t_quotok **lst)
 	}
 }
 
-//void	ft_free_exit_process(int **pipes, t_shell *shell)
-//{
-//	int	n;
-
-//	n = count_cmd(shell->cmd) - 1;
-//	free_pipes_n(pipes, n);
-//	exit(shell->exit);
-//}
-
-void	free_pipes_n(int **pipes, int count)
+void	free_pipes_n(t_pipe *params, int count)
 {
 	int	i;
 
 	i = 0;
 	while (i < count)
-	{
-		free(pipes[i]);
-		pipes[i++] = NULL;
-	}
-	free(pipes);
-	pipes = NULL;
-	return ;
-}
-
-void	free_pipes(t_pipe *params)
-{
-	int	i;
-
-	if (!params || !params->pipes)
-		return ;
-	i = 0;
-	while (i < params->cmd_count - 1)
 	{
 		free(params->pipes[i]);
 		params->pipes[i++] = NULL;
@@ -193,3 +170,29 @@ void	free_pipes(t_pipe *params)
 	return ;
 }
 
+//void	free_pipes(t_pipe *params)
+//{
+//	int	i;
+
+//	if (!params || !params->pipes)
+//		return ;
+//	i = 0;
+//	while (i < params->cmd_count - 1)
+//	{
+//		free(params->pipes[i]);
+//		params->pipes[i++] = NULL;
+//	}
+//	free(params->pipes);
+//	params->pipes = NULL;
+//	return ;
+//}
+
+/** if the char ptr exist, free and set as NULL */
+void	free_charptr(char **ptr)
+{
+	if (ptr && *ptr)
+	{
+		free(*ptr);
+		ptr = NULL;
+	}
+}

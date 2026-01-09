@@ -22,28 +22,30 @@ static void	append_to_lst(t_token **head, t_token *node)
 }
 
 /**
- * check if value = "", not create token node.
+ * check if value = "", not create token node, but not failture
  * ft_substr might create empty string if it is only a stop symbol < > | 
+ * 
+ * return 0 if malloc failture;
  */
-void	create_token_node(char *value, t_shell *shell, t_type type)
+int	create_token_node(char *value, t_shell *shell, t_type type)
 {
 	t_token	*node;
 
 	if (ft_strlen(value) == 0)
-		return ;
+		return (1);
 	node = (t_token*)malloc(sizeof(t_token));
 	if (!node)
-		ft_malloc_failure("tokenization.\n", shell);
+		return (ft_malloc_error("tokenization.\n", shell), 0);
 	node->value = ft_strdup(value);
 	if (!node->value)
 	{
-		free(value);
 		free(node);
-		ft_malloc_failure("tokenization.\n", shell);
+		return (ft_malloc_error("tokenization.\n", shell), 0);
 	}
 	node->type = type;
 	node->next = NULL;
 	append_to_lst(&(shell->token), node);
+	return (1);
 }
 
 /**

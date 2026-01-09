@@ -65,25 +65,27 @@ size_t	find_stop(char *str, t_quote *status)
 	return (i);
 }
 
+/** return -1 if malloc failed. value being freed here */
 int	create_quotok_node(char *value, t_quotok **head)
 {
 	t_quotok	*node;
 
-	//if (ft_strlen(value) == 0)
-	//	return (-1);
 	node = (t_quotok*)malloc(sizeof(t_quotok));
-	node->value = ft_strdup(value);
-	//printf("create tok value = %s\n", node->value);
-	if (!node || !node->value)
+	if (!node)
 	{
-		free(value);
+		free_charptr(&value);
 		free_quotok(head);
-		if (node)
-			free(node);
+		return (-1);
+	}
+	node->value = ft_strdup(value);
+	if (!node->value)
+	{
+		free_charptr(&value);
+		free_quotok(head);
+		free(node);
 		return (-1);
 	}
 	node->next = NULL;
 	append_to_lst(head, node);
-	//print_quotok(*head);
 	return (1);
 }
