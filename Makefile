@@ -32,7 +32,10 @@ UTILS_SRC = $(shell find ./src/utils -iname "*.c")
 # lexing module
 LEX_SRC = $(shell find ./src/lexing -iname "*.c")
 PARSE_SRC = $(shell find ./src/parse -iname "*.c")
+# execution module
 EXECUTION_SRC = $(shell find ./src/execution -iname "*.c")
+# builtins module
+BUILTINS_SRC = $(shell find ./src/builtins -iname "*.c")
 
 all: buildlib $(NAME) 
 
@@ -74,7 +77,7 @@ parse: buildlib
 	@echo "✅ Built test executable: ./parse"
 execution: buildlib
 	@echo "Compiling execution testing module..."
-	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(EXECUTION_SRC) $(ENV_SRC) $(UTILS_SRC) $(LIBFT) $(RLFLAG) -o execution
+	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(BUILTINS_SRC) $(EXECUTION_SRC) $(ENV_SRC) $(UTILS_SRC) $(LIBFT) $(RLFLAG) -o execution
 	@echo "✅ Built test executable: ./execution"
 
 .PHONY: all buildlib clean fclean re env lex parse execution

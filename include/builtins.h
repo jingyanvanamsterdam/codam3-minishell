@@ -3,6 +3,9 @@
 
 # include "minishell.h"
 
+// Is it supposed to return int to indicate success or failure?
+// Or just void?
+int	ft_cd(char **argv, t_shell *shell);
 int	ft_pwd(char **argv, t_shell *shell);
 int	ft_echo(char **argv, t_shell *shell);
 int	ft_env(char **argv, t_shell *shell);

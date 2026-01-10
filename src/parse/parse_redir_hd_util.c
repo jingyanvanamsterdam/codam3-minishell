@@ -8,6 +8,7 @@
 #include <readline/history.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/wait.h>
 
 static size_t	update_index(char *input, t_quotok **tok)
 {

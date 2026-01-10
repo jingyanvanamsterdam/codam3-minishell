@@ -1,4 +1,3 @@
-
 #include "minishell.h"
 #include <stdio.h>
 #include "libft.h"
@@ -29,27 +28,31 @@ int	is_builtin(char *command)
 // arguement specify which command to be executed when there are multiple of them. 
 void	execve_builtin(t_shell *shell, int command_type, t_cmd *cmd)
 {
+	int	status;
+
+	status = 1;
 	// Temporary just set exit status to 0 for now
 	// shell->exit needs to be set properly after the builtin function is implemented
 	// TODO: implement the builtin functions
 	if (command_type == 1)
-		ft_echo_test(cmd->cmd, shell);
-	else
+		status = ft_echo(cmd->cmd, shell);
+	if (command_type == 2)
+		status = ft_cd(cmd->cmd, shell);
+	if (command_type == 3)
+		status = ft_pwd(cmd->cmd, shell);
+	if (command_type == 4)
+		status = ft_export(cmd->cmd, shell);
+	if (command_type == 5)
+		status = ft_unset(cmd->cmd, shell);
+	if (command_type == 6)
+		status = ft_env(cmd->cmd, shell);
+	if (command_type == 7)
+		status = ft_exit(cmd->cmd, shell);
+
+	shell->exit = status;
+	if (status != 0)
 	{
-		shell->exit = 0;
-		printf("Builtin function not implemented yet\n");
+		// something worng happened with running the builtin command
 	}
-	// if (command_type == 2)
-	// 	ft_cd(cmd->cmd, shell);
-	// if (command_type == 3)
-	// 	ft_pwd(cmd->cmd, shell);
-	// if (command_type == 4)
-	// 	ft_export(cmd->cmd, shell);
-	// if (command_type == 5)
-	// 	ft_unset(cmd->cmd, shell);
-	// if (command_type == 6)
-	// 	ft_env(cmd->cmd, shell);
-	// if (command_type == 7)
-	// 	ft_exit(cmd->cmd, shell);
 }
 

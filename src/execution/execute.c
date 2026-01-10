@@ -180,7 +180,9 @@ int	single_builtin_handler(t_shell *shell)
 		&& shell->cmd->cmd 
 		&& shell->cmd->cmd[0])
 	{
+		// TODO: Can I combine the is_builtin() with execve_builtin() to reduce calling time?
 		command_type = is_builtin(shell->cmd->cmd[0]);
+		// TODO: If command is not a builtin, just do nothing and return 0;
 		if (command_type > 0)
 		{
 			if (apply_redir_parent(shell, saved_stdfd) != 0)
