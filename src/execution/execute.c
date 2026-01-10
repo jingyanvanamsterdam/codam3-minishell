@@ -287,6 +287,7 @@ int	create_process(t_shell *shell)
 	// Each child has its own copies via dup2, so parent doesn't need them
 	//close_pipes(params);
 	close_all_fds(shell, shell->pip_param->cmd_count - 1);
+	//TODO: should be close_pipes_i(params, params->cmd_count - 1); ???
 	return (1);
 }
 
