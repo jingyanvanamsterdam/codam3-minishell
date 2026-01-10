@@ -16,7 +16,8 @@ RLFLAG = -lreadline
 HEADERS := -Iinclude -I$(LIBFT_DIR)
 
 ifeq ($(OS),Darwin)
-	RL_DIR = /opt/homebrew/Cellar/readline/8.3.1
+# 	RL_DIR = /opt/homebrew/Cellar/readline/8.3.1
+	RL_DIR = $(shell brew --prefix readline)
 	RLFLAG += -L$(RL_DIR)/lib
 	HEADERS += -I$(RL_DIR)/include
 endif
@@ -24,9 +25,16 @@ endif
 LIBFT = $(LIBFT_DIR)/libft.a
 
 # ========== Testing SRC ============
-BUILTINS_SRC = $(shell find ./src/builtins -iname "*.c")
+# env module
+ENV_SRC = $(shell find ./src/env -iname "*.c")
+# utils module
+UTILS_SRC = $(shell find ./src/utils -iname "*.c")
+# lexing module
+LEX_SRC = $(shell find ./src/lexing -iname "*.c")
+PARSE_SRC = $(shell find ./src/parse -iname "*.c")
+EXECUTION_SRC = $(shell find ./src/execution -iname "*.c")
 
-all: buildlib $(NAME)
+all: buildlib $(NAME) 
 
 # %.o: %.c
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
@@ -52,9 +60,21 @@ re: fclean all
 
 # ================= Test rules ===================
 #  Example: make env -> compile only env/*.c + test_env.c into ./env executable
-builtin: buildlib
-	@echo "Compiling builtin testing module..."
-	cc $(FLAGS) $(HEADERS) $(BUILTINS_SRC) ./src/ft_free.c $(LIBFT) $(RLFLAG) -o builtins
-	@echo "✅ Built test executable: ./builtins"
+env: buildlib
+	@echo "Compiling env testing module..."
+	cc $(FLAGS) $(HEADERS) $(ENV_SRC) $(UTILS_SRC) $(LIBFT) -o env
+	@echo "✅ Built test executable: ./env"
+lex: buildlib
+	@echo "Compiling lex testing module..."
+	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(LIBFT) $(RLFLAG) -o lex
+	@echo "✅ Built test executable: ./lex"
+parse: buildlib
+	@echo "Compiling parse testing module..."
+	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(ENV_SRC) $(UTILS_SRC) $(LIBFT) $(RLFLAG) -o parse
+	@echo "✅ Built test executable: ./parse"
+execution: buildlib
+	@echo "Compiling execution testing module..."
+	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(EXECUTION_SRC) $(ENV_SRC) $(UTILS_SRC) $(LIBFT) $(RLFLAG) -o execution
+	@echo "✅ Built test executable: ./execution"
 
-.PHONY: all buildlib clean fclean re
+.PHONY: all buildlib clean fclean re env lex parse execution
