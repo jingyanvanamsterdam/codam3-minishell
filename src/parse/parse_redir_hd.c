@@ -94,9 +94,8 @@ int	heredoc(t_shell *shell, t_redir *redir)
 	if (!do_hd_loop(quoted, delimiter, shell, redir))
 		return (-1);
 		// should return and exit => check previous function sequence;
-	
 	redir->fd = open(redir->file, O_RDONLY);
 	unlink(redir->file);
 	free(delimiter);
-	return (1);
+	return (redir->fd);
 } 

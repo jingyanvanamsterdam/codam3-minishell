@@ -2,22 +2,21 @@
 # define UTILS_H
 
 # include "struct.h"
+# include <stdbool.h>
 
 // utils_error.c
 void	ft_shell_input_error(void);
 void	ft_malloc_error(char *s, t_shell *shell);
 void	ft_malloc_parsing(char *s, t_shell *shell);
 void	ft_malloc_exe(char *s, t_shell *shell, int n);
-void	ft_malloc_failure(char *s, t_shell *shell);
 void	ft_input_error(char *errmes, char *s, t_shell *shell);
 void	ft_error_printing(char *mes);
 void	ft_warning_printing(void);
 void	ft_pipe_error(t_shell *shell, char *str, int n);
-void	ft_process_exit(t_shell *shell);
-// close fd
-void	close_fd(int *fd);
-void	close_all_fds(t_shell *shell, int pipe_idx);
-void	ft_reset_shell(t_shell *shell, int pipe_idx);
+
+
+void	ft_process_exit(t_shell *shell, bool pt_exit);
+void	ft_reset_shell(t_shell *shell);
 
 // utils_free.c
 void	free_2d_arr(char **arr);
@@ -30,8 +29,14 @@ void	free_quotok(t_quotok **lst);
 //void	free_pipes(t_pipe *params);
 void	free_pipes_n(t_pipe *params, int count);
 void	free_charptr(char **ptr);
+void	free_pip_param(t_shell *shell, int	n);
 
 // utils_helper.c
 int		count_cmd(t_cmd *cmd);
 
+// close fd
+void	close_fd(int *fd);
+void	close_cmd_fds(t_shell *shell);
+void	close_pipes_i(t_pipe *params, int n); 
+//void	close_all_fds(t_shell *shell, int pipe_idx);
 #endif

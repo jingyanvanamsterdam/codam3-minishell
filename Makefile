@@ -10,7 +10,7 @@ SRC = $(shell find ./src -iname "*.c")
 OBJ = $(SRC:./$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 OS ?= $(shell uname)
-FLAGS = -Werror -Wextra -Wall
+FLAGS = -Werror -Wextra -Wall -fsanitize=address
 #to use readline
 RLFLAG = -lreadline 
 HEADERS := -Iinclude -I$(LIBFT_DIR)

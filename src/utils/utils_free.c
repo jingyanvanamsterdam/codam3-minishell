@@ -122,17 +122,25 @@ void	free_shell(t_shell *shell)
 	if (shell->cmd)
 		free_cmd_lst(&(shell->cmd));
 	if (shell->pip_param)
+		free_pip_param(shell, shell->pip_param->cmd_count - 1);
+	free(shell);
+	shell = NULL;
+}
+
+void	free_pip_param(t_shell *shell, int	n)
+{
+	if (shell->pip_param)
 	{
 		if (shell->pip_param->pipes)
-			free_pipes_n(shell->pip_param, shell->pip_param->cmd_count);
+			free_pipes_n(shell->pip_param, n);
 		if (shell->pip_param->pids)
 		{
 			free(shell->pip_param->pids);
 			shell->pip_param->pids = NULL;
 		}
+		free(shell->pip_param);
+		shell->pip_param = NULL;
 	}
-	free(shell);
-	shell = NULL;
 }
 
 // new function

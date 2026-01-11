@@ -79,8 +79,6 @@ size_t	calculate_cmd_len(t_token *token);
 t_token	*parse_token(t_token *token, t_shell *shell, char **cmd);
 int		parsing(t_shell *shell);
 
-void	set_sig_interactive(void);
-void	set_sig_noninteractive(void);
 //====================================
 
 #endif

@@ -35,7 +35,7 @@ int	handle_redir_fd(t_shell *shell, t_redir *redir)
 		else if (redir->type == HEREDOC)
 			redir->fd = heredoc(shell, redir);
 		if (redir->fd == -1 && redir->type == HEREDOC)
-			return (close_all_fds(shell, 0), 0);
+			return (close_cmd_fds(shell), 0);
 		else if (redir->fd == -1)
 			ft_error_printing(redir->file);
 		redir = redir->next;

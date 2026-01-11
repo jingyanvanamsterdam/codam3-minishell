@@ -32,9 +32,6 @@ void	run_child_process(t_shell *shell, t_cmd *cmd, int stream[2]);
 int		create_process(t_shell *shell);
 void	wait_handler(t_shell *shell);
 void	executor(t_shell *shell);
-//void	close_pipes(t_pipe *params);
-void	close_pipes_i(t_pipe *params, int n);
-
 
 // builtins_handler.c
 int		is_builtin(char *command);
@@ -43,9 +40,13 @@ void	execve_builtin(t_shell *shell, int command_type, t_cmd *cmd);
 // ft_echo_test.c
 int		ft_echo_test(char **argv, t_shell *shell);
 
-//jd_process.c
-void	close_pipes_i(t_pipe *params, int n);
-void	ft_pipe_error(t_shell *shell, char *str, int n);
 
+// signal:
+void	ft_set_after_sigint(t_shell *shell);
+void	handle_sigint(int sig);
+void	sig_interactive(void);
+void	sig_noninteractive(void);
+void	sig_exe_child(void);
+void	sig_heredoc(void);
 
 #endif
