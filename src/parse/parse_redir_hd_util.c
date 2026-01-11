@@ -135,7 +135,6 @@ void	run_heredoc_process(bool quoted, char *delimiter, t_shell *shell, t_redir *
 int	do_hd_loop(bool quoted, char *delimiter, t_shell *shell, t_redir *redir)
 {
 	pid_t	pid;
-	int		status;
 
 	pid = fork();
 	if (pid < 0)
