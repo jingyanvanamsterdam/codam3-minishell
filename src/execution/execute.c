@@ -72,13 +72,9 @@ int	dup_files(t_shell *shell, int stream[2])
 	}	
 	// Close all pipes - after dup2, stdin/stdout have copies of what we need
 	//close_unused_pipes(shell->pip_param, cmd);
-	close_all_fds(shell, shell->pip_param->cmd_count - 1);
-	//// Close original redirect FDs if they're not the same as what we dup2'd
-	//if (cmd->fd[0] != -1 && cmd->fd[0] != stream[0])
-	//	close(cmd->fd[0]);
-	//if (cmd->fd[1] != -1 && cmd->fd[1] != stream[1])
-	//	close(cmd->fd[1]);
-	
+	close_cmd_fds(shell);
+	close_pipes_i(shell->pip_param, shell->pip_param->cmd_count - 1);
+	//close_all_fds(shell, shell->pip_param->cmd_count - 1);
 	return (shell->exit);
 }
 
@@ -112,7 +108,7 @@ void	find_file_redir(t_cmd *cmd)
 		}
 		else if (redir->type == REDIR_OUT || redir->type == APPEND)
 		{
-			if (cmd->fd[1] != -1 && cmd->fd[1]!= 1)
+			if (cmd->fd[1]!= 1)
 				close_fd(&(cmd->fd[1]));
 			cmd->fd[1] = redir->fd;
 		}
@@ -135,7 +131,6 @@ int	apply_redir_parent(t_shell *shell, int savefd[2])
 			shell->exit = 1;
 			ft_error_printing("dup2 input fail");
 		}
-		close_fd(&(shell->cmd->fd[0]));
 	}
 	if (shell->cmd->fd[1] != 1)
 	{
@@ -145,7 +140,6 @@ int	apply_redir_parent(t_shell *shell, int savefd[2])
 			shell->exit = 1;
 			ft_error_printing("dup2 output fail");
 		}
-		close_fd(&(shell->cmd->fd[1]));
 	}
 	return (shell->exit);
 }
@@ -185,6 +179,7 @@ int	single_builtin_handler(t_shell *shell)
 		{
 			if (apply_redir_parent(shell, saved_stdfd) != 0)
 				return (1);
+			close_cmd_fds(shell);
 			execve_builtin(shell, command_type, shell->cmd);
 			restore_parent_fd(saved_stdfd);
 			return (1);
@@ -239,7 +234,7 @@ void	run_child_process(t_shell *shell, t_cmd *cmd, int stream[2])
 {
 	int	command;
 
-	//setup_child_signal();
+	sig_exe_child();
 	if (cmd->cmd)
 	{
 		command = is_builtin(cmd->cmd[0]);
@@ -253,10 +248,12 @@ void	run_child_process(t_shell *shell, t_cmd *cmd, int stream[2])
 	}
 	// TODO: need to close pipes? As pipes are malloced in parent process：pipes已经在dup files的时候全都关闭了，只需要free就可以; free_pipes 在free_shell 里；
 	// TODO: need to free shell? 我觉得的是的，因为child process继承了parent process的所有。所以退出之前应该free
-	//printf("in child process after run\n");
-	ft_process_exit(shell);
+	ft_process_exit(shell, false);
 }
 
+	// Parent closes all pipes after forking all children
+	// Each child has its own copies via dup2, so parent doesn't need them
+	//close_pipes(params);
 int	create_process(t_shell *shell)
 {
 	t_pipe	*params;
@@ -267,7 +264,7 @@ int	create_process(t_shell *shell)
 	params = shell->pip_param;
 	params->pids = ft_calloc(params->cmd_count, sizeof(pid_t));
 	if (!params->pids)
-		return (ft_malloc_exe("pid", shell, shell->pip_param->cmd_count - 1), 0);
+		return (ft_malloc_exe("pid", shell, params->cmd_count - 1), 0);
 	cmd = shell->cmd;
 	i = 0;
 	while (i < params->cmd_count)
@@ -276,17 +273,14 @@ int	create_process(t_shell *shell)
 		setup_stream(stream, cmd, i, shell);
 		params->pids[i] = fork();
 		if (params->pids[i] < 0)
-			return (ft_pipe_error(shell, "fork", params->cmd_count), 0);
+			return (ft_pipe_error(shell, "fork", params->cmd_count - 1), 0);
 		else if (params->pids[i] == 0)
 			run_child_process(shell, cmd, stream);
-		// Parent doesn't close pipes here - wait until all children are forked
 		cmd = cmd->next;
 		++i;
 	}
-	// Parent closes all pipes after forking all children
-	// Each child has its own copies via dup2, so parent doesn't need them
-	//close_pipes(params);
-	close_all_fds(shell, shell->pip_param->cmd_count - 1);
+	close_cmd_fds(shell);
+	close_pipes_i(shell->pip_param, params->cmd_count - 1);
 	return (1);
 }
 
@@ -310,10 +304,7 @@ void	wait_handler(t_shell *shell)
 		}
 		++i;
 	}
-	//free_pipes(params);
-	//free(params->pids);
-	//params->pids = NULL;
-	ft_reset_shell(shell, shell->pip_param->cmd_count - 1);
+	free_pip_param(shell, shell->pip_param->cmd_count - 1);
 }
 
 // After calling this function, need to check the shell->exit to see if it is 1 or 0.
@@ -323,52 +314,21 @@ void	executor(t_shell *shell)
 	if (!shell->pip_param)
 	{
 		ft_malloc_error("executuion", shell);
-		close_all_fds(shell, 0);
-		ft_reset_shell(shell, 0);
+		close_cmd_fds(shell);
+		return ;
 	}
 	shell->pip_param->cmd_count = count_cmd(shell->cmd);
 	shell->pip_param->pids = NULL;
 	shell->pip_param->pipes = NULL;
 	if (single_builtin_handler(shell))
 	{
-		close_all_fds(shell, 0);
-		return (ft_reset_shell(shell, 0));
+		close_cmd_fds(shell);
+		free_pip_param(shell, 0);
+		return ;
 	}
 	if (shell->pip_param->cmd_count > 1 && !create_pipes(shell))
 		return ;
 	if (!create_process(shell))
 		return ;
 	wait_handler(shell);
-}
-
-//void	close_pipes(t_pipe *params)
-//{
-//	int	i;
-
-//	if (!params || !params->pipes)
-//		return ;
-//	i = 0;
-//	while (i < params->cmd_count - 1)
-//	{
-//		close(params->pipes[i][0]);
-//		close(params->pipes[i][1]);
-//		++i;
-//	}
-//	return ;
-//}
-
-void	close_pipes_i(t_pipe *params, int n)
-{
-	int	i;
-
-	if (!params || !params->pipes)
-		return ;
-	i = 0;
-	while (i < n)
-	{
-		close_fd(&(params->pipes[i][0]));
-		close_fd(&(params->pipes[i][1]));
-		++i;
-	}
-	return ;
 }

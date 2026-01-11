@@ -123,7 +123,7 @@ void	init_shell(t_shell *shell, char **envp, int	interactive)
 	shell->prev_exit = 0;
 	shell->exit = 0;
 	if (!init_env(envp, shell))
-		ft_process_exit(shell);
+		ft_process_exit(shell, false);
 }
 /** return 0 if fails, and run ft_reset_shell 
  * return 1 if not, shell->token is freed. 
@@ -135,53 +135,37 @@ int	process_input(t_shell *shell)
 		return (0);
 	add_history(shell->input);
 	if (!tokenization(shell))
-		return (0);
+		return (ft_reset_shell(shell), 0);
 	if (!shell->token)
 		return (0);
 	if (!parsing(shell))
-		return (0);
+		return (ft_reset_shell(shell), 0);
 	free_token_lst(&(shell->token));
 	return (1);
 }
 
+/** ctrl + d => EOF, shell->input == NULL, program exit. */
 void	interactive_shell(t_shell *shell)
 {
 	while (1)
 	{
-		set_sig_interactive();
+		sig_interactive();
 		shell->input = readline("Minishell: ");
-		set_sig_noninteractive();
-		//Oyly when ctrl + d is trigered when there is nothing on the readline
-		if (!shell->input) // This is the only exit of this program
-		{
-			//if (g_sig == SIGINT)
-			//{
-			//	g_sig = 0;
-			//	shell->prev_exit = 130;
-			//	continue;
-			//}
-			// EOF returns null; ctrl+d
-			write(1, "exit\n", 6);
-			ft_process_exit(shell);
-		}
+		sig_noninteractive();
+		if (!shell->input)
+			ft_process_exit(shell, true);
 		if (g_sig == SIGINT)
 		{
 			g_sig = 0;
-			shell->prev_exit = 130;
-			free(shell->input);
-			shell->input = NULL;
-			continue;
+			shell->prev_exit = 130; // for previous readline.
 		}
 		if (!process_input(shell))
-		{
-			ft_reset_shell(shell, 0);
 			continue;
-		}
 		//print_parsed_cmd(shell->cmd);
 		//free_charptr(&(shell->input));
 		//free_cmd_lst(&(shell->cmd));
 		executor(shell);
-		//ft_reset_shell(shell, 0);
+		ft_reset_shell(shell);
 	}
 }
 
@@ -224,18 +208,4 @@ int	main(int argc, char **argv, char **envp)
 	else
 		interactive_shell(shell);
 	return (0);
-
-
-	//print_parsed_cmd(shell->cmd);
-	//excusion cmds
-	//heredoc(shell, test_for_heredoc(shell), 1);
-	//char *filename = test_for_outappend(shell);
-	//int fd = -1;
-	//if (filename)
-	//	fd = output_append(filename);
-	//write(fd, "hello\n", 6);
-	//printf("fd = %d\n", fd);
-	//executor(shell);
-	//executor_tmp(shell);
-	//print_tokens(head);
 }

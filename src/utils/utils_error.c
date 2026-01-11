@@ -27,21 +27,6 @@ void	ft_malloc_error(char *s, t_shell *shell)
 	ft_putstr_fd(s, 2);
 	shell->exit = 1;
 }
-//void	ft_malloc_failure(char *s, t_shell *shell)
-//{
-//	int	clear_history;
-
-//	clear_history = shell->interactive;
-//	//ft_putstr_fd(ERROR "minishell: " RESET, 2);
-//	//ft_putstr_fd("malloc failure at ", 2);
-//	//ft_putstr_fd(s, 2);
-//	//free_shell(shell);
-//	if (clear_history)
-//		rl_clear_history();
-//	// ft_reset_shell(shell, pipe_idx);
-//	ft_reset_shell(shell, 0);
-//	exit(EXIT_FAILURE);
-//}
 
 void	ft_input_error(char *errmes, char *s, t_shell *shell)
 {
@@ -81,39 +66,31 @@ void	ft_warning_printing(void)
 	ft_putstr_fd(ERROR "minishell: warning: heredoc delimited by end of file\n" RESET, 2);
 }
 
-//不需要强制退出。fork 失败需要free所有的pipe，
+//不需要强制退出。fork 失败需要free所有的pipes if any 和pid
 void	ft_pipe_error(t_shell *shell, char *str, int n)
 {
 	ft_error_printing(str);
 	shell->exit = EXIT_FAILURE;
-	close_all_fds(shell, n);
-	ft_reset_shell(shell, n);
+	close_cmd_fds(shell);
+	if (n > 0)
+		close_pipes_i(shell->pip_param, n);
+	free_pip_param(shell, n);
 }
 
 void	ft_malloc_exe(char *s, t_shell *shell, int n)
 {
 	ft_malloc_error(s, shell);
-	close_all_fds(shell, n);
-	ft_reset_shell(shell, n);
+	close_cmd_fds(shell);
+	if (n > 0)
+		close_pipes_i(shell->pip_param, n);
+	free_pip_param(shell, n);
 }
 
-//void	ft_process_error_exit(t_shell *shell, char *mes)
-//{
-//	int	code;
-//	int	clear_history;
 
-//	code = shell->exit;
-//	clear_history = shell->interactive;
-//	ft_error_printing(mes);
-//	close_all_fds(shell, shell->pip_param->cmd_count);
-//	free_shell(shell);
-//	if (clear_history)
-//		rl_clear_history();
-//	exit(code);
-//}
-
-/**close_all_fds() make sure before calling this func, every fd is closed. */
-void	ft_process_exit(t_shell *shell)
+/**close_all_fds() make sure before calling this func, every fd is closed. 
+ * free_pip_params will run if it is child process of pipes. 
+*/
+void	ft_process_exit(t_shell *shell, bool pt_exit)
 {
 	int	code;
 	int	clear_history;
@@ -123,6 +100,8 @@ void	ft_process_exit(t_shell *shell)
 	free_shell(shell);
 	if (clear_history)
 		rl_clear_history();
+	if (pt_exit)
+		ft_putstr_fd("process exit\n", 1);
 	exit(code);
 }
 
@@ -133,7 +112,7 @@ void	close_fd(int *fd)
 	*fd = -1;
 }
 
-void	close_all_fds(t_shell *shell, int pipe_idx)
+void	close_cmd_fds(t_shell *shell)
 {
 	t_cmd	*cmd;
 	t_redir *redir;
@@ -151,11 +130,26 @@ void	close_all_fds(t_shell *shell, int pipe_idx)
 		}
 		cmd = cmd->next;
 	}
-	if (shell->pip_param && pipe_idx != 0)
-		close_pipes_i(shell->pip_param, pipe_idx);
 }
+
+void	close_pipes_i(t_pipe *params, int n)
+{
+	int	i;
+
+	if (!params || !params->pipes)
+		return ;
+	i = 0;
+	while (i < n)
+	{
+		close_fd(&(params->pipes[i][0]));
+		close_fd(&(params->pipes[i][1]));
+		++i;
+	}
+	return ;
+}
+
 /** make sure close all the fds before calling this func */
-void	ft_reset_shell(t_shell *shell, int pipe_count)
+void	ft_reset_shell(t_shell *shell)
 {
 	if (shell->input)
 		free_charptr(&(shell->input));
@@ -163,16 +157,6 @@ void	ft_reset_shell(t_shell *shell, int pipe_count)
 		free_token_lst(&(shell->token));
 	if (shell->cmd)
 		free_cmd_lst(&(shell->cmd));
-	if (shell->pip_param)
-	{
-		if (shell->pip_param->pipes)
-			free_pipes_n(shell->pip_param, pipe_count);
-		if (shell->pip_param->pids)
-		{
-			free(shell->pip_param->pids);
-			shell->pip_param->pids = NULL;
-		}
-	}
 	shell->prev_exit = shell->exit;
 	shell->exit = 0;
 }
