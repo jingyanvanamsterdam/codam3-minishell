@@ -1,0 +1,24 @@
+echo hello world 
+mini error = (================================================================= detected memory leaks 
+#0 0x49a28d in malloc (/home/kuyu/Desktop/current_projects/minishell/minishell+0x49a28d) 
+#1 0x4dc83b in ft_split (/home/kuyu/Desktop/current_projects/minishell/minishell+0x4dc83b) 
+#2 0x4d010e in create_env_path (/home/kuyu/Desktop/current_projects/minishell/minishell+0x4d010e) 
+#3 0x4ccc61 in finish_set_tcmd (/home/kuyu/Desktop/current_projects/minishell/minishell+0x4ccc61) 
+#4 0x4cd5df in parsing (/home/kuyu/Desktop/current_projects/minishell/minishell+0x4cd5df) 
+#5 0x4d8724 in process_input (/home/kuyu/Desktop/current_projects/minishell/minishell+0x4d8724) 
+#6 0x4d8862 in interactive_shell (/home/kuyu/Desktop/current_projects/minishell/minishell+0x4d8862) 
+#7 0x4d8b0b in main (/home/kuyu/Desktop/current_projects/minishell/minishell+0x4d8b0b) 
+16 
+#0 0x49a28d in malloc (/home/kuyu/Desktop/current_projects/minishell/minishell+0x49a28d) 
+#1 0x4dcde8 in ft_join (/home/kuyu/Desktop/current_projects/minishell/minishell+0x4dcde8) 
+#2 0x4dcda1 in ft_strjoin (/home/kuyu/Desktop/current_projects/minishell/minishell+0x4dcda1) 
+#3 0x4d02bb in append_slash (/home/kuyu/Desktop/current_projects/minishell/minishell+0x4d02bb) 
+#4 0x4d011b in create_env_path (/home/kuyu/Desktop/current_projects/minishell/minishell+0x4d011b) 
+#5 0x4ccc61 in finish_set_tcmd (/home/kuyu/Desktop/current_projects/minishell/minishell+0x4ccc61) 
+#6 0x4cd5df in parsing (/home/kuyu/Desktop/current_projects/minishell/minishell+0x4cd5df) 
+#7 0x4d8724 in process_input (/home/kuyu/Desktop/current_projects/minishell/minishell+0x4d8724) 
+#8 0x4d8862 in interactive_shell (/home/kuyu/Desktop/current_projects/minishell/minishell+0x4d8862) 
+#9 0x4d8b0b in main (/home/kuyu/Desktop/current_projects/minishell/minishell+0x4d8b0b) 
+16 
+422 byte(s) leaked in 17 allocation(s).)
+bash error = ()
