@@ -1,11 +1,11 @@
 #include "minishell.h"
 #include "utils.h"
+#include "env.h"
 #include "parse.h"
 #include "struct.h"
 #include "libft.h"
 #include <stdio.h>	
 #include <stdlib.h>
-#include <signal.h>
 #define _GNU_SOURCE
 #include <signal.h>
 #include <readline/readline.h>
@@ -112,10 +112,10 @@ char	*test_for_outappend(t_shell *shell)
 	return (NULL);
 }
 
-void	init_shell(t_shell *shell, char **envp, int	interactive)
+void	init_shell(t_shell *shell, char **envp)
 {
 	shell->input = NULL;
-	shell->interactive = interactive;
+	shell->interactive = isatty(STDIN_FILENO);;
 	shell->env_lst = NULL;
 	shell->token = NULL;
 	shell->cmd = NULL;
@@ -169,43 +169,24 @@ void	interactive_shell(t_shell *shell)
 	}
 }
 
-void	noninteractive_shell(char **argv, t_shell *shell)
-{
-	printf("non interactive %s %p\n", argv[0], shell);
-}
-
-int	check_args(int argc, char **argv)
-{
-	if (argc != 1 && argc != 3)
-		return (-1);
-	if (argc == 3)
-	{
-		if (ft_strcmp(argv[1], "-c") != 0)
-			return (-1);
-		else if (argv[2][0] == '\0' || ft_strcheck(argv[2], ft_isspace))
-			return (-1);
-		else
-			return (0);
-	}
-	else
-		return (1);
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell *shell;
-	int		interactive;
 
-	interactive = check_args(argc, argv);
-	if (interactive == -1)
-		ft_shell_input_error();
 	shell = (t_shell *)malloc(sizeof(t_shell));
 	if (!shell)
 		return (ft_malloc_error("failed at creating shell", shell), 1);
-	init_shell(shell, envp, interactive);
-	if (!interactive) // is not interactive
-		noninteractive_shell(argv, shell);
-	else
+	init_shell(shell, envp);
+	if (shell->interactive && argc == 1)
 		interactive_shell(shell);
+	else if (argc >= 3 && ft_strcmp(argv[1], "-c") == 0)
+	{
+		printf("contain -c\n");
+		shell->interactive = 0;
+		non_interactive_c(shell, argv);
+	}
+	else
+		non_interactive_no_c(shell, argv);
+	ft_process_exit(shell, false);
 	return (0);
 }
