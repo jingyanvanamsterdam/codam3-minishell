@@ -4,6 +4,8 @@
 #include "libft.h"
 #include "minishell.h"
 
+/* cd $PWD hi */
+
 static t_env	*create_node3(const char *key, const char *value, t_shell *shell)
 {
 	t_env	*node;

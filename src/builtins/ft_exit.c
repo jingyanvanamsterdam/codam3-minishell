@@ -2,6 +2,8 @@
 #include "minishell.h"
 #include "libft.h"
 
+/*  ft_exit() need to be able to exit with different codes.  */
+
 static int	is_numeric(const char *s)
 {
 	int	i = 0;

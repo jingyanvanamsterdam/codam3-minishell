@@ -5,6 +5,13 @@
 #include <stdio.h>
 
 
+/* Need to handle cases:
+	Should exit with 1:
+		export HELLO-=123
+		export = 
+		export 123
+		export A-
+ */
 static t_env	*create_node2(char **key_value, t_shell *shell)
 {
 	t_env	*node;
