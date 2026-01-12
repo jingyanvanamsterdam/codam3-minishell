@@ -4,23 +4,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static void	free_2d_arr(char **arr)
-{
-	int	i;
-
-	if (!arr)
-		return ;
-	i = 0;
-	while (arr[i])
-	{
-		free(arr[i]);
-		arr[i] = NULL;
-		++i;
-	}
-	free(arr);
-	arr = NULL;
-
-}
 
 static t_env	*create_node2(char **key_value, t_shell *shell)
 {
@@ -30,13 +13,15 @@ static t_env	*create_node2(char **key_value, t_shell *shell)
 	if (!node)
 	{
 		free_2d_arr(key_value);
-		ft_malloc_failure("Failure at malloc env.\n", shell);
+		ft_malloc_error("ft_export t_env allocation\n", shell);
+		// ft_malloc_failure("Failure at malloc env.\n", shell);
 	}
 	node->key = ft_strdup(key_value[0]);
 	if (!node->key)
 	{
 		free_2d_arr(key_value);
-		ft_malloc_failure("Failure at malloc env.\n", shell);
+		ft_malloc_error("ft_export t_env allocation\n", shell);
+		// ft_malloc_failure("Failure at malloc env.\n", shell);
 	}
 	if (key_value[1])
 		node->value = ft_strdup(key_value[1]);
