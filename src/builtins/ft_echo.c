@@ -1,5 +1,4 @@
 #include "minishell.h"
-#include "builtins.h"
 #include "libft.h"
 
 // return 0 if the there is no newline flag, 1 otherwise

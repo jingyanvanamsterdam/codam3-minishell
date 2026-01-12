@@ -13,8 +13,10 @@ void	ft_input_error(char *errmes, char *s, t_shell *shell);
 void	ft_error_printing(char *mes);
 void	ft_warning_printing(void);
 void	ft_pipe_error(t_shell *shell, char *str, int n);
-
 void	ft_process_exit(t_shell *shell);
+// close fd
+void	close_fd(int *fd);
+void	close_all_fds(t_shell *shell, int pipe_idx);
 void	ft_reset_shell(t_shell *shell, int pipe_idx);
 
 // utils_free.c
@@ -32,7 +34,4 @@ void	free_charptr(char **ptr);
 // utils_helper.c
 int		count_cmd(t_cmd *cmd);
 
-// close fd
-void	close_fd(int *fd);
-void	close_all_fds(t_shell *shell, int pipe_idx);
 #endif

@@ -25,7 +25,7 @@ int	ft_exit(char **argv, t_shell *shell)
 
 	ft_putstr_fd("exit\n", 2);
 	if (!argv[1])
-		exit(shell->status);
+		exit(shell->prev_exit);				// TODO: check if need to exit with prev_exit or exit?
 	if (!is_numeric(argv[1]))
 	{
 		ft_putstr_fd("minishell: exit: numeric argument required\n", 2);
