@@ -99,11 +99,7 @@ static void	print_export_error(char *identifier)
 static t_env	*create_export_node(char *key, char *value, t_shell *shell)
 {
 	t_env	*node;
-	char	*kv[3];
 
-	kv[0] = key;
-	kv[1] = value;
-	kv[2] = NULL;
 	node = (t_env *)malloc(sizeof(t_env));
 	if (!node)
 		return (ft_malloc_error("ft_export t_env allocation\n", shell), NULL);
