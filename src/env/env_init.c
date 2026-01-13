@@ -31,7 +31,7 @@ t_env	*create_node(char **key_value, t_shell *shell)
 	return (node);
 }
 
-static void	append_to_env_lst(t_env **head, t_env *node)
+void	append_to_env_lst(t_env **head, t_env *node)
 {
 	t_env	*tmp;
 
