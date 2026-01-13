@@ -31,12 +31,17 @@ int	finish_set_tcmd(t_shell *shell)
 	{
 		cmd->path = set_cmd_path(cmd->cmd[0], env_paths);
 		if (!cmd->path)
+		{
+			free_2d_arr(env_paths);
 			return (ft_malloc_error("path creation", shell), 0);
+		}
+			
 		if (cmd->redir)
 			if (!handle_redir_fd(shell, cmd->redir))
-				return (0);
+				return (free_2d_arr(env_paths), 0);
 		cmd = cmd->next;
 	}
+	free_2d_arr(env_paths);
 	return (1);
 }
 

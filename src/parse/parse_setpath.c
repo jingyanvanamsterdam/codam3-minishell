@@ -27,7 +27,7 @@ static int	append_slash(char **env_path)
 }
 
 /* Get PATH from enviroment and append / add the end */
-void	*create_env_path(t_env *env_lst)
+char	*create_env_path(t_env *env_lst)
 {
 	t_env	*head;
 	char	**env_path;

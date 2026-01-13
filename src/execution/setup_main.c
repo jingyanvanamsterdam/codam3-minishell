@@ -51,11 +51,15 @@ int	open_argv_fd(char *file, t_shell *shell)
 	{
 		fd = open(file, O_RDONLY | O_EXEC);
 		if (fd == -1)
+		{
+			free_2d_arr(env_paths);
 			return (ft_error_printing(file), -1);
+		}
+		free_2d_arr(env_paths);
 		return (fd);
 	}
 	else
-		return (-1);
+		return (free_2d_arr(env_paths), -1);
 }
 
 void	non_interactive_no_c(t_shell *shell, char **av)
