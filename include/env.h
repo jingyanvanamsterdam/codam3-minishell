@@ -15,6 +15,7 @@ void	env_unset(t_env **env, const char *key);
 t_env	*create_node(char **key_value, t_shell *shell);
 void	append_to_env_lst(t_env **head, t_env *node);
 int		init_env(char **envp, t_shell *shell);
+void	append_to_env_lst(t_env **head, t_env *node);
 
 //  ======= env_utils.c =======
 t_env	*env_find(t_env *env, const char *key);

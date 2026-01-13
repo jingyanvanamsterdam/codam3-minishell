@@ -4,7 +4,8 @@
 #include "libft.h"
 #include "minishell.h"
 
-/* cd $PWD hi */
+/* cd $PWD hi , just tested, I don't know what was wrong with it.*/
+// TODO: 
 
 static t_env	*create_node3(const char *key, const char *value, t_shell *shell)
 {
@@ -24,22 +25,6 @@ static t_env	*create_node3(const char *key, const char *value, t_shell *shell)
 		node->value = NULL;
 	node->next = NULL;
 	return (node);
-}
-// TODO: 也许用JD做的那些个libft的添加env node的函数？？？
-
-static void	append_to_env_lst(t_env **head, t_env *node)
-{
-	t_env	*cur;
-
-	if (*head == NULL)
-	{
-		*head = node;
-		return ;
-	}
-	cur = *head;
-	while (cur->next)
-		cur = cur->next;
-	cur->next = node;
 }
 
 // need functions like: ft_getenv() & update_env_value()
