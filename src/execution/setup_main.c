@@ -49,7 +49,7 @@ int	open_argv_fd(char *file, t_shell *shell)
 		return (ft_malloc_error("env path creation", shell), -1);
 	if (is_script(env_paths, file, shell))
 	{
-		fd = open(file, O_RDONLY | O_EXEC);
+		fd = open(file, O_RDONLY);
 		if (fd == -1)
 		{
 			free_2d_arr(env_paths);
@@ -62,20 +62,27 @@ int	open_argv_fd(char *file, t_shell *shell)
 		return (free_2d_arr(env_paths), -1);
 }
 
+/**
+ * interactive == 0: e.g. cmd -option | ./minishell or ./minishell < infile 
+ * ./minishell > outfile will not do anything. 
+ * shell->interactive == 1 means argc > 1 e.g. ./minishell executable_script*/
 void	non_interactive_no_c(t_shell *shell, char **av)
 {
 	int	fd;
 	int	read;
 
 	fd = 0;
-	if (shell->interactive == 1) // means argc > 1 e.g. ./minishell executable_script
+	printf("sinter = %d\n", shell->interactive);
+	if (shell->interactive) // means argc > 1 e.g. ./minishell executable_script
 	{
 		shell->interactive = 0;
 		fd = open_argv_fd(av[1], shell);
 		if (fd == -1)
 			ft_process_exit(shell, false);
 	}
-	read = 1; // interactive == 0: e.g. cmd -option | ./minishell or ./minishell < infile
+	if (!isatty(STDOUT_FILENO))
+		return ;
+	read = 1; 
 	while (read)
 	{
 		shell->input = get_next_line(fd);
@@ -90,32 +97,20 @@ void	non_interactive_no_c(t_shell *shell, char **av)
 	close_fd(&fd);
 }
 
-void	non_interactive_c(t_shell *shell, char **av)
+void	non_interactive_c(t_shell *shell, char *av)
 {
 	char	**inputs;
 	int		i;
-	char	**key_value;
-	t_env	*node;
 
-	i = 2;
-	inputs = ft_split(av[2], ';');
+	inputs = ft_split(av, ';');
 	if (!inputs)
 		return (ft_malloc_error("paring inputs", shell));
-	while (av[++i])
-	{
-		key_value = ft_split(av[i], '=');
-		if (!key_value)
-			return (ft_malloc_error("paring inputs", shell));
-		node = create_node(key_value, shell);
-		if (!node)
-			return ;
-		append_to_env_lst(&(shell->env_lst), node);
-		free_2d_arr(key_value);
-	}
 	i = -1;
 	while (inputs[++i])
 	{
-		shell->input = inputs[i];
+		shell->input = ft_strdup(inputs[i]);
+		if (!shell->input)
+			return (free_2d_arr(inputs), ft_malloc_error("set shell inputs", shell));
 		sig_noninteractive();
 		if (!process_input(shell))
 			continue;

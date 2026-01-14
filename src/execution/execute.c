@@ -80,8 +80,12 @@ int	dup_files(t_shell *shell, int stream[2])
 
 void	execve_cmd(t_shell *shell, t_cmd *cmd)
 {
-	if (!cmd->path)
+	if (!cmd->path || cmd->path[0] == '\0')
 	{
+		ft_putstr_fd(ERROR "minishell: " RESET, 2);
+		ft_putstr_fd("command not found: ", 2);
+		ft_putstr_fd(cmd->cmd[0], 2);
+		ft_putstr_fd("\n", 2);
 		shell->exit = EXIT_NOCMD;
 		return ;
 	}
@@ -266,8 +270,8 @@ int	create_process(t_shell *shell)
 	if (!params->pids)
 		return (ft_malloc_exe("pid", shell, params->cmd_count - 1), 0);
 	cmd = shell->cmd;
-	i = 0;
-	while (i < params->cmd_count)
+	i = -1;
+	while (++i < params->cmd_count)
 	{
 		find_file_redir(cmd);
 		setup_stream(stream, cmd, i, shell);
@@ -277,7 +281,6 @@ int	create_process(t_shell *shell)
 		else if (params->pids[i] == 0)
 			run_child_process(shell, cmd, stream);
 		cmd = cmd->next;
-		++i;
 	}
 	close_cmd_fds(shell);
 	close_pipes_i(shell->pip_param, params->cmd_count - 1);
@@ -310,6 +313,8 @@ void	wait_handler(t_shell *shell)
 // After calling this function, need to check the shell->exit to see if it is 1 or 0.
 void	executor(t_shell *shell)
 {
+	if (!shell->cmd->cmd[0])
+		return ;
 	shell->pip_param = malloc(sizeof(t_pipe));
 	if (!shell->pip_param)
 	{

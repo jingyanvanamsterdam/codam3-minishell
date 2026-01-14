@@ -55,44 +55,33 @@ static char	*handle_exp_input(char *input, t_shell *shell, size_t len, char *res
 
 static char	*handle_hd_input(bool quoted, char *input, char *res, t_shell *shell)
 {
+	char	*new;
 	char	*tmp;
 	int		exp_i;
 	int		len;
 
 	exp_i = 0;
-	tmp = res;
+	new = res;
 	len = ft_strlen(input);
 	if (!quoted)
 		exp_i = find_index(input, len, '$');
-	if (!res)
-	{
-		tmp = ft_strdup("");
-		if (!tmp)
-			return (NULL);
-	}
 	if (quoted || exp_i == len)
-		res = ft_strjoin(tmp, input);
+		new = ft_strjoin(res, input);
 	else
-		res = handle_exp_input(input, shell, len, tmp);
-	free(tmp);
-	tmp = res;
-	res = ft_strjoin(tmp, "\n");
-	free(tmp);
-	return (res);
+		new = handle_exp_input(input, shell, len, res);
+	if (!new)
+		return (NULL);
+	tmp = new;
+	new = ft_strjoin(tmp, "\n");
+	free_charptr(&tmp);
+	return (new);
 }
-/**
- * tmp is previous result, res is updated by handle_hd_input() and tmp is being freed inside;
- * if ctrl + d end of the heredoc, whatever res before had will be write into the heredoc fd.
- */
 
-void	run_heredoc_process(bool quoted, char *delimiter, t_shell *shell, t_redir *redir)
+static char *heredoc_input(char	*res, bool quoted, char *delimiter, t_shell *shell)
 {
+	char	*tmp;
 	char	*input;
-	char	*res;
-	char 	*tmp;
 
-	res = NULL;
-	tmp = NULL;
 	while (1)
 	{
 		input = readline("> ");
@@ -106,47 +95,60 @@ void	run_heredoc_process(bool quoted, char *delimiter, t_shell *shell, t_redir *
 		tmp = res;
 		res = handle_hd_input(quoted, input, tmp, shell);
 		free_charptr(&input);
+		free_charptr(&tmp);
 		if (!res)
-			return (ft_error_printing("issues at heredoc"));
+			return (ft_error_printing("issues at heredoc"), NULL);
 	}
-	write(redir->fd, res, ft_strlen(res));
 	free_charptr(&input);
+	return (res);
 }
+/**
+ * tmp is previous result, res is updated by handle_hd_input() and tmp is being freed inside;
+ * if ctrl + d end of the heredoc, whatever res before had will be write into the heredoc fd.
+ */
 
-int	heredoc_wait(t_shell *shell, pid_t pid)
+void	run_heredoc_process(bool quoted, char *delimiter, t_shell *shell, t_redir *redir)
 {
-	int	status;
+	char	*res;
 
-	waitpid(pid, &status, 0);
-	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	sig_heredoc();
+	redir->fd = open(redir->file, O_WRONLY|O_CREAT|O_EXCL|O_TRUNC, 0600);
+	if (redir->fd == -1)
 	{
-		shell->exit = 130;
-		//printf("heredoc sig int\n");
-		return (0);
+		ft_error_printing("open heredoc file");
+		close_cmd_fds(shell);
+		ft_process_exit(shell, false);
 	}
-	//printf("heredoc wait finished, %d\n", WEXITSTATUS(status));
-	return (1);	
+	res = ft_strdup("");
+	if (!res)
+		return (ft_error_printing("issues at heredoc"));
+	res = heredoc_input(res, quoted, delimiter, shell);
+	if (!res)
+		return ;
+	write(redir->fd, res, ft_strlen(res));
+	free_charptr(&res);
+	ft_process_exit(shell, false);
 }
+
 /** return 0 if there is error and fails */
 int	do_hd_loop(bool quoted, char *delimiter, t_shell *shell, t_redir *redir)
 {
 	pid_t	pid;
+	int		status;
 
 	pid = fork();
 	if (pid < 0)
 		return (ft_pipe_error(shell, "fork", 0), 0);
 	else if (pid == 0)
-	{
-		sig_heredoc();
-		redir->fd = open(redir->file, O_WRONLY|O_CREAT|O_EXCL|O_TRUNC, 0600);
-		if (redir->fd == -1)
-			ft_error_printing("open heredoc file");
-		else
-			run_heredoc_process(quoted, delimiter, shell, redir);
-		close_cmd_fds(shell);
-		ft_process_exit(shell, false);
-		return (1);
-	}
+		return (run_heredoc_process(quoted, delimiter, shell, redir), 1);
 	else
-		return (heredoc_wait(shell, pid));
+	{
+		waitpid(pid, &status, 0);
+		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		{
+			shell->exit = 130;
+			return (0);
+		}
+		return (1);	
+	}
 }

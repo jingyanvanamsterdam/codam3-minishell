@@ -29,13 +29,15 @@ int	finish_set_tcmd(t_shell *shell)
 		return (ft_malloc_error("env path creation", shell), 0);
 	while (cmd)
 	{
-		cmd->path = set_cmd_path(cmd->cmd[0], env_paths);
-		if (!cmd->path)
+		if (cmd->cmd[0])
 		{
-			free_2d_arr(env_paths);
-			return (ft_malloc_error("path creation", shell), 0);
+			cmd->path = set_cmd_path(cmd->cmd[0], env_paths);
+			if (!cmd->path)
+			{
+				free_2d_arr(env_paths);
+				return (ft_malloc_error("path creation", shell), 0);
+			}
 		}
-			
 		if (cmd->redir)
 			if (!handle_redir_fd(shell, cmd->redir))
 				return (free_2d_arr(env_paths), 0);
@@ -50,7 +52,7 @@ int	finish_set_tcmd(t_shell *shell)
  * Check !shell->token;
  * if there is input error in redir, shell->token will be NULL
  */
-t_token	*parse_token(t_token *token, t_shell *shell, char **cmd)
+t_token	*parse_token(t_token *token, t_shell *shell, t_cmd *cmd)
 {
 	t_redir *redir;
 
@@ -67,7 +69,7 @@ t_token	*parse_token(t_token *token, t_shell *shell, char **cmd)
 				return (NULL);
 		}
 		else
-			if (!update_cmds_arr(cmd, token, shell))
+			if (!update_cmds_arr(cmd->cmd, token, shell))
 				return (NULL);
 		token = token->next;
 	}
@@ -84,19 +86,22 @@ t_token	*parse_token(t_token *token, t_shell *shell, char **cmd)
 int	parsing(t_shell *shell)
 {
 	t_token	*token;
-	char	**cmd;
 	size_t	size;
+	t_cmd	*cmd;
+	t_cmd	*tmp;
 
 	token = shell->token;
-	cmd = NULL;
 	while (token)
 	{
 		size = calculate_cmd_len(token) + 1;
-		cmd = ft_calloc(size, sizeof(char *));
-		if (!cmd)
-			return (ft_malloc_error("parsing.\n", shell), 0);
-		if (!init_cmd_node(shell, cmd))
-			return (free_2d_arr(cmd), 0);
+		if (!init_cmd_node(shell, size))
+			return (0);
+		tmp = shell->cmd;
+		while (tmp)
+		{
+			cmd = tmp;
+			tmp = tmp->next;
+		}
 		token = parse_token(token, shell, cmd);
 		if (!shell->token)
 			return (0);

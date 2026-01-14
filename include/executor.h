@@ -49,7 +49,7 @@ void	sig_noninteractive(void);
 void	sig_exe_child(void);
 void	sig_heredoc(void);
 
-void	non_interactive_c(t_shell *shell, char **av);
+void	non_interactive_c(t_shell *shell, char *av);
 void	non_interactive_no_c(t_shell *shell, char **av);
 
 int	process_input(t_shell *shell);

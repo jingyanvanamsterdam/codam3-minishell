@@ -66,17 +66,17 @@ int		handle_redir_fd(t_shell *shell, t_redir *redir);
 t_token	*handle_redir(t_token *token, t_redir **redir, t_shell *shell);
 
 //ENV_PATH AND PATH
-char	*create_env_path(t_env *env_lst);
+char	**create_env_path(t_env *env_lst);
 char	*set_cmd_path(char *cmd, char **env_paths);
 
 //T_CMD creation funcs #5
 void	update_cmd_redir(t_redir *redir, t_shell *shell);
 int		update_cmds_arr(char **cmd, t_token *token, t_shell *shell);
-int		init_cmd_node(t_shell *shell, char **cmd);
+int		init_cmd_node(t_shell *shell, size_t size);
 size_t	calculate_cmd_len(t_token *token);
 
 //void	print_quotok(t_quotok *head)
-t_token	*parse_token(t_token *token, t_shell *shell, char **cmd);
+t_token	*parse_token(t_token *token, t_shell *shell, t_cmd *cmd);
 int		parsing(t_shell *shell);
 
 //====================================

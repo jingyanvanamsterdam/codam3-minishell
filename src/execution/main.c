@@ -114,8 +114,16 @@ char	*test_for_outappend(t_shell *shell)
 
 void	init_shell(t_shell *shell, char **envp)
 {
+	bool	interactive_in;
+	bool	interactive_out;
+
+	interactive_in = isatty(STDIN_FILENO);
+	interactive_out = isatty(STDOUT_FILENO);
 	shell->input = NULL;
-	shell->interactive = isatty(STDIN_FILENO);;
+	if (interactive_in && interactive_out)
+		shell->interactive = 1;
+	else
+		shell->interactive = 0;
 	shell->env_lst = NULL;
 	shell->token = NULL;
 	shell->cmd = NULL;
@@ -141,6 +149,7 @@ int	process_input(t_shell *shell)
 	if (!parsing(shell))
 		return (ft_reset_shell(shell), 0);
 	free_token_lst(&(shell->token));
+	//print_parsed_cmd(shell->cmd);
 	return (1);
 }
 
@@ -181,9 +190,8 @@ int	main(int argc, char **argv, char **envp)
 		interactive_shell(shell);
 	else if (argc >= 3 && ft_strcmp(argv[1], "-c") == 0)
 	{
-		printf("contain -c\n");
 		shell->interactive = 0;
-		non_interactive_c(shell, argv);
+		non_interactive_c(shell, argv[2]);
 	}
 	else
 		non_interactive_no_c(shell, argv);

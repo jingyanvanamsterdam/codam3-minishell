@@ -25,6 +25,7 @@ void	ft_malloc_error(char *s, t_shell *shell)
 	ft_putstr_fd(ERROR "minishell: " RESET, 2);
 	ft_putstr_fd("malloc failure at ", 2);
 	ft_putstr_fd(s, 2);
+	ft_putstr_fd("\n", 2);
 	shell->exit = 1;
 }
 

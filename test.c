@@ -18,6 +18,7 @@ int	has_c_option(int ac, char **av)
 int main(int argc, char **av)
 {
 	int	interactive = isatty(STDIN_FILENO);
+	int outinter =  isatty(STDOUT_FILENO);
 	printf("identify args = %d \n", argc);
 
 	if (argc > 1)
@@ -27,6 +28,7 @@ int main(int argc, char **av)
 		printf("interactive = %d\n", interactive);
 	else
 		printf("interative = %d\n", interactive);
+	printf("out inter = %d\n", outinter);
 
 	if (has_c_option(argc, av))
 		printf("yes");

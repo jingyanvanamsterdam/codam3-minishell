@@ -56,14 +56,19 @@ void	update_cmd_redir(t_redir *redir, t_shell *shell)
  * return 1 success;
  * return 0 malloc fail return the program;
  */
-int	init_cmd_node(t_shell *shell, char **cmd)
+int	init_cmd_node(t_shell *shell, size_t size)
 {
 	t_cmd	*node;
 
 	node = (t_cmd *)malloc(sizeof(t_cmd));
 	if (!node)
 		return (ft_malloc_error("parsing.\n", shell), 0);
-	node->cmd = cmd;
+	node->cmd = ft_calloc(size, sizeof(char *));
+	if (!node->cmd)
+	{
+		free(node);
+		return (ft_malloc_error("parsing.\n", shell), 0);
+	}
 	node->fd[0] = 0;
 	node->fd[1] = 1;
 	node->path = NULL;
