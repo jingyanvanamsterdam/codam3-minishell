@@ -42,7 +42,6 @@ int		ft_echo_test(char **argv, t_shell *shell);
 
 
 // signal:
-void	ft_set_after_sigint(t_shell *shell);
 void	handle_sigint(int sig);
 void	sig_interactive(void);
 void	sig_noninteractive(void);
