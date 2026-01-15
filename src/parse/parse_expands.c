@@ -7,6 +7,7 @@
 char	*lookup_key(t_env *env_lst, const char *key)
 {
 	char	*value;
+	char	*tmp;
 
 	value = ft_strdup("");
 	if (!value || !key)
@@ -14,7 +15,12 @@ char	*lookup_key(t_env *env_lst, const char *key)
 	while (env_lst)
 	{
 		if (ft_strcmp(env_lst->key, key) == 0)
-			return (ft_strjoin(value, env_lst->value));
+		{
+			tmp = value;
+			value = ft_strjoin(tmp, env_lst->value);
+			free_charptr(&tmp);
+			return (value);
+		}
 		env_lst = env_lst->next;
 	}
 	return (value);
@@ -37,7 +43,7 @@ char	*expansion(char *str, t_shell *shell, size_t end)
 		return (NULL);
 	expansion = lookup_key(shell->env_lst, key);
 	if (key)
-		free(key);
+		free_charptr(&key);
 	if (!expansion)
 		return (NULL);
 	return (expansion);
@@ -68,7 +74,7 @@ size_t	handle_expands(char *str, t_shell *shell, t_quotok **tok)
 	if (!value)
 		return ((size_t)-1);
 	if (create_quotok_node(value, tok) == -1)
-		return ((size_t)-1);
+		return (free_charptr(&value), (size_t)-1);
 	free_charptr(&value);
 	return (end);
 }

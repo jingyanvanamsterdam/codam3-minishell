@@ -115,20 +115,15 @@ void	run_heredoc_process(bool quoted, char *delimiter, t_shell *shell, t_redir *
 	sig_heredoc();
 	redir->fd = open(redir->file, O_WRONLY|O_CREAT|O_EXCL|O_TRUNC, 0600);
 	if (redir->fd == -1)
-	{
-		ft_error_printing("open heredoc file");
-		close_cmd_fds(shell);
-		ft_process_exit(shell, false);
-	}
+		return (ft_error_printing("open heredoc file"));
 	res = ft_strdup("");
 	if (!res)
-		return (ft_error_printing("issues at heredoc"));
+		return (ft_malloc_error("heredoc", shell));
 	res = heredoc_input(res, quoted, delimiter, shell);
 	if (!res)
 		return ;
 	write(redir->fd, res, ft_strlen(res));
 	free_charptr(&res);
-	ft_process_exit(shell, false);
 }
 
 /** return 0 if there is error and fails */
@@ -141,7 +136,12 @@ int	do_hd_loop(bool quoted, char *delimiter, t_shell *shell, t_redir *redir)
 	if (pid < 0)
 		return (ft_pipe_error(shell, "fork", 0), 0);
 	else if (pid == 0)
-		return (run_heredoc_process(quoted, delimiter, shell, redir), 1);
+	{
+		run_heredoc_process(quoted, delimiter, shell, redir);
+		close_cmd_fds(shell);
+		ft_process_exit(shell, false);
+		return (1);
+	}
 	else
 	{
 		waitpid(pid, &status, 0);

@@ -61,14 +61,14 @@ t_token	*handle_redir(t_token *token, t_redir **redir, t_shell *shell)
 		return (ft_input_error("near upexpected token `", value, shell), NULL);
 	node = (t_redir *)malloc(sizeof(t_redir));
 	if (!node)
-		return (ft_malloc_parsing("parsing.\n", shell), NULL);
+		return (ft_malloc_parsing("parsing", shell), NULL);
 	node->type = t;
 	if (t == HEREDOC)
 		node->file = ft_strdup(token->value);
 	else
 		node->file = remove_quote(token->value, shell, false);
 	if (!node->file)
-		return (ft_malloc_parsing("parsing.\n", shell), NULL);
+		return (ft_malloc_parsing("parsing", shell), NULL);
 	node->fd = -1;
 	node->next = NULL;
 	append_to_rdir_lst(redir, node);

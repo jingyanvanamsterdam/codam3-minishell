@@ -88,6 +88,7 @@ int	heredoc(t_shell *shell, t_redir *redir)
 	delimiter = remove_quote(redir->file, shell, true);
 	if (!delimiter)
 		return (ft_malloc_error("heredoc\n", shell), -1);
+	free_charptr(&(redir->file));
 	redir->file = create_hd_tmp_name();
 	if (!redir->file)
 		return (ft_malloc_error("heredoc name\n", shell), -1);

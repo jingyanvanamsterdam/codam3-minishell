@@ -35,7 +35,7 @@
 //             continue;
 
 //         t_env *new = create_env_node(kv[0], kv[1] ? kv[1] : "");
-//         free_split(kv);
+//         free_2d_arr(kv);
 
 //         if (!head)
 //             head = new;
@@ -121,7 +121,7 @@
 //             fgets(input, sizeof(input), stdin);
 //             args = str_to_argv(input);
 //             ft_echo(args, &shell);
-//             free_split(args);
+//             free_2d_arr(args);
 //         }
 //         else if (choice == 2) {
 //             char *tmp[] = {"pwd", NULL};
@@ -136,21 +136,21 @@
 //             fgets(input, sizeof(input), stdin);
 //             args = str_to_argv(input);
 //             ft_export(args, &shell);
-//             free_split(args);
+//             free_2d_arr(args);
 //         }
 //         else if (choice == 5) {
 //             printf("unset> ");
 //             fgets(input, sizeof(input), stdin);
 //             args = str_to_argv(input);
 //             ft_unset(args, &shell);
-//             free_split(args);
+//             free_2d_arr(args);
 //         }
 //         else if (choice == 6) {
 //             printf("exit> ");
 //             fgets(input, sizeof(input), stdin);
 //             args = str_to_argv(input);
 //             ft_exit(args, &shell);
-//             free_split(args);
+//             free_2d_arr(args);
 //         }
 //         else {
 //             print_help();

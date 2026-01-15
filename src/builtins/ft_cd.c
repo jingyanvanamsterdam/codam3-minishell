@@ -6,7 +6,7 @@
 
 /* cd $PWD hi , just tested, I don't know what was wrong with it.*/
 // TODO: 
-
+/** why don´t use t_env	*create_node(char **key_value, t_shell *shell)?*/
 static t_env	*create_node3(const char *key, const char *value, t_shell *shell)
 {
 	t_env	*node;

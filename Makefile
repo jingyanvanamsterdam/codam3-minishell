@@ -10,7 +10,8 @@ SRC = $(shell find ./src -iname "*.c")
 OBJ = $(SRC:./$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 OS ?= $(shell uname)
-FLAGS = -Werror -Wextra -Wall -fsanitize=address
+FLAGS = -Werror -Wextra -Wall
+FSAN =  -fsanitize=address
 #to use readline
 RLFLAG = -lreadline 
 HEADERS := -Iinclude -I$(LIBFT_DIR)
@@ -80,4 +81,10 @@ execution: buildlib
 	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(BUILTINS_SRC) $(EXECUTION_SRC) $(ENV_SRC) $(UTILS_SRC) $(LIBFT) $(RLFLAG) -o execution
 	@echo "✅ Built test executable: ./execution"
 
-.PHONY: all buildlib clean fclean re env lex parse execution
+fsan: buildlib
+	@echo "Compiling execution testing module..."
+	cc $(FLAGS) $(FSAN) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(BUILTINS_SRC) $(EXECUTION_SRC) $(ENV_SRC) $(UTILS_SRC) $(LIBFT) $(RLFLAG) -o fsan
+	@echo "✅ Built test executable: ./execution"
+
+
+.PHONY: all buildlib clean fclean re env lex parse execution fsan

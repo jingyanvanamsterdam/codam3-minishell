@@ -1,9 +1,5 @@
 #define _GNU_SOURCE
-//#include "parse.h"
 #include "executor.h"
-//#include "struct.h"
-//#include "libft.h"
-#include <stdio.h>	
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>

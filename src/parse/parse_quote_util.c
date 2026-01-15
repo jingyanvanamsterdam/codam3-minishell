@@ -65,23 +65,17 @@ size_t	find_stop(char *str, t_quote *status)
 	return (i);
 }
 
-/** return -1 if malloc failed. value being freed here */
+/** return -1 if malloc failed */
 int	create_quotok_node(char *value, t_quotok **head)
 {
 	t_quotok	*node;
 
 	node = (t_quotok*)malloc(sizeof(t_quotok));
 	if (!node)
-	{
-		free_charptr(&value);
-		free_quotok(head);
 		return (-1);
-	}
 	node->value = ft_strdup(value);
 	if (!node->value)
 	{
-		free_charptr(&value);
-		free_quotok(head);
 		free(node);
 		return (-1);
 	}

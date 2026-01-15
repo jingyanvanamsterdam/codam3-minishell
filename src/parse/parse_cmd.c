@@ -32,7 +32,7 @@ int	update_cmds_arr(char **cmd, t_token *token, t_shell *shell)
 		i++;
 	cmd[i] = remove_quote(token->value, shell, false);
 	if (!cmd[i])
-		return (ft_malloc_parsing("parsing.\n", shell), 0);
+		return (ft_malloc_parsing("parsing", shell), 0);
 	return (1);
 }
 

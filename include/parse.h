@@ -8,18 +8,6 @@
 # include <stdbool.h>
 # include "utils.h"
 
-# define RESET   "\033[0m"
-# define BLACK   "\033[30m"
-# define ERROR   "\033[31m" // RED
-# define EXEC    "\033[32m" // GREEN
-//# define YELLOW  "\033[33m"
-//# define BLUE    "\033[34m"
-//# define MAGENTA "\033[35m"
-//# define CYAN    "\033[36m"
-//# define WHITE   "\033[37m"
-
-//UTILS
-int		init_env(char **envp, t_shell *shell);
 //===========LEX======================
 //helper funcs for lex
 size_t	find_index(char *str, size_t len, char c);

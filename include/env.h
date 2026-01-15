@@ -3,9 +3,6 @@
 
 # include "struct.h"
 
-// ======= env_free.c =======
-void	free_env_list(t_env *env_list);
-
 // ======= env_getset.c =======
 void	env_set(t_env **env, const char *key, const char *value);
 void	env_unset(t_env **env, const char *key);
@@ -23,8 +20,8 @@ char    *env_get_value(t_env *env, const char *key);
 int		env_key_exists(t_env *env, const char *key);
 char	**env_to_array(t_env *env);
 
-//  ======= free_split.c =======
-void	free_split(char **key_value);
+//  ======= free_2d_arr.c =======
+void	free_2d_arr(char **key_value);
 
 
 #endif

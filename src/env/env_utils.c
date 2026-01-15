@@ -1,43 +1,7 @@
-// t_env *env_find(t_env *env, const char *key);
-// char *env_get_value(t_env *env, const char *key);
-// char **env_to_array(t_env *env);
-// int env_key_exists(t_env *env, const char *key);
-
 #include "struct.h"
 #include "minishell.h"
 #include "libft.h"
 #include "env.h"
-
-// find the node matching the given key
-t_env	*env_find(t_env *env, const char *key)
-{
-    if (!env || !key)
-        return (NULL);
-    while (env)
-    {
-        if (ft_strcmp(env->key, key) == 0)
-            return (env);
-        env = env->next;
-    }
-    return (NULL);
-}
-
-// return only the value of the given key (NULL if not found)
-char    *env_get_value(t_env *env, const char *key)
-{
-    while (env)
-    {
-        if (ft_strcmp(env->key, key) == 0)
-            return (env->value);
-        env = env->next;
-    }
-    return (NULL);
-}
-
-int	env_key_exists(t_env *env, const char *key)
-{
-	return (env_find(env, key) != NULL);
-}
 
 // count the number of nodes in env
 static int	env_count(t_env *env)
@@ -63,6 +27,7 @@ static void	free_array(char **arr, int n)
 	free(arr);
 }
 
+/**env->value will exist, when init_env, value == NULL, ft_strdup("") */
 static char	*join_key_value(t_env *env)
 {
 	char	*pair;

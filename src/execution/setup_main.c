@@ -6,60 +6,32 @@
 #include "libft.h"
 #include <stdio.h>	
 #include <stdlib.h>
-#include <fcntl.h>
-
+#include <unistd.h>
 #define _GNU_SOURCE
+#include <signal.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
-#include <unistd.h> // for sleep
-
-int	is_script(char **env_paths, char *file, t_shell *shell)
+void	init_shell(t_shell *shell, char **envp)
 {
-	char	*tmp;
-	int		i;
+	bool	interactive_in;
+	bool	interactive_out;
 
-	tmp = NULL;
-	i = 0;
-	if (!env_paths[0] && access(file, F_OK == 0))
-		return (ft_putstr_fd("cannot execute binary file", 2), 0);
+	interactive_in = isatty(STDIN_FILENO);
+	interactive_out = isatty(STDOUT_FILENO);
+	shell->input = NULL;
+	if (interactive_in && interactive_out)
+		shell->interactive = 1;
 	else
-	{
-		while (env_paths[i])
-		{
-			tmp = ft_strjoin(env_paths[i++], file);
-			if (!tmp)
-				return (ft_malloc_error("env path creation", shell), 0);
-			if (access(tmp, F_OK) == 0)
-				break ;
-			free(tmp);
-			tmp = NULL;
-		}
-		if (tmp != NULL)
-			return (ft_putstr_fd("cannot execute binary file", 2), 0);
-	}
-	return (1);
-}
-
-int	open_argv_fd(char *file, t_shell *shell)
-{
-	int		fd;
-	char	**env_paths;
-
-	env_paths = create_env_path(shell->env_lst);
-	if (!env_paths)
-		return (ft_malloc_error("env path creation", shell), -1);
-	if (is_script(env_paths, file, shell))
-	{
-		fd = open(file, O_RDONLY);
-		if (fd == -1)
-		{
-			free_2d_arr(env_paths);
-			return (ft_error_printing(file), -1);
-		}
-		free_2d_arr(env_paths);
-		return (fd);
-	}
-	else
-		return (free_2d_arr(env_paths), -1);
+		shell->interactive = 0;
+	shell->env_lst = NULL;
+	shell->token = NULL;
+	shell->cmd = NULL;
+	shell->pip_param = NULL;
+	shell->prev_exit = 0;
+	shell->exit = 0;
+	if (!init_env(envp, shell))
+		ft_process_exit(shell, false);
 }
 
 /**
@@ -118,4 +90,29 @@ void	non_interactive_c(t_shell *shell, char *av)
 		ft_reset_shell(shell);
 	}
 	free_2d_arr(inputs);
+}
+
+/** ctrl + d => EOF, shell->input == NULL, program exit. */
+void	interactive_shell(t_shell *shell)
+{
+	while (1)
+	{
+		sig_interactive();
+		shell->input = readline("Minishell: ");
+		sig_noninteractive();
+		if (!shell->input)
+			ft_process_exit(shell, true);
+		if (g_sig == SIGINT)
+		{
+			g_sig = 0;
+			shell->prev_exit = 130; // for previous readline.
+		}
+		if (!process_input(shell))
+			continue;
+		//print_parsed_cmd(shell->cmd);
+		//free_charptr(&(shell->input));
+		//free_cmd_lst(&(shell->cmd));
+		executor(shell);
+		ft_reset_shell(shell);
+	}
 }
