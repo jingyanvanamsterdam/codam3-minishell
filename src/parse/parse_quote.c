@@ -81,7 +81,7 @@ char	*join_quotok(t_quotok *quotok)
 		//printf("find next quotok: value = %s\n", quotok->value);
 		tmp = value;
 		value = ft_strjoin(tmp, quotok->value);
-		free(tmp);
+		free_charptr(&tmp);
 		if (!value)
 			return (NULL);
 		quotok = quotok->next;

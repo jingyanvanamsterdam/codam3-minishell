@@ -44,8 +44,9 @@
  * in that case, no dup or execve will run.*/
 int  open_files(t_cmd *cmd, t_redir *redir, t_type type)
 {
-    if (cmd->fd[0] > 0 && (type == REDIR_IN || type == HEREDOC))
-        close_fd(&(cmd->fd[0]));
+	if (cmd->fd[0] > 0 && cmd->fd[0] != cmd->hdfd
+		&& (type == REDIR_IN || type == HEREDOC))
+		close_fd(&(cmd->fd[0]));
     if (type == REDIR_IN)
         cmd->fd[0] =open(redir->file, O_RDONLY);
     else if (type == HEREDOC)
@@ -83,6 +84,25 @@ t_builtin	is_builtin(char *command)
 	return (OTHERS);
 }
 
+static void	ft_handle_execve_err(char *cmd, t_shell *shell)
+{
+	if (errno == ENOENT)
+	{
+		ft_execve_error(cmd, "command not found");
+		shell->exit = EXIT_NOCMD;
+	}
+	else
+	{
+		shell->exit = EXIT_CMD_NOEXC;
+		if (errno == EACCES)
+			ft_execve_error(cmd, "permission denied");
+		else if (errno == EISDIR)
+			ft_execve_error(cmd, "is a directory");
+		else
+			ft_execve_error(cmd, strerror(errno));
+	}
+};
+
 void	execve_cmd(t_shell *shell, t_cmd *cmd)
 {
 	char	**env;
@@ -98,10 +118,7 @@ void	execve_cmd(t_shell *shell, t_cmd *cmd)
 		return ;
 	}
 	if (execve(cmd->path, cmd->cmd, env) == -1)
-	{
-		ft_execve_error(cmd->cmd[0], strerror(errno));
-		shell->exit = EXIT_CMD_NOEXC;
-	}
+		ft_handle_execve_err(cmd->cmd[0], shell);
 	free_2d_arr(env);
 }
 

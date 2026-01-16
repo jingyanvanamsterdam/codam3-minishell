@@ -115,7 +115,7 @@ int	process_input(t_shell *shell)
 	if (!parsing(shell))
 		return (ft_reset_shell(shell), 0);
 	free_token_lst(&(shell->token));
-	print_parsed_cmd(shell->cmd);
+	//print_parsed_cmd(shell->cmd);
 	return (1);
 }
 

@@ -78,18 +78,23 @@ int	heredoc(t_shell *shell, t_cmd *cmd, t_redir *redir, char *deli)
 	free_charptr(&(redir->file));
 	redir->file = create_hd_tmp_name();
 	if (!redir->file)
-	{
-		ft_malloc_error("create heredoc tmp file", shell);
-		return (0);
-	}
+		return (ft_malloc_error("hd tmp file", shell), 0);
 	if (cmd->hdfd != -1)
 		close_fd(&(cmd->hdfd));
 	cmd->hdfd = open(redir->file, O_CREAT | O_RDWR | O_TRUNC, 0600);
 	if (cmd->hdfd == -1)
 		return (ft_error_printing("heredoc"), 0);
-	unlink(redir->file);
 	if (!do_hd_loop(quoted, deli, shell, cmd))
+	{
+		close_fd(&(cmd->hdfd));
+		unlink(redir->file);
 		return (0);
+	}
+	close_fd(&(cmd->hdfd));
+	cmd->hdfd = open(redir->file, O_RDONLY);
+	unlink(redir->file);
+	if (cmd->hdfd == -1)
+		return (ft_error_printing("heredoc"), 0);
 	return (1);
 } 
 

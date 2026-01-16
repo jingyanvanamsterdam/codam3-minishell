@@ -32,10 +32,10 @@ static char	*handle_exp_input(char *input, t_shell *shell, size_t len, char *res
 	size_t	increase;
 	t_quotok	*tok;
 	char	*value;
+	char	*tmp;
 
 	start = 0;
 	tok = NULL;
-	value = NULL;
 	while (start < len)
 	{
 		if (input[start] == '$')
@@ -46,11 +46,11 @@ static char	*handle_exp_input(char *input, t_shell *shell, size_t len, char *res
 			return (free_quotok(&tok), NULL);
 		start += increase;
 	}
-	value = join_quotok(tok);
+	tmp = join_quotok(tok);
 	free_quotok(&tok);
-	if (!value)
-		return (NULL);
-	return (ft_strjoin(res, value));
+	value = ft_strjoin(res, tmp);
+	free_charptr(&tmp);
+	return (value);
 }
 
 static char	*handle_hd_input(bool quoted, char *input, char *res, t_shell *shell)
@@ -116,6 +116,7 @@ void	run_hd_process(bool q, char *deli, t_shell *shell, t_cmd *cmd)
 	if (!res)
 		return (ft_malloc_error("heredoc", shell));
 	res = heredoc_input(res, q, deli, shell);
+	free_charptr(&deli);
 	if (!res)
 		return ;
 	write(cmd->hdfd, res, ft_strlen(res));

@@ -62,7 +62,9 @@ static char	*set_cmd_path(char *cmd, char **env_paths)
 
 	i = 0;
 	tmp = NULL;
-	if (access(cmd, F_OK) == 0)
+	// if (access(cmd, F_OK) == 0)
+	// 	return (ft_strdup(cmd));
+	if (ft_strchr(cmd, '/'))
 		return (ft_strdup(cmd));
 	while (env_paths[i])
 	{

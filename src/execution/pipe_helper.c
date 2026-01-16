@@ -62,12 +62,12 @@ int	dup_files(t_shell *shell, int stream[2])
     if (dup2(stream[0], STDIN_FILENO) < 0)
     {
         shell->exit = 1;
-        ft_error_printing("fail at dup2");
+        ft_error_printing("fail at dup2 in");
     }
     if (dup2(stream[1], STDOUT_FILENO) < 0)
     {
         shell->exit = 1;
-        ft_error_printing("fail at dup2");
+        ft_error_printing("fail at dup2 out");
     }	
 	close_cmd_fds(shell);
 	close_pipes_i(shell->pip_param, shell->pip_param->cmd_count - 1);
