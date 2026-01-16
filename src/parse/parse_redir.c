@@ -22,78 +22,84 @@ static void	append_to_rdir_lst(t_redir **head, t_redir *node)
 /** heredoc has malloc. so need to return 0 if heredoc returned -1
  * at this step, fd might opened, so exit need to close fds
  */
-int	handle_redir_fd(t_shell *shell, t_redir *redir)
-{
-	while (redir)
-	{
-		if (redir->type == REDIR_IN)
-			redir->fd = open_infile(redir->file);
-		else if (redir->type == REDIR_OUT)
-			redir->fd = open_outfile(redir->file);
-		else if (redir->type == APPEND)
-			redir->fd = output_append(redir->file);
-		else if (redir->type == HEREDOC)
-			redir->fd = heredoc(shell, redir);
-		if (redir->fd == -1 && redir->type == HEREDOC)
-			return (close_cmd_fds(shell), 0);
-		else if (redir->fd == -1)
-			ft_error_printing(redir->file);
-		redir = redir->next;
-	}
-	return (1);
-}
+// int	handle_redir_fd(t_shell *shell, t_redir *redir)
+// {
+// 	while (redir)
+// 	{
+// 		if (redir->type == REDIR_IN)
+// 			redir->fd = open_infile(redir->file);
+// 		else if (redir->type == REDIR_OUT)
+// 			redir->fd = open_outfile(redir->file);
+// 		else if (redir->type == APPEND)
+// 			redir->fd = output_append(redir->file);
+// 		else if (redir->type == HEREDOC)
+// 			redir->fd = heredoc(shell, redir);
+// 		if (redir->fd == -1 && redir->type == HEREDOC)
+// 			return (close_cmd_fds(shell), 0);
+// 		else if (redir->fd == -1)
+// 			ft_error_printing(redir->file);
+// 		redir = redir->next;
+// 	}
+// 	return (1);
+// }
 
-static char	*find_infile(t_redir *redir, t_cmd *cmd)
-{
-	while (redir)
-	{
-		if (redir->type == REDIR_IN || redir->type == HEREDOC)
-		{
-			cmd->intype = redir->type;
-			return (redir->file);
-		}
-		redir = redir->next;
-	}
-	return (NULL);
-}
+// static char	*find_infile(t_redir *redir, t_cmd *cmd)
+// {
+// 	char	*file;
 
-static char	*find_outfile(t_redir *redir, t_cmd *cmd)
-{
-	while (redir)
-	{
-		if (redir->type == REDIR_OUT || redir->type == APPEND)
-		{
-			cmd->intype = redir->type;
-			return (redir->file);
-		}
-		redir = redir->next;
-	}
-	return (NULL);
-}
+// 	file = NULL;
+// 	while (redir)
+// 	{
+// 		if (redir->type == REDIR_IN || redir->type == HEREDOC)
+// 		{
+// 			cmd->intype = redir->type;
+// 			file = redir->file;
+// 		}
+// 		redir = redir->next;
+// 	}
+// 	return (file);
+// }
 
-int	handle_cmd_io(t_shell *shell, t_cmd *cmd)
-{
-	t_redir	*redir;
-	char	*infile;
-	char	*outfile;
+// static char	*find_outfile(t_redir *redir, t_cmd *cmd)
+// {
+// 	char	*file;
 
-	redir = cmd->redir;
-	infile = find_infile(redir, cmd);
-	outfile = find_outfile(redir, cmd);
-	if (cmd->intype != DEFAULT)
-	{
-		cmd->infile = ft_strdup(infile);
-		if (!cmd->infile)
-			return (ft_malloc_error("cmd io", shell), 0);
-	}
-	if (cmd->outtype != DEFAULT)
-	{
-		cmd->outfile = ft_strdup(outfile);
-		if (!cmd->outfile)
-			return (ft_malloc_error("cmd io", shell), 0);
-	}
-	return (1);
-}
+// 	file = NULL;
+// 	while (redir)
+// 	{
+// 		if (redir->type == REDIR_OUT || redir->type == APPEND)
+// 		{
+// 			cmd->intype = redir->type;
+// 			file = redir->file;
+// 		}
+// 		redir = redir->next;
+// 	}
+// 	return (file);
+// }
+
+// int	handle_cmd_io(t_shell *shell, t_cmd *cmd)
+// {
+// 	t_redir	*redir;
+// 	char	*infile;
+// 	char	*outfile;
+
+// 	redir = cmd->redir;
+// 	infile = find_infile(redir, cmd);
+// 	outfile = find_outfile(redir, cmd);
+// 	if (cmd->intype != DEFAULT)
+// 	{
+// 		cmd->infile = ft_strdup(infile);
+// 		if (!cmd->infile)
+// 			return (ft_malloc_error("cmd io", shell), 0);
+// 	}
+// 	if (cmd->outtype != DEFAULT)
+// 	{
+// 		cmd->outfile = ft_strdup(outfile);
+// 		if (!cmd->outfile)
+// 			return (ft_malloc_error("cmd io", shell), 0);
+// 	}
+// 	return (1);
+// }
 
 /**
  * Return value = next token, if it is NULL or != WORD, means after redir symbol, there is an input error.
@@ -121,7 +127,6 @@ t_token	*handle_redir(t_token *token, t_redir **redir, t_shell *shell)
 		node->file = remove_quote(token->value, shell, false);
 	if (!node->file)
 		return (ft_malloc_parsing("parsing", shell), NULL);
-	node->fd = -1;
 	node->next = NULL;
 	append_to_rdir_lst(redir, node);
 	return (token);

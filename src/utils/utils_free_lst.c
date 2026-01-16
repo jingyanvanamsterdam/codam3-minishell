@@ -63,8 +63,6 @@ void	free_redir_lst(t_redir **lst)
 			free((*lst)->file);
 			(*lst)->file = NULL;
 		}
-		if ((*lst)->fd != -1)
-			close((*lst)->fd);
 		free(*lst);
 		*lst = temp;
 	}
@@ -82,8 +80,6 @@ void	free_cmd_lst(t_cmd **lst)
 		if ((*lst)->cmd)
 			free_2d_arr((*lst)->cmd);
         free_charptr(&((*lst)->path));
-        free_charptr(&((*lst)->infile));
-        free_charptr(&((*lst)->outfile));
 		if ((*lst)->redir)
 			free_redir_lst(&((*lst)->redir));
 		free(*lst);

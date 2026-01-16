@@ -16,19 +16,14 @@ void	close_fd(int *fd)
 void	close_cmd_fds(t_shell *shell)
 {
 	t_cmd	*cmd;
-	t_redir *redir;
+	//t_redir *redir;
 
 	cmd = shell->cmd;
 	while (cmd)
 	{
 		close_fd(&(cmd->fd[0]));
 		close_fd(&(cmd->fd[1]));
-		redir = cmd->redir;
-		while (redir)
-		{
-			close_fd(&(redir->fd));
-			redir = redir->next;
-		}
+		close_fd(&(cmd->hdfd));
 		cmd = cmd->next;
 	}
 }

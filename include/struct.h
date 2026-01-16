@@ -19,6 +19,18 @@ typedef enum	e_quote
 	GENERAL
 }				t_quote;
 
+typedef enum	e_builtin
+{
+	ECHO,
+	CD,
+	PWD,
+	EXPORT,
+	UNSET,
+	ENV,
+	EXIT,
+	OTHERS
+}				t_builtin;
+
 typedef struct	s_quotok
 {
 	char 			*value;
@@ -29,7 +41,6 @@ typedef struct	s_redir
 {
 	t_type			type;
 	char			*file;
-	int				fd;
 	struct s_redir	*next;
 
 }				t_redir;
@@ -53,11 +64,8 @@ typedef struct	s_cmd
 	char			**cmd;
 	char			*path;
 	t_redir			*redir;
-	char			*infile;
-	char			*outfile;
-	t_type			intype;
-	t_type			outtype;
 	int				fd[2];
+	int				hdfd;
 	struct s_cmd	*next;
 }				t_cmd;
 typedef struct s_pipe

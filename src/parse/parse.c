@@ -15,35 +15,6 @@
 //	printf("==========finish printing==========\n");
 //}
 
-/**return 0 if malloc fails. 
- * handle_redir_fd will return 0 only if heredoc has malloc error, which need to terminate the current paring.
- */
-int	set_tcmd_pathes(t_shell *shell)
-{
-	t_cmd	*cmd;
-	char	**env_paths;
-
-	cmd = shell->cmd;
-	env_paths = create_env_path(shell->env_lst);
-	if (!env_paths)
-		return (ft_malloc_error("env path creation", shell), 0);
-	while (cmd)
-	{
-		if (cmd->cmd[0])
-		{
-			cmd->path = set_cmd_path(cmd->cmd[0], env_paths);
-			if (!cmd->path)
-			{
-				free_2d_arr(env_paths);
-				return (ft_malloc_error("path creation", shell), 0);
-			}
-		}
-		cmd = cmd->next;
-	}
-	free_2d_arr(env_paths);
-	return (1);
-}
-
 int	finish_set_tcmd(t_shell *shell)
 {
 	t_cmd	*cmd;
@@ -57,13 +28,6 @@ int	finish_set_tcmd(t_shell *shell)
 	}
 	if (!set_tcmd_pathes(shell))
 		return (0);
-	cmd = shell->cmd;
-	while (cmd)
-	{
-		if (cmd->redir)
-			if (!handle_cmd_io(shell, cmd))
-				return (0);
-	}
 	return (1);
 }
 

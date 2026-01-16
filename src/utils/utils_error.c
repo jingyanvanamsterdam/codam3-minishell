@@ -49,7 +49,7 @@ void	ft_pipe_error(t_shell *shell, char *str, int n)
 {
 	ft_error_printing(str);
 	shell->exit = EXIT_FAILURE;
-	close_cmd_fds(shell);
+	//close_cmd_fds(shell);
 	if (n > 0)
 		close_pipes_i(shell->pip_param, n);
 	free_pip_param(shell, n);

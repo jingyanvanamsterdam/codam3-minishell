@@ -36,7 +36,7 @@ int	create_process(t_shell *shell)
 	t_pipe	*params;
 	t_cmd	*cmd;
 	int		i;
-	int		stream[2];
+	//int		stream[2];
 
 	params = shell->pip_param;
 	params->pids = ft_calloc(params->cmd_count, sizeof(pid_t));
@@ -46,34 +46,35 @@ int	create_process(t_shell *shell)
 	i = -1;
 	while (++i < params->cmd_count)
 	{
-		find_file_redir(cmd);
-		setup_stream(stream, cmd, i, shell);
 		params->pids[i] = fork();
 		if (params->pids[i] < 0)
 			return (ft_pipe_error(shell, "fork", params->cmd_count - 1), 0);
 		else if (params->pids[i] == 0)
-			run_child_process(shell, cmd, stream);
+			run_child_process(shell, cmd, i);
 		cmd = cmd->next;
 	}
-	close_cmd_fds(shell);
 	close_pipes_i(shell->pip_param, params->cmd_count - 1);
 	return (1);
 }
 
-void	run_child_process(t_shell *shell, t_cmd *cmd, int stream[2])
+void	run_child_process(t_shell *shell, t_cmd *cmd, int i)
 {
-	int	command;
+	t_builtin	cmd_type;
+	int			stream[2];
 
 	sig_exe_child();
 	if (cmd->cmd)
 	{
-		command = is_builtin(cmd->cmd[0]);
-		if (dup_files(shell, stream) == 0)
+		if (setup_stream(stream, cmd, i, shell))
 		{
-			if (command > 0)
-				execve_builtin(shell, command, cmd);
-			else
-				execve_cmd(shell, cmd);
+			cmd_type = is_builtin(cmd->cmd[0]);
+			if (dup_files(shell, stream) == 0)
+			{
+				if (cmd_type != OTHERS)
+					execve_builtin(shell, cmd_type, cmd);
+				else
+					execve_cmd(shell, cmd);
+			}
 		}
 	}
 	ft_process_exit(shell, false);

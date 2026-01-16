@@ -39,21 +39,22 @@ void	executor(t_shell *shell);
 
 // exe_utils.c
 void	find_file_redir(t_cmd *cmd);
-int		is_builtin(char *command);
-void	execve_builtin(t_shell *shell, int command_type, t_cmd *cmd);
+int     open_files(t_cmd *cmd, t_redir *redir, t_type type);
+t_builtin	is_builtin(char *command);
+void	execve_builtin(t_shell *shell, t_builtin type, t_cmd *cmd);
 void	execve_cmd(t_shell *shell, t_cmd *cmd);
 // builtin_exe.c
 int		apply_redir_parent(t_shell *shell, int savefd[2]);
 void	restore_parent_fd(int saved_stdfd[2]);
-int		single_builtin_handler(t_shell *shell);
+void    single_builtin_handler(t_shell *shell, t_builtin type);
 
 // pipe_helpers.c
-void	setup_stream(int stream[2], t_cmd *cmd, int i, t_shell *shell);
+int     setup_stream(int stream[2], t_cmd *cmd, int i, t_shell *shell);
 int		dup_files(t_shell *shell, int stream[2]);
 //pipe_exe.c
 int		create_pipes(t_shell *shell);
 int		create_process(t_shell *shell);
-void	run_child_process(t_shell *shell, t_cmd *cmd, int stream[2]);
+void	run_child_process(t_shell *shell, t_cmd *cmd, int i);
 void	wait_handler(t_shell *shell);
 
 #endif

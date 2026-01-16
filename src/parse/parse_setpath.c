@@ -55,7 +55,7 @@ char	**create_env_path(t_env *env_lst)
 	return (env_path);
 }
 
-char	*set_cmd_path(char *cmd, char **env_paths)
+static char	*set_cmd_path(char *cmd, char **env_paths)
 {
 	int		i;
 	char	*tmp;
@@ -77,4 +77,33 @@ char	*set_cmd_path(char *cmd, char **env_paths)
 	if (!env_paths[0] || (env_paths[0] != NULL && tmp == NULL))
 		return (ft_strdup(""));
 	return (tmp);
+}
+
+/**return 0 if malloc fails. 
+ * handle_redir_fd will return 0 only if heredoc has malloc error, which need to terminate the current paring.
+ */
+int	set_tcmd_pathes(t_shell *shell)
+{
+	t_cmd	*cmd;
+	char	**env_paths;
+
+	cmd = shell->cmd;
+	env_paths = create_env_path(shell->env_lst);
+	if (!env_paths)
+		return (ft_malloc_error("env path creation", shell), 0);
+	while (cmd)
+	{
+		if (cmd->cmd[0])
+		{
+			cmd->path = set_cmd_path(cmd->cmd[0], env_paths);
+			if (!cmd->path)
+			{
+				free_2d_arr(env_paths);
+				return (ft_malloc_error("path creation", shell), 0);
+			}
+		}
+		cmd = cmd->next;
+	}
+	free_2d_arr(env_paths);
+	return (1);
 }

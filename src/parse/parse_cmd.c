@@ -71,13 +71,10 @@ int	init_cmd_node(t_shell *shell, size_t size)
 	}
 	node->fd[0] = 0;
 	node->fd[1] = 1;
+	node->hdfd = -1;
 	node->path = NULL;
-	node->infile = NULL;
-	node->outfile = NULL;
 	node->redir = NULL;
 	node->next = NULL;
-	node->intype = DEFAULT;
-	node->outtype = DEFAULT;
 	append_to_cmd_lst(&(shell->cmd), node);
 	return (1);
 }

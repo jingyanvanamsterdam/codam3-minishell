@@ -23,6 +23,8 @@ int	ft_echo(char **argv, t_shell *shell)
 	(void)shell;
 	i = 1;
 	newline = 0;
+	if (!argv[i])
+		return (0);
 	while (argv[i] && is_newline_flag(argv[i]))
 	{
 		newline = 1;

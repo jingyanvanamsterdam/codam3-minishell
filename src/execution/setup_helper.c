@@ -41,7 +41,7 @@ void print_parsed_cmd(t_cmd *head)
 			t_redir *redir = head->redir;
 			while (redir)
 			{
-				printf("redirect type = %d, file is %s, fd = %d\n", redir->type, redir->file, redir->fd);
+				printf("redirect type = %d, file is %s\n", redir->type, redir->file);
 				redir = redir->next;
 			}
 		}
@@ -121,33 +121,26 @@ int	process_input(t_shell *shell)
 
 void	executor(t_shell *shell)
 {
-    int count;
+    int         count;
+    t_builtin   cmd_type;
 
 	if (!shell->cmd || !shell->cmd->cmd[0])
 		return ;
     count = count_cmd(shell->cmd);
-    if (count == 1 && is_builtin(shell->cmd->cmd[0]))
-        if (single_builtin_handler(shell))
-            return (clsoe_cmd_fds(shell));
-	shell->pip_param = malloc(sizeof(t_pipe));
-	if (!shell->pip_param)
-	{
-		ft_malloc_error("executuion", shell);
-		close_cmd_fds(shell);
-		return ;
-	}
-	shell->pip_param->cmd_count = count;
-	shell->pip_param->pids = NULL;
-	shell->pip_param->pipes = NULL;
-	// if (single_builtin_handler(shell))
-	// {
-	// 	close_cmd_fds(shell);
-	// 	free_pip_param(shell, 0);
-	// 	return ;
-	// }
-	if (shell->pip_param->cmd_count > 1 && !create_pipes(shell))
-		return ;
-	if (!create_process(shell))
-		return ;
-	wait_handler(shell);
+    cmd_type = is_builtin(shell->cmd->cmd[0]);
+    if (count == 1 && cmd_type != OTHERS)
+        single_builtin_handler(shell, cmd_type);
+    else
+    {	shell->pip_param = malloc(sizeof(t_pipe));
+        if (!shell->pip_param)
+            return (ft_malloc_error("executuion", shell));
+        shell->pip_param->cmd_count = count;
+        shell->pip_param->pids = NULL;
+        shell->pip_param->pipes = NULL;
+        if (count > 1 && !create_pipes(shell))
+            return ;
+        if (!create_process(shell))
+            return ;
+        wait_handler(shell);
+    }
 }

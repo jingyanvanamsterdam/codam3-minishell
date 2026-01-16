@@ -9,6 +9,9 @@ int	ft_env(char **argv, t_shell *shell)
 
 	(void)argv;
 	env = shell->env_lst;
+
+	if (!env_find(env, "PATH"))
+		return (ft_execve_error("env", "No such file or directory"), 0);
 	while (env)
 	{
 		if (env->value)

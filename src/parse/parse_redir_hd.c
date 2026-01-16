@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <signal.h> //for g_sig
 #include <sys/errno.h>
+#include <sys/wait.h>
 
 //use a static variable i for muiltiple heredoc;
 static char	*create_hd_tmp_name(void)
@@ -26,39 +27,7 @@ static char	*create_hd_tmp_name(void)
 	return (name);
 }
 
-/**
- * malloc failure will exit program, cleaned up everything, close fd.
- * Return -1 or fd. 
- */
-//static int		redirect_heredoc(char *res, t_shell *shell)
-//{
-//	int			p[2];
-//	int			ret;
-//	char		*name;
-
-//	name = NULL;
-//	//if (pipe(p) == -1)
-//	//	return (-1); 
-//	//ret = write(p[1], res, ft_strlen(res));
-//	//if (ret == -1 && (errno == EAGAIN || errno == EWOULDBLOCK))
-//	//{
-//		//name = create_hd_tmp_name();
-//		//if (!name)
-//		//	ft_malloc_failure("heredoc redirection\n", shell);
-//		ret = open(name, O_WRONLY|O_CREAT|O_EXCL|O_TRUNC, 0600);
-//		if (ret == -1)
-//			return (ret);
-//		write(ret, res, ft_strlen(res));
-//		close(ret);
-//		ret = open(name, O_RDONLY);
-//		unlink(name);
-//		return (ret);
-//	//}
-//	//else
-//	//	return (p[0]);
-//}
-
-bool	is_quoted(char *file)
+static bool	is_quoted(char *file)
 {
 	int	i;
 
@@ -72,36 +41,55 @@ bool	is_quoted(char *file)
 	return (false);
 }
 
+/** return 0 if there is error and fails */
+int	do_hd_loop(bool q, char *delimiter, t_shell *shell, t_cmd *cmd)
+{
+	pid_t	pid;
+	int		status;
+
+	pid = fork();
+	if (pid < 0)
+		return (ft_pipe_error(shell, "fork", 0), 0);
+	else if (pid == 0)
+	{
+		run_hd_process(q, delimiter, shell, cmd);
+		close_fd(&(cmd->hdfd));
+		ft_process_exit(shell, false);
+	}
+	else
+	{
+		waitpid(pid, &status, 0);
+		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+			shell->exit = 130;
+	}
+	return (1);
+}
+
 /**
  * bash 5.1: create a pipe buffer to write the heredoc content and read it from.
  * if it is too big, it will create a tmp file in the system
  * Return the read end of pipe or tmp's fd. 
  */
-int	heredoc(t_shell *shell, t_redir *redir)
+int	heredoc(t_shell *shell, t_cmd *cmd, t_redir *redir, char *deli)
 {
-	//char	*res;
 	bool	quoted;
-	char	*delimiter;
 
-	//res = NULL;
 	quoted = is_quoted(redir->file);
-	delimiter = remove_quote(redir->file, shell, true);
-	if (!delimiter)
-		return (ft_malloc_error("heredoc\n", shell), 0);
 	free_charptr(&(redir->file));
 	redir->file = create_hd_tmp_name();
 	if (!redir->file)
 	{
-		free_charptr(&delimiter);
-		ft_malloc_error("heredoc name\n", shell);
+		ft_malloc_error("create heredoc tmp file", shell);
 		return (0);
 	}
-	if (!do_hd_loop(quoted, delimiter, shell, redir))
-		return (free_charptr(&delimiter), 0);
-		// should return and exit => check previous function sequence;
-	//redir->fd = open(redir->file, O_RDONLY);
-	//unlink(redir->file);
-	free_charptr(&delimiter);
+	if (cmd->hdfd != -1)
+		close_fd(&(cmd->hdfd));
+	cmd->hdfd = open(redir->file, O_CREAT | O_RDWR | O_TRUNC, 0600);
+	if (cmd->hdfd == -1)
+		return (ft_error_printing("heredoc"), 0);
+	unlink(redir->file);
+	if (!do_hd_loop(quoted, deli, shell, cmd))
+		return (0);
 	return (1);
 } 
 
@@ -109,14 +97,23 @@ int	handle_cmd_heredoc(t_cmd *cmd, t_shell *shell)
 {
 	t_redir *redir;
 
+	char	*delimiter;
+
 	redir = cmd->redir;
-	while (redir)
+	while (redir && redir->type == HEREDOC)
 	{
-		if (redir->type == HEREDOC)
-			if (!heredoc(shell, redir))
-				return (0);
+		
+		delimiter = remove_quote(redir->file, shell, true);
+		if (!delimiter)
+			return (ft_malloc_error("heredoc", shell), 0);
+		
+		if (!heredoc(shell, cmd, redir, delimiter))
+		{
+			free_charptr(&delimiter);
+			return (0);
+		}
+		free_charptr(&(delimiter));
 		redir = redir->next;
 	}
-	cmd = cmd->next;
 	return (1);
 }

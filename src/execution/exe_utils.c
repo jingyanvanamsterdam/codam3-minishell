@@ -14,47 +14,73 @@
 #include <string.h>
 #include <errno.h>
 
-void	find_file_redir(t_cmd *cmd)
-{
-	t_redir *redir;
+// void	find_file_redir(t_cmd *cmd)
+// {
+// 	t_redir *redir;
 
-	redir = cmd->redir;
-	while (redir)
-	{
-		if (redir->type == REDIR_IN || redir->type == HEREDOC)
-		{
-			if (cmd->fd[0] > 0)
-				close_fd(&(cmd->fd[0]));
-			cmd->fd[0] = redir->fd;
-		}
-		else if (redir->type == REDIR_OUT || redir->type == APPEND)
-		{
-			if (cmd->fd[1]!= 1)
-				close_fd(&(cmd->fd[1]));
-			cmd->fd[1] = redir->fd;
-		}
-		redir = redir->next;
-	}
-	printf("fd0 = %d, fd1 = %d\n", cmd->fd[0], cmd->fd[1]);
+// 	redir = cmd->redir;
+// 	while (redir)
+// 	{
+// 		if (redir->type == REDIR_IN || redir->type == HEREDOC)
+// 		{
+// 			if (cmd->fd[0] > 0)
+// 				close_fd(&(cmd->fd[0]));
+// 			cmd->fd[0] = redir->fd;
+// 		}
+// 		else if (redir->type == REDIR_OUT || redir->type == APPEND)
+// 		{
+// 			if (cmd->fd[1]!= 1)
+// 				close_fd(&(cmd->fd[1]));
+// 			cmd->fd[1] = redir->fd;
+// 		}
+// 		redir = redir->next;
+// 	}
+// 	printf("fd0 = %d, fd1 = %d\n", cmd->fd[0], cmd->fd[1]);
+// }
+
+/** if no redir, cmd_fd default 0 en 1; 
+ * if there are several same type of redir previous will close and neww will be open
+ * if open fails because of no permission or no such file, return 0
+ * in that case, no dup or execve will run.*/
+int  open_files(t_cmd *cmd, t_redir *redir, t_type type)
+{
+    if (cmd->fd[0] > 0 && (type == REDIR_IN || type == HEREDOC))
+        close_fd(&(cmd->fd[0]));
+    if (type == REDIR_IN)
+        cmd->fd[0] =open(redir->file, O_RDONLY);
+    else if (type == HEREDOC)
+        cmd->fd[0] = cmd->hdfd;
+    if (cmd->fd[0] == -1)
+        return (ft_error_printing(redir->file), 0);
+
+    if (cmd->fd[1] > 1 && (type == REDIR_OUT || type == APPEND))
+        close_fd(&(cmd->fd[1]));
+    if (type == REDIR_OUT)
+        cmd->fd[1] = open_outfile(redir->file);
+    else if (type == APPEND)
+        cmd->fd[1] = output_append(redir->file);
+    if (cmd->fd[1] == -1)
+        return (ft_error_printing(redir->file), 0);
+    return (1);
 }
 
-int	is_builtin(char *command)
+t_builtin	is_builtin(char *command)
 {
 	if (ft_strcmp("echo", command) == 0)
-		return (1);
+		return (ECHO);
 	if (ft_strcmp("cd", command) == 0)
-		return (2);
+		return (CD);
 	if (ft_strcmp("pwd", command) == 0)
-		return (3);
+		return (PWD);
 	if (ft_strcmp("export", command) == 0)
-		return (4);
+		return (EXPORT);
 	if (ft_strcmp("unset", command) == 0)
-		return (5);
+		return (UNSET);
 	if (ft_strcmp("env", command) == 0)
-		return (6);
+		return (ENV);
 	if (ft_strcmp("exit", command) == 0)
-		return (7);
-	return (0);
+		return (EXIT);
+	return (OTHERS);
 }
 
 void	execve_cmd(t_shell *shell, t_cmd *cmd)
@@ -83,32 +109,23 @@ void	execve_cmd(t_shell *shell, t_cmd *cmd)
 // builtin function exit(shell->exit); shell->exit is changed when it fails 
 // This function has to have the third arguement, t_cmd*, although *shell has cmd, as the third
 // arguement specify which command to be executed when there are multiple of them. 
-void	execve_builtin(t_shell *shell, int command_type, t_cmd *cmd)
+void	execve_builtin(t_shell *shell, t_builtin type, t_cmd *cmd)
 {
-	int	status;
-
-	status = 1;
 	// Temporary just set exit status to 0 for now
 	// shell->exit needs to be set properly after the builtin function is implemented
 	// TODO: implement the builtin functions
-	if (command_type == 1)
-		status = ft_echo(cmd->cmd, shell);
-	if (command_type == 2)
-		status = ft_cd(cmd->cmd, shell);
-	if (command_type == 3)
-		status = ft_pwd(cmd->cmd, shell);
-	if (command_type == 4)
-		status = ft_export(cmd->cmd, shell);
-	if (command_type == 5)
-		status = ft_unset(cmd->cmd, shell);
-	if (command_type == 6)
-		status = ft_env(cmd->cmd, shell);
-	if (command_type == 7)
-		status = ft_exit(cmd->cmd, shell);
-
-	shell->exit = status;
-	if (status != 0)
-	{
-		// something worng happened with running the builtin command
-	}
+	if (type == ECHO)
+		ft_echo(cmd->cmd, shell);
+	if (type == CD)
+		ft_cd(cmd->cmd, shell);
+	if (type == PWD)
+		ft_pwd(cmd->cmd, shell);
+	if (type == EXPORT)
+		ft_export(cmd->cmd, shell);
+	if (type == UNSET)
+		ft_unset(cmd->cmd, shell);
+	if (type == ENV)
+		ft_env(cmd->cmd, shell);
+	if (type == EXIT)
+		ft_exit(cmd->cmd, shell);
 }
