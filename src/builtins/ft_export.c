@@ -33,105 +33,6 @@ static int	is_valid_identifier(const char *identifier)
 	return (1);
 }
 
-static void	print_export_error(char *identifier)
-{
-	ft_putstr_fd("export: `", 2);
-	ft_putstr_fd(identifier, 2);
-	ft_putstr_fd("': not a valid identifier\n", 2);
-}
-
-// static t_env	*create_node2(char **key_value, t_shell *shell)
-// {
-// 	t_env	*node;
-
-// 	node = (t_env *)malloc(sizeof(t_env));
-// 	if (!node)
-// 		return (free_2d_arr(key_value), ft_malloc_error("ft_export t_env allocation\n", shell), NULL);
-// 	node->key = ft_strdup(key_value[0]);
-// 	if (!node->key)
-// 		return (free_2d_arr(key_value), ft_malloc_error("ft_export t_env allocation\n", shell), NULL);
-// 	if (key_value[1])
-// 		node->value = ft_strdup(key_value[1]);
-// 	else
-// 		node->value = NULL;
-// 	node->next = NULL;
-// 	return (node);
-// }
-
-// static void	add_or_update_env(t_env **env, char *key, char *value, t_shell *shell)
-// {
-// 	t_env	*cur;
-// 	char	*kv[3];
-
-// 	cur = *env;
-// 	while (cur)
-// 	{
-// 		if (!ft_strcmp(cur->key, key))
-// 		{
-// 			if (value)
-// 			{
-// 				free(cur->value);
-// 				cur->value = ft_strdup(value);
-// 			}
-// 			return ;
-// 		}
-// 		cur = cur->next;
-// 	}
-// 	kv[0] = key;
-// 	if (value)
-// 		kv[1] = value;
-// 	else
-// 		kv[1] = "";
-// 	kv[2] = NULL;
-// 	append_to_env_lst(env, create_node2(kv, shell));
-// }
-
-// static void	add_new_env(t_env **env, char *key, char *value, t_shell *shell)
-// {
-// 	char	*kv[3];
-
-// 	kv[0] = key;
-// 	kv[1] = value ? value : "";
-// 	kv[2] = NULL;
-// 	append_to_env_lst(env, create_node2(kv, shell));
-// }
-
-static t_env	*create_export_node(char *key, char *value, t_shell *shell)
-{
-	t_env	*node;
-
-	node = (t_env *)malloc(sizeof(t_env));
-	if (!node)
-		return (ft_malloc_error("ft_export t_env allocation\n", shell), NULL);
-	node->key = ft_strdup(key);
-	if (!node->key)
-		return (ft_malloc_error("ft_export t_env allocation\n", shell), NULL);
-	if (value)
-		node->value = ft_strdup(value);
-	else
-		node->value = NULL;
-	node->next = NULL;
-	return (node);
-}
-
-static void	add_or_update_env(t_env **env, char *key, char *value, t_shell *shell)
-{
-	t_env	*existing;
-
-	existing = env_find(*env, key);
-	if (existing)
-	{
-		if (value)
-		{
-			free(existing->value);
-			existing->value = ft_strdup(value);
-		}
-	}
-	else
-		append_to_env_lst(env, create_export_node(key, value, shell));
-		// add_new_env(env, key, value, shell);
-}
-
 static void	ft_export_env_list(t_env *env)
 {
 	while (env)
@@ -144,6 +45,8 @@ static void	ft_export_env_list(t_env *env)
 	}
 }
 
+// TODO: need to fix when input: export HELLO-=123 and export =
+// Now it work with export =, but not with export HELLO-=123
 static int	process_with_equals(char *arg, t_shell *shell)
 {
 	char	*sep;
@@ -155,13 +58,14 @@ static int	process_with_equals(char *arg, t_shell *shell)
 	if (!is_valid_identifier(identifier))
 	{
 		if (sep == arg)
-			print_export_error("=");
+			ft_builtin_error("export: `", "=", "': not a valid identifier");
 		else
-			print_export_error(identifier);
+			ft_builtin_error("export: `", identifier, "': not a valid identifier");
 		*sep = '=';
 		return (1);
 	}
-	add_or_update_env(&(shell->env_lst), identifier, sep + 1, shell);
+	update_env_value(shell, identifier, sep + 1);
+	// add_or_update_env(&(shell->env_lst), identifier, sep + 1, shell);
 	*sep = '=';
 	return (0);
 }
@@ -170,10 +74,11 @@ static int	process_without_equals(char *arg, t_shell *shell)
 {
 	if (!is_valid_identifier(arg))
 	{
-		print_export_error(arg);
+		ft_builtin_error("export: `", arg, "': not a valid identifier");
 		return (1);
 	}
-	add_or_update_env(&(shell->env_lst), arg, NULL, shell);
+	update_env_value(shell, arg, NULL);
+	// add_or_update_env(&(shell->env_lst), arg, NULL, shell);
 	return (0);
 }
 

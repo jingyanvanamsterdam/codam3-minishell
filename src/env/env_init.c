@@ -37,6 +37,7 @@ void	append_to_env_lst(t_env **head, t_env *node)
 	tmp->next = node;
 }
 
+// TODO: need to handle env variable like LS_COLORS=rs=0:... properly
 int	init_env(char **envp, t_shell *shell)
 {
 	int		i;
@@ -52,6 +53,7 @@ int	init_env(char **envp, t_shell *shell)
 		node = create_node(key_value, shell);
 		if (!node)
 			return (free_2d_arr(key_value), 0);
+		printf("DEBUG: key=%s, value_len=%zu\n", node->key, ft_strlen(node->value)); // Add this
 		append_to_env_lst(&(shell->env_lst), node);
 		free_2d_arr(key_value);
 		i++;
