@@ -93,10 +93,12 @@ void	wait_handler(t_shell *shell)
 		if (i == params->cmd_count - 1)
 		{
 			if (WIFEXITED(status))
-				shell->exit = WEXITSTATUS(status);		// TODO: need JD to confirm should be shell->exit. bc we have reset  shell after execution	是的吧，run_child_process 返回一个exit code；然后这个shell->exit就是此次运行的最后一个command返回的exit code；execute（) 结束后，shell->prevexit = shell->exit. shell->exit = 0；
+				shell->exit = WEXITSTATUS(status);
 			else if (WIFSIGNALED(status))
+			{
 				shell->exit = 128 + WTERMSIG(status);
-			write(1, "\n", 1);
+				write(1, "2\n", 2);
+			}
 		}
 		++i;
 	}

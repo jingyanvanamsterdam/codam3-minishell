@@ -81,11 +81,9 @@ void	free_cmd_lst(t_cmd **lst)
 		temp = (*lst)->next;
 		if ((*lst)->cmd)
 			free_2d_arr((*lst)->cmd);
-		if ((*lst)->path)
-		{
-			free((*lst)->path);
-			(*lst)->path = NULL;
-		}
+        free_charptr(&((*lst)->path));
+        free_charptr(&((*lst)->infile));
+        free_charptr(&((*lst)->outfile));
 		if ((*lst)->redir)
 			free_redir_lst(&((*lst)->redir));
 		free(*lst);

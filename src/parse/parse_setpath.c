@@ -74,7 +74,7 @@ char	*set_cmd_path(char *cmd, char **env_paths)
 		free(tmp);
 		tmp = NULL;
 	}
-	if (env_paths[0] != NULL && tmp == NULL)
+	if (!env_paths[0] || (env_paths[0] != NULL && tmp == NULL))
 		return (ft_strdup(""));
 	return (tmp);
 }

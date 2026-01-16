@@ -4,9 +4,16 @@ NAME = minishell
 LIBFT_DIR = libft
 SRC_DIR = src
 OBJ_DIR := obj
+EXEC_SRC = \
+	$(ENV_SRC) \
+	$(LEX_SRC) \
+	$(PARSE_SRC) \
+	$(BUILTINS_SRC) \
+	$(EXECUTION_SRC) \
+	$(UTILS_SRC)
 
 #Add new files here
-SRC = $(shell find ./src -iname "*.c")
+SRC = $(EXEC_SRC)
 OBJ = $(SRC:./$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 OS ?= $(shell uname)
@@ -38,14 +45,14 @@ EXECUTION_SRC = $(shell find ./src/execution -iname "*.c")
 # builtins module
 BUILTINS_SRC = $(shell find ./src/builtins -iname "*.c")
 
-all: buildlib $(NAME) 
+all: $(NAME) 
 
 # %.o: %.c
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(dir $@)
 	cc $(FLAGS) $(HEADERS) -c $< -o $@ 
 
-$(NAME): $(OBJ)
+$(NAME): buildlib $(OBJ)
 	cc $(HEADERS) $(FLAGS) $(OBJ) $(LIBFT) $(RLFLAG) -o $@
 
 buildlib:

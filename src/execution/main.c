@@ -38,42 +38,6 @@ void print_tokens(t_token *head)
 	printf("\n======================End the token:===========================\n");
 }
 
-void print_parsed_cmd(t_cmd *head)
-{
-	int	i;
-	
-	i = 1;
-	while (head)
-	{
-		printf("======================Start %d of cmd:===========================\n", i);
-		int j = 0;
-		printf("cmds part: \n");
-		while (head->cmd[j])
-		{
-			printf("%s", head->cmd[j]);
-			j++;
-			if (head->cmd[j])
-				printf(", ");
-			else
-				printf("\n");
-		}
-		if (head->redir)
-		{
-			printf("\nredir parts: \n");
-			t_redir *redir = head->redir;
-			while (redir)
-			{
-				printf("redirect type = %d, file is %s, fd = %d\n", redir->type, redir->file, redir->fd);
-				redir = redir->next;
-			}
-		}
-		printf("path = %s\n", head->path);
-		printf("\n======================End the cmd:===========================\n\n");
-		head = head->next;
-		i++;
-	}
-}
-
 t_redir	*test_for_heredoc(t_shell *shell)
 {
 	t_cmd *cmd = shell->cmd;

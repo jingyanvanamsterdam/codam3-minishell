@@ -35,6 +35,7 @@ void	find_file_redir(t_cmd *cmd)
 		}
 		redir = redir->next;
 	}
+	printf("fd0 = %d, fd1 = %d\n", cmd->fd[0], cmd->fd[1]);
 }
 
 int	is_builtin(char *command)
@@ -74,7 +75,6 @@ void	execve_cmd(t_shell *shell, t_cmd *cmd)
 	{
 		ft_execve_error(cmd->cmd[0], strerror(errno));
 		shell->exit = EXIT_CMD_NOEXC;
-		free_2d_arr(env);
 	}
 	free_2d_arr(env);
 }

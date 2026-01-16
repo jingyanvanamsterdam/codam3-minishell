@@ -53,6 +53,10 @@ int		heredoc(t_shell *shell, t_redir *redir);
 int		handle_redir_fd(t_shell *shell, t_redir *redir);
 t_token	*handle_redir(t_token *token, t_redir **redir, t_shell *shell);
 
+
+int	    handle_cmd_io(t_shell *shell, t_cmd *cmd);
+int     handle_cmd_heredoc(t_cmd *cmd, t_shell *shell);
+
 //ENV_PATH AND PATH
 char	**create_env_path(t_env *env_lst);
 char	*set_cmd_path(char *cmd, char **env_paths);

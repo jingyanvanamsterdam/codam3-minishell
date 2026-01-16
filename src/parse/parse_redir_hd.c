@@ -21,7 +21,7 @@ static char	*create_hd_tmp_name(void)
 	if (!num)
 		return (NULL);
 	name = ft_strjoin(HD_NAME, num);
-	free(num);
+	free_charptr(&num);
 	i++;
 	return (name);
 }
@@ -87,16 +87,36 @@ int	heredoc(t_shell *shell, t_redir *redir)
 	quoted = is_quoted(redir->file);
 	delimiter = remove_quote(redir->file, shell, true);
 	if (!delimiter)
-		return (ft_malloc_error("heredoc\n", shell), -1);
+		return (ft_malloc_error("heredoc\n", shell), 0);
 	free_charptr(&(redir->file));
 	redir->file = create_hd_tmp_name();
 	if (!redir->file)
-		return (ft_malloc_error("heredoc name\n", shell), -1);
+	{
+		free_charptr(&delimiter);
+		ft_malloc_error("heredoc name\n", shell);
+		return (0);
+	}
 	if (!do_hd_loop(quoted, delimiter, shell, redir))
-		return (-1);
+		return (free_charptr(&delimiter), 0);
 		// should return and exit => check previous function sequence;
-	redir->fd = open(redir->file, O_RDONLY);
-	unlink(redir->file);
-	free(delimiter);
-	return (redir->fd);
+	//redir->fd = open(redir->file, O_RDONLY);
+	//unlink(redir->file);
+	free_charptr(&delimiter);
+	return (1);
 } 
+
+int	handle_cmd_heredoc(t_cmd *cmd, t_shell *shell)
+{
+	t_redir *redir;
+
+	redir = cmd->redir;
+	while (redir)
+	{
+		if (redir->type == HEREDOC)
+			if (!heredoc(shell, redir))
+				return (0);
+		redir = redir->next;
+	}
+	cmd = cmd->next;
+	return (1);
+}

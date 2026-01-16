@@ -43,6 +43,58 @@ int	handle_redir_fd(t_shell *shell, t_redir *redir)
 	return (1);
 }
 
+static char	*find_infile(t_redir *redir, t_cmd *cmd)
+{
+	while (redir)
+	{
+		if (redir->type == REDIR_IN || redir->type == HEREDOC)
+		{
+			cmd->intype = redir->type;
+			return (redir->file);
+		}
+		redir = redir->next;
+	}
+	return (NULL);
+}
+
+static char	*find_outfile(t_redir *redir, t_cmd *cmd)
+{
+	while (redir)
+	{
+		if (redir->type == REDIR_OUT || redir->type == APPEND)
+		{
+			cmd->intype = redir->type;
+			return (redir->file);
+		}
+		redir = redir->next;
+	}
+	return (NULL);
+}
+
+int	handle_cmd_io(t_shell *shell, t_cmd *cmd)
+{
+	t_redir	*redir;
+	char	*infile;
+	char	*outfile;
+
+	redir = cmd->redir;
+	infile = find_infile(redir, cmd);
+	outfile = find_outfile(redir, cmd);
+	if (cmd->intype != DEFAULT)
+	{
+		cmd->infile = ft_strdup(infile);
+		if (!cmd->infile)
+			return (ft_malloc_error("cmd io", shell), 0);
+	}
+	if (cmd->outtype != DEFAULT)
+	{
+		cmd->outfile = ft_strdup(outfile);
+		if (!cmd->outfile)
+			return (ft_malloc_error("cmd io", shell), 0);
+	}
+	return (1);
+}
+
 /**
  * Return value = next token, if it is NULL or != WORD, means after redir symbol, there is an input error.
  * Check !shell->token; ft_malloc_parsing clean up token list and cmd list

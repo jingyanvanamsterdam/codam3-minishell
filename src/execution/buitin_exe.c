@@ -53,29 +53,22 @@ void	restore_parent_fd(int saved_stdfd[2])
 // After calling this function, need to check the shell->exit to see if it is 1 or 0.
 int	single_builtin_handler(t_shell *shell)
 {
-	t_pipe	*params;
 	int		command_type;
 	int		saved_stdfd[2];
 
-	params = shell->pip_param;
 	saved_stdfd[0] = -1;
 	saved_stdfd[1] = -1;
-	if (params->cmd_count == 1 
-		&& shell->cmd->cmd 
-		&& shell->cmd->cmd[0])
-	{
-		// TODO: Can I combine the is_builtin() with execve_builtin() to reduce calling time?
-		command_type = is_builtin(shell->cmd->cmd[0]);
-		// TODO: If command is not a builtin, just do nothing and return 0;
-		if (command_type > 0)
-		{
-			if (apply_redir_parent(shell, saved_stdfd) != 0)
-				return (1);
-			close_cmd_fds(shell);
-			execve_builtin(shell, command_type, shell->cmd);
-			restore_parent_fd(saved_stdfd);
-			return (1);
-		}
-	}
+    // TODO: Can I combine the is_builtin() with execve_builtin() to reduce calling time?
+    command_type = is_builtin(shell->cmd->cmd[0]);
+    // TODO: If command is not a builtin, just do nothing and return 0;
+    if (command_type > 0)
+    {
+        if (apply_redir_parent(shell, saved_stdfd) != 0)
+            return (1);
+        close_cmd_fds(shell);
+        execve_builtin(shell, command_type, shell->cmd);
+        restore_parent_fd(saved_stdfd);
+        return (1);
+    }
 	return (0);
 }

@@ -148,7 +148,6 @@ int	do_hd_loop(bool quoted, char *delimiter, t_shell *shell, t_redir *redir)
 		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 		{
 			shell->exit = 130;
-			return (0);
 		}
 		return (1);	
 	}

@@ -9,6 +9,7 @@ typedef enum	e_type
 	REDIR_OUT,
 	HEREDOC,
 	APPEND,
+	DEFAULT
 }				t_type;
 
 typedef enum	e_quote
@@ -52,6 +53,10 @@ typedef struct	s_cmd
 	char			**cmd;
 	char			*path;
 	t_redir			*redir;
+	char			*infile;
+	char			*outfile;
+	t_type			intype;
+	t_type			outtype;
 	int				fd[2];
 	struct s_cmd	*next;
 }				t_cmd;
