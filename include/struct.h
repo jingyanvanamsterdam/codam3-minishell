@@ -68,6 +68,7 @@ typedef struct	s_cmd
 	int				hdfd;
 	struct s_cmd	*next;
 }				t_cmd;
+
 typedef struct s_pipe
 {
 	int	cmd_count;

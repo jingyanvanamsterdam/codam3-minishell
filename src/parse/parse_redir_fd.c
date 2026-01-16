@@ -3,19 +3,19 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-int	open_infile(char *file)
-{
-	int	fd;
+// int	open_infile(char *file)
+// {
+// 	int	fd;
 
-	if (access(file, F_OK) == -1 || access(file, R_OK) == -1)
-	{
-		ft_error_printing(file);
-		//fd = open("/dev/null", O_RDONLY);
-	}
-	else
-		fd = open(file, O_RDONLY);
-	return (fd);
-}
+// 	if (access(file, F_OK) == -1 || access(file, R_OK) == -1)
+// 	{
+// 		ft_error_printing(file);
+// 		//fd = open("/dev/null", O_RDONLY);
+// 	}
+// 	else
+// 		fd = open(file, O_RDONLY);
+// 	return (fd);
+// }
 
 int	open_outfile(char *file)
 {

@@ -45,7 +45,7 @@ char		*remove_quote(char *value, t_shell *shell, bool hdoc);
 //============
 
 //REDIR funcs 
-int		open_infile(char *file);
+//int		open_infile(char *file);
 int		open_outfile(char *file);
 int		output_append(char *file);
 
