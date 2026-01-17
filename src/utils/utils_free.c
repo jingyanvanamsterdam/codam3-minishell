@@ -14,8 +14,7 @@ void	free_2d_arr(char **arr)
 	i = 0;
 	while (arr[i])
 	{
-		free(arr[i]);
-		arr[i] = NULL;
+		free_charptr(&arr[i]);
 		++i;
 	}
 	free(arr);

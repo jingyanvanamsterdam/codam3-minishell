@@ -36,7 +36,7 @@ static int	update_pwd_variables(t_shell *shell, char *oldpwd)
     if (!newpwd)
         return (1);
     update_env_value(shell, "PWD", newpwd);
-    free(newpwd);
+    free_charptr(&newpwd);
     return (0);
 }
 
@@ -55,14 +55,14 @@ int	ft_cd(char **argv, t_shell *shell)
         oldpwd = ft_strdup("");
     if (chdir(target) == -1)
     {
-        free(oldpwd);
+        free_charptr(&oldpwd);
         return (ft_builtin_error("cd: ", target, ": No such file or directory"), 1);
     }
     if (update_pwd_variables(shell, oldpwd) == 1)
     {
-        free(oldpwd);
+        free_charptr(&oldpwd);
         return (1);
     }
-    free(oldpwd);
+    free_charptr(&oldpwd);
     return (0);
 }

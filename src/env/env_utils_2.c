@@ -42,12 +42,19 @@ void	update_env_value(t_shell *shell, char *key, char *value)
         {
             free_charptr(&cur->value);
             if (value)
+			{
                 cur->value = ft_strdup(value);
+				if (!cur->value)
+					ft_malloc_error("env value update", shell);
+			}
             return ;
         }
         cur = cur->next;
     }
-    append_to_env_lst(&shell->env_lst, create_env_node_3args(key, value, shell));
+	cur = create_env_node_3args(key, value, shell);
+	if (!cur)
+		return (ft_malloc_error("env node creation", shell));
+    append_to_env_lst(&shell->env_lst, cur);
 }
 
 t_env	*create_node(char **key_value, t_shell *shell)

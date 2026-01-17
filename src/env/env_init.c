@@ -15,9 +15,9 @@ static char **split_env_with_equals(char *env_str, char *equals_pos, t_shell *sh
     if (!key_value[0] || !key_value[1])
     {
         if (key_value[0])
-            free(key_value[0]);
+            free_charptr(&key_value[0]);
         if (key_value[1])
-            free(key_value[1]);
+            free_charptr(&key_value[1]);
         free(key_value);
         return (ft_malloc_error("setup env key_value", shell), NULL);
     }
@@ -67,6 +67,19 @@ static int  process_env_entry(char *env_str, t_shell *shell)
     return (1);
 }
 
+void	create_minimal_env(t_shell *shell)
+{
+	char	*cwd;
+
+	cwd = NULL;
+	cwd = getcwd(cwd, 0);
+	if (cwd)
+		update_env_value(shell, "PWD", cwd);
+	free_charptr(&cwd);
+	update_env_value(shell, "SHLVL", "1");
+	update_env_value(shell, "PATH", "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin");
+}
+
 int init_env(char **envp, t_shell *shell)
 {
     int i;
@@ -79,6 +92,6 @@ int init_env(char **envp, t_shell *shell)
         i++;
     }
     if (envp[0] == NULL)
-        printf("no envp\n");
+		create_minimal_env(shell);
     return (1);
 }

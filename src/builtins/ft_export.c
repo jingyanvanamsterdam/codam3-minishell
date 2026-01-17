@@ -61,7 +61,7 @@ static int	process_with_equals(char *arg, t_shell *shell)
 	}
 	update_env_value(shell, identifier, sep + 1);
 	*sep = '=';
-	free(original_arg);
+	free_charptr(&original_arg);
 	return (0);
 }
 
