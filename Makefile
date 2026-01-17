@@ -93,5 +93,9 @@ fsan: buildlib
 	cc $(FLAGS) $(FSAN) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(BUILTINS_SRC) $(EXECUTION_SRC) $(ENV_SRC) $(UTILS_SRC) $(LIBFT) $(RLFLAG) -o fsan
 	@echo "✅ Built test executable: ./execution"
 
+test: buildlib
+	@echo "Compiling all testing modules..."
+	cc $(FLAGS) $(HEADERS) $(LEX_SRC) $(PARSE_SRC) $(BUILTINS_SRC) $(EXECUTION_SRC) $(ENV_SRC) $(UTILS_SRC) $(LIBFT) $(RLFLAG) -o minishell
+	@echo "✅ Built test executable: ./minishell"
 
-.PHONY: all buildlib clean fclean re env lex parse execution fsan
+.PHONY: all buildlib clean fclean re env lex parse execution fsan test
