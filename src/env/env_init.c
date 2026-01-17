@@ -37,23 +37,51 @@ void	append_to_env_lst(t_env **head, t_env *node)
 	tmp->next = node;
 }
 
-// TODO: need to handle env variable like LS_COLORS=rs=0:... properly
 int	init_env(char **envp, t_shell *shell)
 {
 	int		i;
 	t_env	*node;
 	char	**key_value;
+	char	*equals_pos;
 
 	i = 0;
 	while (envp[i] != NULL)
 	{
-		key_value = ft_split(envp[i], '=');
-		if (!key_value)
-			return (ft_malloc_error("setup env key_value", shell), 0);
+		equals_pos = ft_strchr(envp[i], '=');
+		if (equals_pos)
+		{
+			key_value = (char **)malloc(sizeof(char *) * 3);
+			if (!key_value)
+				return (ft_malloc_error("setup env key_value", shell), 0);
+			key_value[0] = ft_substr(envp[i], 0, equals_pos - envp[i]);
+			key_value[1] = ft_strdup(equals_pos + 1);
+			key_value[2] = NULL;
+			if (!key_value[0] || !key_value[1])
+			{
+				if (key_value[0])
+					free(key_value[0]);
+				if (key_value[1])
+					free(key_value[1]);
+				free(key_value);
+				return (ft_malloc_error("setup env key_value", shell), 0);
+			}
+		}
+		else
+		{
+			key_value = (char **)malloc(sizeof(char *) * 2);
+			if (!key_value)
+				return (ft_malloc_error("setup env key_value", shell), 0);
+			key_value[0] = ft_strdup(envp[i]);
+			key_value[1] = NULL;
+			if (!key_value[0])
+			{
+				free(key_value);
+				return (ft_malloc_error("setup env key_value", shell), 0);
+			}
+		}
 		node = create_node(key_value, shell);
 		if (!node)
 			return (free_2d_arr(key_value), 0);
-		printf("DEBUG: key=%s, value_len=%zu\n", node->key, ft_strlen(node->value)); // Add this
 		append_to_env_lst(&(shell->env_lst), node);
 		free_2d_arr(key_value);
 		i++;
