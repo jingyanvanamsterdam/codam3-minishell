@@ -26,6 +26,9 @@ void	ft_error_printing(char *mes);
 void	ft_warning_printing(void);
 void	ft_pipe_error(t_shell *shell, char *str, int n);
 
+// utils_error_2.c
+void	ft_builtin_error(char *cmd, char *arg, char *msg);
+
 // utils_helper.c
 int		count_cmd(t_cmd *cmd);
 void	ft_process_exit(t_shell *shell, bool pt_exit);

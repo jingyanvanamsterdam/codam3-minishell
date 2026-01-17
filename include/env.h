@@ -9,10 +9,8 @@ void	env_unset(t_env **env, const char *key);
 
 //  ======= env_init.c =======
 // t_env	*create_node(char **key_value, t_env *env_list);
-t_env	*create_node(char **key_value, t_shell *shell);
-void	append_to_env_lst(t_env **head, t_env *node);
+
 int		init_env(char **envp, t_shell *shell);
-void	append_to_env_lst(t_env **head, t_env *node);
 
 //  ======= env_utils.c =======
 t_env	*env_find(t_env *env, const char *key);
@@ -20,8 +18,11 @@ char    *env_get_value(t_env *env, const char *key);
 int		env_key_exists(t_env *env, const char *key);
 char	**env_to_array(t_env *env);
 
-//  ======= free_2d_arr.c =======
-void	free_2d_arr(char **key_value);
-
+//  ======= env_utils_2.c =======
+char	*ft_getenv(t_env *env, const char *key);
+t_env	*create_env_node_3args(char *key, char *value, t_shell *shell);
+void	update_env_value(t_shell *shell, char *key, char *value);
+t_env	*create_node(char **key_value, t_shell *shell);
+void	append_to_env_lst(t_env **head, t_env *node);
 
 #endif

@@ -82,15 +82,14 @@ int	ft_exit(char **argv, t_shell *shell)
 	// Check for non-numeric argument
 	if (!parse_exit_code(argv[1], &code))
 	{
-		ft_putstr_fd("minishell: exit: ", 2);
-		ft_putstr_fd(argv[1], 2);
-		ft_putstr_fd(": numeric argument required\n", 2);
+		ft_builtin_error("exit: ", argv[1], ": numeric argument required");
 		exit(2);
 	}
 	// Check for too many arguments (don't exit in this case)
 	if (argv[2])
 	{
-		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		ft_builtin_error("exit: ", "", "too many arguments");
+		// ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 		shell->exit = 1;
 		return (1);
 	}
