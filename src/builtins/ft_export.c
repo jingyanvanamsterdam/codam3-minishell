@@ -45,13 +45,15 @@ static void	ft_export_env_list(t_env *env)
 	}
 }
 
-// TODO: need to fix when input: export HELLO-=123 and export =
-// Now it work with export =, but not with export HELLO-=123
 static int	process_with_equals(char *arg, t_shell *shell)
 {
 	char	*sep;
 	char	*identifier;
+	char	*original_arg;
 
+	original_arg = ft_strdup(arg);
+	if (!original_arg)
+		return (1);
 	sep = ft_strchr(arg, '=');
 	*sep = '\0';
 	identifier = arg;
@@ -60,13 +62,15 @@ static int	process_with_equals(char *arg, t_shell *shell)
 		if (sep == arg)
 			ft_builtin_error("export: `", "=", "': not a valid identifier");
 		else
-			ft_builtin_error("export: `", identifier, "': not a valid identifier");
+			ft_builtin_error("export: `", original_arg, "': not a valid identifier");
 		*sep = '=';
+		free(original_arg);
 		return (1);
 	}
 	update_env_value(shell, identifier, sep + 1);
 	// add_or_update_env(&(shell->env_lst), identifier, sep + 1, shell);
 	*sep = '=';
+	free(original_arg);
 	return (0);
 }
 
