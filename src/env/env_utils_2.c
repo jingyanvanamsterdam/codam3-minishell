@@ -49,3 +49,38 @@ void	update_env_value(t_shell *shell, char *key, char *value)
     }
     append_to_env_lst(&shell->env_lst, create_env_node_3args(key, value, shell));
 }
+
+t_env	*create_node(char **key_value, t_shell *shell)
+{
+	t_env	*node;
+
+	node = (t_env *)malloc(sizeof(t_env) * 1);
+	if (!node)
+		return (ft_malloc_error("env setup", shell), NULL);
+	node->key = ft_strdup(key_value[0]);
+	if (key_value[1])
+		node->value = ft_strdup(key_value[1]);
+	else
+		node->value = ft_strdup("");
+	if (!node->key || !node->value)
+		return (ft_malloc_error("env setup", shell), NULL);
+	node->next = NULL;
+	return (node);
+}
+
+void	append_to_env_lst(t_env **head, t_env *node)
+{
+	t_env	*tmp;
+
+	//if (!head || !node)
+	//	return ;
+	if (*head == NULL)
+	{
+		*head = node;
+		return ;
+	}
+	tmp = *head;
+	while(tmp->next)
+		tmp = tmp->next;
+	tmp->next = node;
+}
