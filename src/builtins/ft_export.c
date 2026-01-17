@@ -4,25 +4,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-// TODO: 
-/* Need to handle cases:
-	Should exit with 1:
-		export HELLO-=123
-		export = 
-		export 123
-		export A-
- */
-
+// First character must be a letter or underscore
+// Remaining characters must be alphanumeric or underscore
 static int	is_valid_identifier(const char *identifier)
 {
 	int	i;
 
 	if (!identifier || !identifier[0])
 		return (0);
-	// First character must be a letter or underscore
+	
 	if (!ft_isalpha(identifier[0]) && identifier[0] != '_')
 		return (0);
-	// Remaining characters must be alphanumeric or underscore
 	i = 1;
 	while (identifier[i])
 	{
@@ -68,7 +60,6 @@ static int	process_with_equals(char *arg, t_shell *shell)
 		return (1);
 	}
 	update_env_value(shell, identifier, sep + 1);
-	// add_or_update_env(&(shell->env_lst), identifier, sep + 1, shell);
 	*sep = '=';
 	free(original_arg);
 	return (0);
@@ -82,7 +73,6 @@ static int	process_without_equals(char *arg, t_shell *shell)
 		return (1);
 	}
 	update_env_value(shell, arg, NULL);
-	// add_or_update_env(&(shell->env_lst), arg, NULL, shell);
 	return (0);
 }
 
