@@ -60,11 +60,11 @@ buildlib:
 
 clean:
 	@$(MAKE) -s -C $(LIBFT_DIR) clean
-	rm -f $(OBJ)
+	rm -rf $(OBJ)
 
 fclean: clean
 	@$(MAKE) -s -C $(LIBFT_DIR) fclean
-	@rmdir $(OBJ_DIR)
+	@rm -rf $(OBJ_DIR)
 	rm -f $(NAME)
 
 re: fclean all

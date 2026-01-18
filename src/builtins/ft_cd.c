@@ -6,7 +6,7 @@
 /*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 14:36:58 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 15:29:03 by kuyu             ###   ########.fr       */
+/*   Updated: 2026/01/18 16:48:41 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,23 +17,23 @@
 
 static char	*get_target_directory(char **argv, t_shell *shell)
 {
-	char	*target;
+	t_env	*target;
 
 	if (!argv[1])
 	{
 		target = env_find(shell->env_lst, "HOME");
 		if (!target)
 			ft_builtin_error("cd: ", "HOME", " not set");
-		return (target);
+		return (target->value);
 	}
 	else if (!ft_strcmp(argv[1], "-"))
 	{
 		target = env_find(shell->env_lst, "OLDPWD");
 		if (!target)
 			ft_builtin_error("cd: ", "OLDPWD", " not set");
-		ft_putstr_fd(target, 1);
+		ft_putstr_fd(target->value, 1);
 		ft_putstr_fd("\n", 1);
-		return (target);
+		return (target->value);
 	}
 	return (argv[1]);
 }
