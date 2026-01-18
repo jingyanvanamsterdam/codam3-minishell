@@ -1,21 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   util_malloc_error.c                                :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/18 16:34:03 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:34:45 by kuyu             ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   util_malloc_error.c                                :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/01/18 16:34:03 by kuyu          #+#    #+#                 */
+/*   Updated: 2026/01/18 17:55:47 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
 #include "libft.h"
-#include <string.h>
-#include <errno.h>
-#include <unistd.h>
-#include <stdlib.h> 
 
 /** shell->exit = 1 in this func */
 void	ft_malloc_error(char *s, t_shell *shell)

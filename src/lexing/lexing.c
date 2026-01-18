@@ -1,20 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   lexing.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/18 15:59:28 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:23:14 by kuyu             ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   lexing.c                                           :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/01/18 15:59:28 by kuyu          #+#    #+#                 */
+/*   Updated: 2026/01/18 18:06:43 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parse.h" //change to minishell.h after combin
+#include "parse.h"
 #include "struct.h"
 #include "libft.h"
-#include <stdbool.h> // for boolean functions 
-#include <stdio.h>	// for printf
 #include <stdlib.h>
 #include "utils.h"
 

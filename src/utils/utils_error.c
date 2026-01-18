@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   utils_error.c                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/18 16:34:11 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:35:22 by kuyu             ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   utils_error.c                                      :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/01/18 16:34:11 by kuyu          #+#    #+#                 */
+/*   Updated: 2026/01/18 17:58:22 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
-#include <stdlib.h> 
 
 void	ft_execve_error(char *cmd_name, char *err_mes)
 {

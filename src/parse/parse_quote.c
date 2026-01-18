@@ -1,20 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parse_quote.c                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/18 16:23:55 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:31:22 by kuyu             ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parse_quote.c                                      :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/01/18 16:23:55 by kuyu          #+#    #+#                 */
+/*   Updated: 2026/01/18 18:02:50 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h" 
 #include "struct.h"
 #include "libft.h"
-#include <stdlib.h>
-#include <stdio.h> 
 
 static size_t	next_index(char *str, t_quotok **tok, t_quote *status, bool hd)
 {

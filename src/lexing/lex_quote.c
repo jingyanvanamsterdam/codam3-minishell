@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   lex_quote.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/18 15:59:23 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:23:27 by kuyu             ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   lex_quote.c                                        :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/01/18 15:59:23 by kuyu          #+#    #+#                 */
+/*   Updated: 2026/01/18 18:07:40 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "struct.h"
 #include "utils.h"
 #include <stdlib.h>
-#include <stdio.h> // for printf
 
 /*
  * change status and return the index of the start quote. 

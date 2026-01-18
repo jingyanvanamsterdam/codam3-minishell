@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parse_quote_util.c                                 :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/18 16:23:53 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:32:30 by kuyu             ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parse_quote_util.c                                 :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/01/18 16:23:53 by kuyu          #+#    #+#                 */
+/*   Updated: 2026/01/18 18:02:47 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "struct.h"
 #include "libft.h"
 #include <stdlib.h>
-#include <stdio.h> 
 
 static void	append_to_lst(t_quotok **head, t_quotok *node)
 {

@@ -1,20 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   utils_free_lst.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/18 16:34:14 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:36:39 by kuyu             ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   utils_free_lst.c                                   :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/01/18 16:34:14 by kuyu          #+#    #+#                 */
+/*   Updated: 2026/01/18 17:57:43 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include <stdio.h>
-#include "parse.h" //change to minishell.h after combin
 #include "utils.h"
-#include <unistd.h> // close
 
 /** shell->token = NULL after the function */
 void	free_token_lst(t_token **lst)

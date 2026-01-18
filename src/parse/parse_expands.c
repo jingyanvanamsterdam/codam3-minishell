@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parse_expands.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/18 16:23:50 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:33:13 by kuyu             ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parse_expands.c                                    :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/01/18 16:23:50 by kuyu          #+#    #+#                 */
+/*   Updated: 2026/01/18 18:00:08 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "struct.h"
 #include "libft.h"
 #include <stdlib.h>
-#include <stdio.h> // for printf
 
 char	*lookup_key(t_env *env_lst, const char *key)
 {

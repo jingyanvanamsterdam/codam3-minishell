@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parse_cmd.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/18 16:23:43 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:33:43 by kuyu             ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parse_cmd.c                                        :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/01/18 16:23:43 by kuyu          #+#    #+#                 */
+/*   Updated: 2026/01/18 18:00:01 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "parse.h"
 #include "libft.h"
 #include <stdlib.h>
-#include <stdio.h> // printf
 
 static void	append_to_cmd_lst(t_cmd **head, t_cmd *node)
 {

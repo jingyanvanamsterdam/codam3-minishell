@@ -1,22 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   utils_free.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/18 16:34:16 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:36:05 by kuyu             ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   utils_free.c                                       :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/01/18 16:34:16 by kuyu          #+#    #+#                 */
+/*   Updated: 2026/01/18 17:58:51 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include <stdio.h>
-#include "parse.h" //change to minishell.h after combin
 #include "utils.h"
-#include <unistd.h> // close
 
-// Changed name from free_2d_arr() 
 void	free_2d_arr(char **arr)
 {
 	int	i;

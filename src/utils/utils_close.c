@@ -1,22 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   utils_close.c                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/18 16:34:06 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:35:03 by kuyu             ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   utils_close.c                                      :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/01/18 16:34:06 by kuyu          #+#    #+#                 */
+/*   Updated: 2026/01/18 17:54:38 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
-// for the ERROR defined in parse.h
 #include "libft.h"
-#include <string.h>
-#include <errno.h>
 #include <unistd.h>
-#include <stdlib.h>
 
 void	close_fd(int *fd)
 {

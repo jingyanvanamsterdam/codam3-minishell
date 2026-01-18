@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parse_setpath.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/18 16:24:12 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:25:50 by kuyu             ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parse_setpath.c                                    :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/01/18 16:24:12 by kuyu          #+#    #+#                 */
+/*   Updated: 2026/01/18 18:04:01 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	append_slash(char **env_path)
 		tmp = ft_strjoin(env_path[i], "/");
 		if (!tmp)
 			return (free_2d_arr(env_path), 0);
-		free(env_path[i]);
+		free_charptr(&(env_path[i]));
 		env_path[i] = tmp;
 		tmp = NULL;
 		i++;

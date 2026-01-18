@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parse_redir_hd_util.c                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/18 16:24:02 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:29:34 by kuyu             ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parse_redir_hd_util.c                              :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/01/18 16:24:02 by kuyu          #+#    #+#                 */
+/*   Updated: 2026/01/18 18:01:06 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "utils.h"
 #include "struct.h"
 #include "libft.h"
-#include <stdio.h> // printf
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <unistd.h>

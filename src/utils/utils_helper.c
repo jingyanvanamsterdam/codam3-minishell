@@ -1,18 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   utils_helper.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/18 16:34:18 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:34:19 by kuyu             ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   utils_helper.c                                     :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/01/18 16:34:18 by kuyu          #+#    #+#                 */
+/*   Updated: 2026/01/18 18:09:54 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "struct.h"
-#include <stdbool.h>
 #include "libft.h"
 #include "utils.h"
 #include <string.h>
@@ -49,7 +48,7 @@ void	ft_process_exit(t_shell *shell, bool pt_exit)
 	if (clear_history)
 		rl_clear_history();
 	if (pt_exit)
-		ft_putstr_fd("process exit\n", 1);
+		ft_putstr_fd("exit\n", 1);
 	exit(code);
 }
 

@@ -1,20 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parse_redir_hd.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/18 16:24:05 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:27:46 by kuyu             ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parse_redir_hd.c                                   :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/01/18 16:24:05 by kuyu          #+#    #+#                 */
+/*   Updated: 2026/01/18 18:03:01 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 #include "struct.h"
 #include "libft.h"
-#include <stdio.h>	
-#include <stdlib.h>
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>

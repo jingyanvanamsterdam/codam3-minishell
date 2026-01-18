@@ -1,20 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parse_redir.c                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/18 16:24:07 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:26:45 by kuyu             ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   parse_redir.c                                      :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2026/01/18 16:24:07 by kuyu          #+#    #+#                 */
+/*   Updated: 2026/01/18 18:04:34 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "struct.h"
 #include "parse.h"
 #include "libft.h"
-#include <stdlib.h>
-#include <stdio.h> // printf
+//#include <stdlib.h>
 
 static void	append_to_rdir_lst(t_redir **head, t_redir *node)
 {
