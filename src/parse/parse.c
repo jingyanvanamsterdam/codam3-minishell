@@ -1,19 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 16:24:16 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 16:25:17 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "struct.h"
 #include "parse.h"
 #include "libft.h"
 #include <stdlib.h>
 #include <stdio.h> // printf
-
-
-//void	print_quotok(t_quotok *head)
-//{
-//	while (head)
-//	{
-//		printf("printing quotok %s\n", head->value);
-//		head = head->next;
-//	}
-//	printf("==========finish printing==========\n");
-//}
 
 int	finish_set_tcmd(t_shell *shell)
 {
@@ -38,14 +39,15 @@ int	finish_set_tcmd(t_shell *shell)
  */
 t_token	*parse_token(t_token *token, t_shell *shell, t_cmd *cmd)
 {
-	t_redir *redir;
+	t_redir	*redir;
 
-	redir = NULL; 
+	redir = NULL;
 	if (token->type == PIPE)
-		return (ft_input_error("near upexpected token `", token->value, shell), NULL);
+		return (ft_input_error("near upexpected token `",
+				token->value, shell), NULL);
 	while (token && token->type != PIPE)
 	{
-		if (token->type == REDIR_IN || token->type == REDIR_OUT 
+		if (token->type == REDIR_IN || token->type == REDIR_OUT
 			|| token->type == HEREDOC || token->type == APPEND)
 		{
 			token = handle_redir(token, &redir, shell);

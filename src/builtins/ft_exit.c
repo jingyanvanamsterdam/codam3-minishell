@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_exit.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 14:37:05 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 14:46:49 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
@@ -5,7 +16,6 @@
 #include <limits.h>
 
 /*  ft_exit() need to be able to exit with different codes.  */
-
 /**
  * Validates if a string is a valid numeric argument for exit.
  * Returns 1 if valid, 0 otherwise.
@@ -16,19 +26,17 @@
  */
 static int	is_valid_numeric(const char *s)
 {
-	int	i = 0;
+	int	i;
 
+	i = 0;
 	if (!s || !s[0])
 		return (0);
-	// Handle optional sign
 	if (s[0] == '+' || s[0] == '-')
 	{
 		++i;
-		// Must have at least one digit after sign
 		if (!s[i] || !ft_isdigit(s[i]))
 			return (0);
 	}
-	// Check all remaining characters are digits
 	while (s[i])
 	{
 		if (!ft_isdigit(s[i]))
@@ -51,7 +59,6 @@ static int	parse_exit_code(const char *s, long *code)
 	if (!s || !is_valid_numeric(s))
 		return (0);
 	result = strtol(s, &endptr, 10);
-	// Check if entire string was consumed (catches partial parses like "123abc")
 	if (*endptr != '\0')
 		return (0);
 	*code = result;
@@ -76,23 +83,18 @@ int	ft_exit(char **argv, t_shell *shell)
 	long	code;
 
 	ft_putstr_fd("exit\n", 2);
-	// Exit without arguments: exit with status 0 (POSIX compliant)
 	if (!argv[1])
 		exit(0);
-	// Check for non-numeric argument
 	if (!parse_exit_code(argv[1], &code))
 	{
 		ft_builtin_error("exit: ", argv[1], ": numeric argument required");
 		exit(2);
 	}
-	// Check for too many arguments (don't exit in this case)
 	if (argv[2])
 	{
 		ft_builtin_error("exit: ", "", "too many arguments");
-		// ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 		shell->exit = 1;
 		return (1);
 	}
-	// Exit with the code (modulo 256 to ensure 0-255 range)
 	exit((unsigned char)code);
 }

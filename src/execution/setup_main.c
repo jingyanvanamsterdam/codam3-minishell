@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   setup_main.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 15:39:58 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 16:41:38 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "utils.h"
 #include "env.h"
@@ -34,6 +46,21 @@ void	init_shell(t_shell *shell, char **envp)
 		ft_process_exit(shell, false);
 }
 
+static int	non_interactive_no_c_helper(t_shell *shell, char **av)
+{
+	int	fd;
+
+	fd = 0;
+	if (shell->interactive)
+	{
+		shell->interactive = 0;
+		fd = open_argv_fd(av[1], shell);
+		if (fd == -1)
+			ft_process_exit(shell, false);
+	}
+	return (fd);
+}
+
 /**
  * interactive == 0: e.g. cmd -option | ./minishell or ./minishell < infile 
  * ./minishell > outfile will not do anything. 
@@ -44,25 +71,18 @@ void	non_interactive_no_c(t_shell *shell, char **av)
 	int	read;
 
 	fd = 0;
-	printf("sinter = %d\n", shell->interactive);
-	if (shell->interactive) // means argc > 1 e.g. ./minishell executable_script
-	{
-		shell->interactive = 0;
-		fd = open_argv_fd(av[1], shell);
-		if (fd == -1)
-			ft_process_exit(shell, false);
-	}
+	fd = non_interactive_no_c_helper(shell, av);
 	if (!isatty(STDOUT_FILENO))
 		return ;
-	read = 1; 
+	read = 1;
 	while (read)
 	{
 		shell->input = get_next_line(fd);
 		if (!shell->input)
-			break;
+			break ;
 		sig_noninteractive();
 		if (!process_input(shell))
-			continue;
+			continue ;
 		executor(shell);
 		ft_reset_shell(shell);
 	}
@@ -82,10 +102,11 @@ void	non_interactive_c(t_shell *shell, char *av)
 	{
 		shell->input = ft_strdup(inputs[i]);
 		if (!shell->input)
-			return (free_2d_arr(inputs), ft_malloc_error("set shell inputs", shell));
+			return (free_2d_arr(inputs),
+				ft_malloc_error("set shell inputs", shell));
 		sig_noninteractive();
 		if (!process_input(shell))
-			continue;
+			continue ;
 		executor(shell);
 		ft_reset_shell(shell);
 	}
@@ -105,13 +126,10 @@ void	interactive_shell(t_shell *shell)
 		if (g_sig == SIGINT)
 		{
 			g_sig = 0;
-			shell->prev_exit = 130; // for previous readline.
+			shell->prev_exit = 130;
 		}
 		if (!process_input(shell))
-			continue;
-		//print_parsed_cmd(shell->cmd);
-		//free_charptr(&(shell->input));
-		//free_cmd_lst(&(shell->cmd));
+			continue ;
 		executor(shell);
 		ft_reset_shell(shell);
 	}

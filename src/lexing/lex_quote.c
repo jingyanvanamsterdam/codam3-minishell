@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lex_quote.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 15:59:23 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 16:23:27 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parse.h" 
 #include "libft.h"
 #include "struct.h"
@@ -5,12 +17,12 @@
 #include <stdlib.h>
 #include <stdio.h> // for printf
 
-/**
+/*
  * change status and return the index of the start quote. 
  */
 size_t	quote_index(char *str, size_t end)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (i < end)
@@ -27,7 +39,8 @@ size_t	quote_index(char *str, size_t end)
 /**
  * Check whether there is close quote. Return the end index.
  * if result i is later than end, return the close quote index.
- * if it is at the same index, meaning it is the end of the string and there is no close quote. 
+ * if it is at the same index, meaning it is the end of the
+ * string and there is no close quote. 
  * if it is smaller, then end index not change. 
  */
 size_t	find_close_quote(char *str, size_t start, size_t end, t_shell *shell)
@@ -52,7 +65,7 @@ size_t	find_close_quote(char *str, size_t start, size_t end, t_shell *shell)
 	else if (end == start || !str[start])
 	{
 		ft_input_error("unclosed quote", "", shell);
-		return ((size_t)-1);
+		return ((size_t) - 1);
 	}
 	return (end);
 }

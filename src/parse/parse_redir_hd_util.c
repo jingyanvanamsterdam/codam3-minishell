@@ -1,4 +1,16 @@
-# define _GNU_SOURCE
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_redir_hd_util.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 16:24:02 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 16:29:34 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#define _GNU_SOURCE
 #include "parse.h"
 #include "utils.h"
 #include "struct.h"
@@ -26,13 +38,14 @@ static size_t	update_index(char *input, t_quotok **tok)
 	return (free(value), i);
 }
 
-static char	*handle_exp_input(char *input, t_shell *shell, size_t len, char *res)
+static char	*handle_exp_input(char *input, t_shell *shell,
+	size_t len, char *res)
 {
-	size_t	start;
-	size_t	increase;
+	size_t		start;
+	size_t		increase;
 	t_quotok	*tok;
-	char	*value;
-	char	*tmp;
+	char		*value;
+	char		*tmp;
 
 	start = 0;
 	tok = NULL;
@@ -42,7 +55,7 @@ static char	*handle_exp_input(char *input, t_shell *shell, size_t len, char *res
 			increase = handle_expands(input + start, shell, &tok);
 		else
 			increase = update_index(input + start, &tok);
-		if (increase == (size_t)-1)
+		if (increase == (size_t) - 1)
 			return (free_quotok(&tok), NULL);
 		start += increase;
 	}
@@ -53,7 +66,8 @@ static char	*handle_exp_input(char *input, t_shell *shell, size_t len, char *res
 	return (value);
 }
 
-static char	*handle_hd_input(bool quoted, char *input, char *res, t_shell *shell)
+static char	*handle_hd_input(bool quoted, char *input,
+		char *res, t_shell *shell)
 {
 	char	*new;
 	char	*tmp;
@@ -77,7 +91,8 @@ static char	*handle_hd_input(bool quoted, char *input, char *res, t_shell *shell
 	return (new);
 }
 
-static char *heredoc_input(char	*res, bool quoted, char *delimiter, t_shell *shell)
+static char	*heredoc_input(char	*res, bool quoted,
+		char *delimiter, t_shell *shell)
 {
 	char	*tmp;
 	char	*input;
@@ -103,8 +118,10 @@ static char *heredoc_input(char	*res, bool quoted, char *delimiter, t_shell *she
 	return (res);
 }
 /**
- * tmp is previous result, res is updated by handle_hd_input() and tmp is being freed inside;
- * if ctrl + d end of the heredoc, whatever res before had will be write into the heredoc fd.
+ * tmp is previous result, 
+ * res is updated by handle_hd_input() and tmp is being freed inside;
+ * if ctrl + d end of the heredoc, 
+ * whatever res before had will be write into the heredoc fd.
  */
 
 void	run_hd_process(bool q, char *deli, t_shell *shell, t_cmd *cmd)

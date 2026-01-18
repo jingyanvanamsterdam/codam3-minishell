@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   ft_strcheck.c                                      :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: jingyandong <jingyandong@student.codam.      +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2025/10/29 17:38:02 by jingyandong   #+#    #+#                 */
-/*   Updated: 2025/11/04 16:28:45 by jdong         ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   ft_strcheck.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/29 17:38:02 by jingyandong       #+#    #+#             */
+/*   Updated: 2026/01/18 14:36:25 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_strcheck(char *s, int (*f)(int))
+int	ft_strcheck(char *s, int (*f)(int))
 {
 	int	len;
 	int	count;

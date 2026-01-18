@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_setpath.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 16:24:12 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 16:25:50 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h>
 #include "struct.h"
 #include "parse.h"
@@ -62,8 +74,6 @@ static char	*set_cmd_path(char *cmd, char **env_paths)
 
 	i = 0;
 	tmp = NULL;
-	// if (access(cmd, F_OK) == 0)
-	// 	return (ft_strdup(cmd));
 	if (ft_strchr(cmd, '/'))
 		return (ft_strdup(cmd));
 	while (env_paths[i])
@@ -82,7 +92,8 @@ static char	*set_cmd_path(char *cmd, char **env_paths)
 }
 
 /**return 0 if malloc fails. 
- * handle_redir_fd will return 0 only if heredoc has malloc error, which need to terminate the current paring.
+ * handle_redir_fd will return 0 only if heredoc has malloc error,
+ * which need to terminate the current paring.
  */
 int	set_tcmd_pathes(t_shell *shell)
 {

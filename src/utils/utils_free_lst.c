@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_free_lst.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 16:34:14 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 16:36:39 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "parse.h" //change to minishell.h after combin
@@ -79,7 +91,7 @@ void	free_cmd_lst(t_cmd **lst)
 		temp = (*lst)->next;
 		if ((*lst)->cmd)
 			free_2d_arr((*lst)->cmd);
-        free_charptr(&((*lst)->path));
+		free_charptr(&((*lst)->path));
 		if ((*lst)->redir)
 			free_redir_lst(&((*lst)->redir));
 		free(*lst);

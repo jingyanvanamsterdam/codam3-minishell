@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_expands.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 16:23:50 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 16:33:13 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parse.h" 
 #include "struct.h"
 #include "libft.h"
@@ -28,8 +40,10 @@ char	*lookup_key(t_env *env_lst, const char *key)
 
 /**
  * end = length of the name of the expands. expands length contains 1 as $. 
- * if expansion variable doesn't exist or env_lst == NULL, it would be returned an empty string.
- * Here will handle $? and anything after ? will be conected with the exit code unless there is space.
+ * if expansion variable doesn't exist or env_lst == NULL,
+ * it would be returned an empty string.
+ * Here will handle $? and anything after ? will be conected with 
+ * the exit code unless there is space.
  */
 char	*expansion(char *str, t_shell *shell, size_t end)
 {
@@ -57,7 +71,7 @@ size_t	handle_expands(char *str, t_shell *shell, t_quotok **tok)
 
 	value = NULL;
 	end = 1;
-	if (!str[end] 
+	if (!str[end]
 		|| (!ft_isalnum(str[end]) && str[end] != '_' && str[end] != '?'))
 		value = ft_strdup("$");
 	else if (str[end] == '?')
@@ -72,9 +86,9 @@ size_t	handle_expands(char *str, t_shell *shell, t_quotok **tok)
 		value = expansion(str, shell, end);
 	}
 	if (!value)
-		return ((size_t)-1);
+		return ((size_t) - 1);
 	if (create_quotok_node(value, tok) == -1)
-		return (free_charptr(&value), (size_t)-1);
+		return (free_charptr(&value), (size_t) - 1);
 	free_charptr(&value);
 	return (end);
 }

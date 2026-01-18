@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_redir_hd.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 16:24:05 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 16:27:46 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parse.h"
 #include "struct.h"
 #include "libft.h"
@@ -96,22 +108,19 @@ int	heredoc(t_shell *shell, t_cmd *cmd, t_redir *redir, char *deli)
 	if (cmd->hdfd == -1)
 		return (ft_error_printing("heredoc"), 0);
 	return (1);
-} 
+}
 
 int	handle_cmd_heredoc(t_cmd *cmd, t_shell *shell)
 {
-	t_redir *redir;
-
+	t_redir	*redir;
 	char	*delimiter;
 
 	redir = cmd->redir;
 	while (redir && redir->type == HEREDOC)
 	{
-		
 		delimiter = remove_quote(redir->file, shell, true);
 		if (!delimiter)
 			return (ft_malloc_error("heredoc", shell), 0);
-		
 		if (!heredoc(shell, cmd, redir, delimiter))
 		{
 			free_charptr(&delimiter);

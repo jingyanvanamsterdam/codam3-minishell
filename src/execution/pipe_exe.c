@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipe_exe.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 15:39:51 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 15:47:57 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include <fcntl.h>		// for pid_t
 #include <stdlib.h>		// for EXIT_FAILURE
@@ -7,7 +19,8 @@
 #include "libft.h"
 #include <errno.h>
 
-/* Create pipes for multi-command execution, leave the pipes = NULL by deafult if single command*/
+/* Create pipes for multi-command execution,
+leave the pipes = NULL by deafult if single command*/
 /* if (!pipes[i] || pipe(pipes[i]) == -1) 太聪明了！*/
 int	create_pipes(t_shell *shell)
 {
@@ -36,7 +49,6 @@ int	create_process(t_shell *shell)
 	t_pipe	*params;
 	t_cmd	*cmd;
 	int		i;
-	//int		stream[2];
 
 	params = shell->pip_param;
 	params->pids = ft_calloc(params->cmd_count, sizeof(pid_t));

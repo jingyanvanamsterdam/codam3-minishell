@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 14:25:35 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 14:27:44 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef UTILS_H
 # define UTILS_H
 
@@ -38,7 +50,7 @@ void	ft_reset_shell(t_shell *shell);
 void	free_2d_arr(char **arr);
 void	free_pipes_n(t_pipe *params, int count);
 void	free_charptr(char **ptr);
-void	free_pip_param(t_shell *shell, int	n);
+void	free_pip_param(t_shell *shell, int n);
 void	free_shell(t_shell *shell);
 
 // utils_free_lst.c

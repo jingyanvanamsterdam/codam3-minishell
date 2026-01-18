@@ -1,10 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexing_helper.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 15:59:26 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 16:18:27 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parse.h" //change to minishell.h after combin
 #include "struct.h"
 #include "libft.h"
 #include <stdio.h>	// for printf
 #include <stdlib.h>
 #include "utils.h"
-
 
 static void	append_to_lst(t_token **head, t_token *node)
 {
@@ -16,7 +27,7 @@ static void	append_to_lst(t_token **head, t_token *node)
 		return ;
 	}
 	tmp = *head;
-	while(tmp->next)
+	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = node;
 }
@@ -33,7 +44,7 @@ int	create_token_node(char *value, t_shell *shell, t_type type)
 
 	if (ft_strlen(value) == 0)
 		return (1);
-	node = (t_token*)malloc(sizeof(t_token));
+	node = (t_token *)malloc(sizeof(t_token));
 	if (!node)
 		return (ft_malloc_error("tokenization.\n", shell), 0);
 	node->value = ft_strdup(value);
@@ -55,9 +66,9 @@ int	create_token_node(char *value, t_shell *shell, t_type type)
 size_t	find_end(char *str)
 {
 	size_t	end;
-	
+
 	end = 0;
-	while (str[end] && !ft_isspace(str[end]) 
+	while (str[end] && !ft_isspace(str[end])
 		&& str[end] != '|' && str[end] != '<' && str[end] != '>')
 		end++;
 	return (end);
@@ -65,12 +76,12 @@ size_t	find_end(char *str)
 
 /**
  * Return the index of the charater, if there is no, it will equal to the end.
- * To do: Maybe replace with ft_strchr(), but some compare logic need to be changed.
+ * Maybe replace with ft_strchr(), but some compare logic need to be changed.
  */
 size_t	find_index(char *str, size_t len, char c)
 {
 	size_t	i;
-	
+
 	i = 0;
 	while (i < len)
 	{

@@ -1,10 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   util_malloc_error.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 16:34:03 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 16:34:45 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "utils.h"
 #include "libft.h"
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
 #include <stdlib.h> 
-
 
 /** shell->exit = 1 in this func */
 void	ft_malloc_error(char *s, t_shell *shell)
@@ -15,7 +26,9 @@ void	ft_malloc_error(char *s, t_shell *shell)
 	ft_putstr_fd("\n", 2);
 	shell->exit = 1;
 }
-/** Special malloc failure handle for parsing; using shell->token to check failure. so need to free them here first */
+
+/** Special malloc failure handle for parsing;
+ * using shell->token to check failure. so need to free them here first */
 void	ft_malloc_parsing(char *s, t_shell *shell)
 {
 	ft_malloc_error(s, shell);

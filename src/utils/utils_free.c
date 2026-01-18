@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_free.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 16:34:16 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 16:36:05 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "parse.h" //change to minishell.h after combin
@@ -38,7 +50,7 @@ void	free_shell(t_shell *shell)
 	shell = NULL;
 }
 
-void	free_pip_param(t_shell *shell, int	n)
+void	free_pip_param(t_shell *shell, int n)
 {
 	if (shell->pip_param)
 	{
@@ -68,7 +80,6 @@ void	free_pipes_n(t_pipe *params, int count)
 	params->pipes = NULL;
 	return ;
 }
-
 
 /** if the char ptr exist, free and set as NULL */
 void	free_charptr(char **ptr)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_error.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 16:34:11 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 16:35:22 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "utils.h"
 #include "libft.h"
 #include <string.h>
@@ -44,12 +56,10 @@ void	ft_warning_printing(void)
 	ft_putstr_fd(ERROR "heredoc delimited by end of file\n" RESET, 2);
 }
 
-//不需要强制退出。fork 失败需要free所有的pipes if any 和pid
 void	ft_pipe_error(t_shell *shell, char *str, int n)
 {
 	ft_error_printing(str);
 	shell->exit = EXIT_FAILURE;
-	//close_cmd_fds(shell);
 	if (n > 0)
 		close_pipes_i(shell->pip_param, n);
 	free_pip_param(shell, n);

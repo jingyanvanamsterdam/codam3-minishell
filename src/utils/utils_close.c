@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_close.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 16:34:06 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 16:35:03 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "utils.h"
 // for the ERROR defined in parse.h
 #include "libft.h"
@@ -16,7 +28,6 @@ void	close_fd(int *fd)
 void	close_cmd_fds(t_shell *shell)
 {
 	t_cmd	*cmd;
-	//t_redir *redir;
 
 	cmd = shell->cmd;
 	while (cmd)

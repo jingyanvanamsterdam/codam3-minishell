@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexing.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 15:59:28 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 16:23:14 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parse.h" //change to minishell.h after combin
 #include "struct.h"
 #include "libft.h"
@@ -25,13 +37,13 @@ size_t	update_start(char *str, t_shell *shell)
 	quote_i = quote_index(str, end);
 	if (quote_i < end)
 		end = find_close_quote(str, quote_i, end, shell);
-	if (end == (size_t)-1)
-		return ((size_t)-1);
+	if (end == (size_t) - 1)
+		return ((size_t) - 1);
 	value = ft_substr(str, 0, end);
 	if (!value)
-		return (ft_malloc_error("lexing", shell), (size_t)-1);
+		return (ft_malloc_error("lexing", shell), (size_t) - 1);
 	if (!create_token_node(value, shell, WORD))
-		return (free_charptr(&value), (size_t)-1);
+		return (free_charptr(&value), (size_t) - 1);
 	free_charptr(&value);
 	return (end);
 }
@@ -79,14 +91,14 @@ size_t	handle_special_symbol(char *str, size_t end, t_shell *shell)
 	else if (str[end] == '<')
 		ret = check_next_symbol(0, shell, str, &end);
 	if (!ret)
-		return ((size_t)-1);
+		return ((size_t) - 1);
 	return (++end);
 }
 
 size_t	skip_space(char *str, size_t end)
 {
 	if (str[end])
-		while(ft_isspace(str[end]))
+		while (ft_isspace(str[end]))
 			end++;
 	return (end);
 }
@@ -104,16 +116,17 @@ int	tokenization(t_shell *shell)
 	while (start < input_len)
 	{
 		increase = update_start(input + start, shell);
-		if (increase == (size_t)-1)
+		if (increase == (size_t) - 1)
 			return (0);
 		start += increase;
-		if (input[start] && (input[start] == '|' || input[start] == '<' || input[start] == '>'))
+		if (input[start] && (input[start] == '|'
+				|| input[start] == '<' || input[start] == '>'))
 			start = handle_special_symbol(input, start, shell);
-		if (start == (size_t)-1)
+		if (start == (size_t) - 1)
 			return (0);
 		if (input[start])
 			while (ft_isspace(input[start]))
-				start++;	
+				start++;
 	}
 	return (1);
 }

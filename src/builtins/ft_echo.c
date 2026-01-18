@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 14:37:00 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 14:45:23 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "libft.h"
 
@@ -15,11 +27,12 @@ static int	is_newline_flag(char *str)
 		return (1);
 	return (0);
 }
+
 int	ft_echo(char **argv, t_shell *shell)
 {
 	int	i;
 	int	newline;
-	
+
 	(void)shell;
 	i = 1;
 	newline = 0;

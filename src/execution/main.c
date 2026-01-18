@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 16:15:10 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 16:16:38 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "utils.h"
 #include "env.h"
@@ -12,73 +24,11 @@
 #include <readline/history.h>
 #include <unistd.h> // for sleep
 
-//用 volatile 保证主程序每次都读最新值。
-//赋值可能被打断，如果类型不是 sig_atomic_t，在某些体系结构上大于机器字长的写操作可能会写一半 → 用 sig_atomic_t 保证赋值原子。
-volatile sig_atomic_t g_sig = 0;
-
-void print_tokens(t_token *head)
-{
-	printf("======================Start the token:===========================\n");
-	while (head)
-	{
-		if (head->type == WORD)
-			printf("%s, ", head->value);
-		else if (head->type == PIPE)
-			printf("|, ");
-		else if (head->type == REDIR_IN)
-			printf("<, ");		
-		else if (head->type == REDIR_OUT)
-			printf(">, ");		
-		else if (head->type == HEREDOC)
-			printf("<<, ");
-		else if (head->type == APPEND)
-			printf(">>, ");
-		head = head->next;
-	}
-	printf("\n======================End the token:===========================\n");
-}
-
-t_redir	*test_for_heredoc(t_shell *shell)
-{
-	t_cmd *cmd = shell->cmd;
-	t_redir *redir = NULL;
-
-	while (cmd)
-	{
-		redir = cmd->redir;
-		while (redir)
-		{
-			if (redir->type == HEREDOC)
-				return redir;
-			redir = redir->next;
-		}
-		cmd = cmd->next;
-	}
-	return (redir);
-}
-
-char	*test_for_outappend(t_shell *shell)
-{
-	t_cmd *cmd = shell->cmd;
-	t_redir *redir = NULL;
-
-	while (cmd)
-	{
-		redir = cmd->redir;
-		while (redir)
-		{
-			if (redir->type == APPEND)
-				return redir->file;
-			redir = redir->next;
-		}
-		cmd = cmd->next;
-	}
-	return (NULL);
-}
+volatile sig_atomic_t	g_sig = 0;
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_shell *shell;
+	t_shell	*shell;
 
 	shell = (t_shell *)malloc(sizeof(t_shell));
 	if (!shell)

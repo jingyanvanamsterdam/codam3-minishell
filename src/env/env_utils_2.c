@@ -1,18 +1,34 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env_utils_2.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 15:30:10 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 15:38:34 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "libft.h"
 
-char	*ft_getenv(t_env *env, const char *key)
+// find the node matching the given key
+t_env	*env_find(t_env *env, const char *key)
 {
+	if (!env || !key)
+		return (NULL);
 	while (env)
 	{
-		if (!ft_strcmp(env->key, key))
-			return (env->value);
+		if (ft_strcmp(env->key, key) == 0)
+			return (env);
 		env = env->next;
 	}
 	return (NULL);
 }
 
-/*  This function creates a new env node, with a different inputs from create_node() */
+/*  This function creates a new env node, 
+with a different inputs from create_node() */
 t_env	*create_env_node_3args(char *key, char *value, t_shell *shell)
 {
 	t_env	*node;
@@ -33,28 +49,28 @@ t_env	*create_env_node_3args(char *key, char *value, t_shell *shell)
 
 void	update_env_value(t_shell *shell, char *key, char *value)
 {
-    t_env	*cur;
+	t_env	*cur;
 
-    cur = shell->env_lst;
-    while (cur)
-    {
-        if (!ft_strcmp(cur->key, key))
-        {
-            free_charptr(&cur->value);
-            if (value)
+	cur = shell->env_lst;
+	while (cur)
+	{
+		if (!ft_strcmp(cur->key, key))
+		{
+			free_charptr(&cur->value);
+			if (value)
 			{
-                cur->value = ft_strdup(value);
+				cur->value = ft_strdup(value);
 				if (!cur->value)
 					ft_malloc_error("env value update", shell);
 			}
-            return ;
-        }
-        cur = cur->next;
-    }
+			return ;
+		}
+		cur = cur->next;
+	}
 	cur = create_env_node_3args(key, value, shell);
 	if (!cur)
 		return (ft_malloc_error("env node creation", shell));
-    append_to_env_lst(&shell->env_lst, cur);
+	append_to_env_lst(&shell->env_lst, cur);
 }
 
 t_env	*create_node(char **key_value, t_shell *shell)
@@ -79,15 +95,13 @@ void	append_to_env_lst(t_env **head, t_env *node)
 {
 	t_env	*tmp;
 
-	//if (!head || !node)
-	//	return ;
 	if (*head == NULL)
 	{
 		*head = node;
 		return ;
 	}
 	tmp = *head;
-	while(tmp->next)
+	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = node;
 }

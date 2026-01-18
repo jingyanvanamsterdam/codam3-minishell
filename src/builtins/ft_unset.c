@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_unset.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 14:37:12 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 14:51:27 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "libft.h"
 #include "minishell.h"
@@ -37,7 +48,7 @@ void	remove_env_key(t_env **env, char *key)
 			free(cur->key);
 			free(cur->value);
 			free(cur);
-			return;
+			return ;
 		}
 		prev = cur;
 		cur = cur->next;
@@ -51,7 +62,7 @@ int	ft_unset(char **argv, t_shell *shell)
 	i = 1;
 	while (argv[i])
 	{
-		if(is_valid_env_key(argv[i]))
+		if (is_valid_env_key(argv[i]))
 			remove_env_key(&(shell->env_lst), argv[i]);
 		++i;
 	}

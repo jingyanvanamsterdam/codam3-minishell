@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_cmd.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 16:23:43 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 16:33:43 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "struct.h"
 #include "parse.h"
 #include "libft.h"
@@ -14,13 +26,14 @@ static void	append_to_cmd_lst(t_cmd **head, t_cmd *node)
 		return ;
 	}
 	tmp = *head;
-	while(tmp->next)
+	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = node;
 }
 
 /**
- * Function will remove quote symbol and accordingly handle expands if there is any.
+ * Function will remove quote symbol and 
+ * accordingly handle expands if there is any.
  * return 0 if malloc fails
  */
 int	update_cmds_arr(char **cmd, t_token *token, t_shell *shell)
@@ -86,7 +99,7 @@ size_t	calculate_cmd_len(t_token *token)
 	len = 0;
 	while (token && token->type != PIPE)
 	{
-		if (token->type == REDIR_IN || token->type == REDIR_OUT 
+		if (token->type == REDIR_IN || token->type == REDIR_OUT
 			|| token->type == HEREDOC || token->type == APPEND)
 		{
 			token = token->next;

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   setup_helper.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 15:39:56 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 15:44:23 by kuyu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "utils.h"
 #include "env.h"
@@ -15,42 +27,6 @@
 #include <signal.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-
-void print_parsed_cmd(t_cmd *head)
-{
-	int	i;
-	
-	i = 1;
-	while (head)
-	{
-		printf("======================Start %d of cmd:===========================\n", i);
-		int j = 0;
-		printf("cmds part: \n");
-		while (head->cmd[j])
-		{
-			printf("%s", head->cmd[j]);
-			j++;
-			if (head->cmd[j])
-				printf(", ");
-			else
-				printf("\n");
-		}
-		if (head->redir)
-		{
-			printf("\nredir parts: \n");
-			t_redir *redir = head->redir;
-			while (redir)
-			{
-				printf("redirect type = %d, file is %s\n", redir->type, redir->file);
-				redir = redir->next;
-			}
-		}
-		printf("path = %s\n", head->path);
-		printf("\n======================End the cmd:===========================\n\n");
-		head = head->next;
-		i++;
-	}
-}
 
 int	is_script(char **env_paths, char *file, t_shell *shell)
 {
@@ -104,7 +80,6 @@ int	open_argv_fd(char *file, t_shell *shell)
 
 int	process_input(t_shell *shell)
 {
-	// this do check for tab, but it doesn't work for tab completion in readline.
 	if (*(shell->input) == '\0' || ft_strcheck(shell->input, ft_isspace))
 		return (0);
 	add_history(shell->input);
@@ -115,32 +90,32 @@ int	process_input(t_shell *shell)
 	if (!parsing(shell))
 		return (ft_reset_shell(shell), 0);
 	free_token_lst(&(shell->token));
-	//print_parsed_cmd(shell->cmd);
 	return (1);
 }
 
 void	executor(t_shell *shell)
 {
-    int         count;
-    t_builtin   cmd_type;
+	int			count;
+	t_builtin	cmd_type;
 
 	if (!shell->cmd || !shell->cmd->cmd[0])
 		return ;
-    count = count_cmd(shell->cmd);
-    cmd_type = is_builtin(shell->cmd->cmd[0]);
-    if (count == 1 && cmd_type != OTHERS)
-        single_builtin_handler(shell, cmd_type);
-    else
-    {	shell->pip_param = malloc(sizeof(t_pipe));
-        if (!shell->pip_param)
-            return (ft_malloc_error("executuion", shell));
-        shell->pip_param->cmd_count = count;
-        shell->pip_param->pids = NULL;
-        shell->pip_param->pipes = NULL;
-        if (count > 1 && !create_pipes(shell))
-            return ;
-        if (!create_process(shell))
-            return ;
-        wait_handler(shell);
-    }
+	count = count_cmd(shell->cmd);
+	cmd_type = is_builtin(shell->cmd->cmd[0]);
+	if (count == 1 && cmd_type != OTHERS)
+		single_builtin_handler(shell, cmd_type);
+	else
+	{
+		shell->pip_param = malloc(sizeof(t_pipe));
+		if (!shell->pip_param)
+			return (ft_malloc_error("executuion", shell));
+		shell->pip_param->cmd_count = count;
+		shell->pip_param->pids = NULL;
+		shell->pip_param->pipes = NULL;
+		if (count > 1 && !create_pipes(shell))
+			return ;
+		if (!create_process(shell))
+			return ;
+		wait_handler(shell);
+	}
 }
