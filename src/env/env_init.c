@@ -6,12 +6,11 @@
 /*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 15:30:03 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 15:35:49 by kuyu             ###   ########.fr       */
+/*   Updated: 2026/01/18 18:05:41 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <stdlib.h>
 #include "libft.h"
 
 int	init_env(char **envp, t_shell *shell)

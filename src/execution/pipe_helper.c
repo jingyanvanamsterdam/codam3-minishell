@@ -1,29 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   pipe_helper.c                                      :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2026/01/18 15:39:53 by kuyu          #+#    #+#                 */
-/*   Updated: 2026/01/18 17:33:49 by jdong         ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   pipe_helper.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 15:39:53 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 18:10:34 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <stdio.h>
-#include "libft.h"
-#include <fcntl.h>
-#include "utils.h"
-#include "env.h"
-#include "parse.h"
-#include "struct.h"
-#include <stdlib.h>		// for EXIT_FAILURE
 #include <sys/wait.h>
-#include <unistd.h>		// for STDIN_FILENO
 #include "libft.h"
 #include <errno.h>
-#include <stdbool.h>
 
 static int	open_redir_fd(t_cmd *cmd, t_shell *shell)
 {

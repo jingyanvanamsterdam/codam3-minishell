@@ -6,12 +6,11 @@
 /*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 14:36:58 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:48:41 by kuyu             ###   ########.fr       */
+/*   Updated: 2026/01/18 17:54:13 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
-#include <stdio.h>
 #include "libft.h"
 #include "minishell.h"
 

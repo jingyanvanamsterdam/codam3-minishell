@@ -6,21 +6,13 @@
 /*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 15:39:58 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:41:38 by kuyu             ###   ########.fr       */
+/*   Updated: 2026/01/18 18:11:18 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "utils.h"
-#include "env.h"
-#include "parse.h"
-#include "struct.h"
 #include "libft.h"
-#include <stdio.h>	
-#include <stdlib.h>
-#include <unistd.h>
 #define _GNU_SOURCE
-#include <signal.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 

@@ -6,13 +6,12 @@
 /*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 14:37:05 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 14:46:49 by kuyu             ###   ########.fr       */
+/*   Updated: 2026/01/18 18:04:22 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
-#include <stdlib.h>
 #include <limits.h>
 
 /*  ft_exit() need to be able to exit with different codes.  */
@@ -47,21 +46,15 @@ static int	is_valid_numeric(const char *s)
 }
 
 /**
- * Parses a numeric string to long using strtol.
+ * Parses a numeric string to int using strtol.
  * Returns 1 on success, 0 on error (non-numeric or partial parse).
  * Note: Overflow is not checked since exit codes are modulo 256 anyway.
  */
-static int	parse_exit_code(const char *s, long *code)
+static int	parse_exit_code(const char *s, int *code)
 {
-	char	*endptr;
-	long	result;
-
 	if (!s || !is_valid_numeric(s))
 		return (0);
-	result = strtol(s, &endptr, 10);
-	if (*endptr != '\0')
-		return (0);
-	*code = result;
+	*code = ft_atoi(s);
 	return (1);
 }
 
@@ -73,14 +66,10 @@ static int	parse_exit_code(const char *s, long *code)
  * - exit with numeric argument: exit with that code (modulo 256)
  * - exit with non-numeric argument: exit with status 2
  * - exit with too many arguments: don't exit, return error status 1
- * 
- * @param argv: Command arguments (argv[0] is "exit")
- * @param shell: Shell structure
- * @return: 1 if error (too many arguments), otherwise exits
  */
 int	ft_exit(char **argv, t_shell *shell)
 {
-	long	code;
+	int	code;
 
 	ft_putstr_fd("exit\n", 2);
 	if (!argv[1])

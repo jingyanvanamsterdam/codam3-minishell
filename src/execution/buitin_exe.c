@@ -6,16 +6,11 @@
 /*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 15:39:19 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 15:56:25 by kuyu             ###   ########.fr       */
+/*   Updated: 2026/01/18 18:07:25 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <fcntl.h>		// for pid_t
-#include <stdlib.h>		// for EXIT_FAILURE
-#include <sys/wait.h>
-#include <unistd.h>		// for STDIN_FILENO
-#include <stdio.h>		// for perror()
 #include "libft.h"
 #include <errno.h>
 

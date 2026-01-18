@@ -6,17 +6,14 @@
 /*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 15:40:01 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 15:40:02 by kuyu             ###   ########.fr       */
+/*   Updated: 2026/01/18 18:11:32 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #define _GNU_SOURCE
-#include "executor.h"
-#include <stdlib.h>
+#include "minishell.h"
 #include <readline/readline.h>
 #include <readline/history.h>
-#include <signal.h>
-#include <unistd.h>
 
 void	handle_sigint(int sig)
 {

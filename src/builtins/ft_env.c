@@ -6,13 +6,12 @@
 /*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 14:37:03 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 14:45:47 by kuyu             ###   ########.fr       */
+/*   Updated: 2026/01/18 17:54:26 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "minishell.h"
-#include <unistd.h>
 
 int	ft_env(char **argv, t_shell *shell)
 {

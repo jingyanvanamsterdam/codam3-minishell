@@ -6,7 +6,7 @@
 /*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 14:25:24 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 14:35:36 by kuyu             ###   ########.fr       */
+/*   Updated: 2026/01/18 18:09:15 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <fcntl.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <unistd.h>
 
 # define ERROR_FILE 1
 # define ERROR_SYS 2

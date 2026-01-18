@@ -6,23 +6,15 @@
 /*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 16:15:10 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:16:38 by kuyu             ###   ########.fr       */
+/*   Updated: 2026/01/18 18:09:50 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "utils.h"
-#include "env.h"
-#include "parse.h"
-#include "struct.h"
 #include "libft.h"
-#include <stdio.h>	
-#include <stdlib.h>
 #define _GNU_SOURCE
-#include <signal.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include <unistd.h> // for sleep
 
 volatile sig_atomic_t	g_sig = 0;
 

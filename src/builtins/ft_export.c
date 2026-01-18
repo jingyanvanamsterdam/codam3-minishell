@@ -6,15 +6,12 @@
 /*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 14:37:08 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 14:50:21 by kuyu             ###   ########.fr       */
+/*   Updated: 2026/01/18 18:05:04 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
 
 int	ft_export(char **argv, t_shell *shell)
 {

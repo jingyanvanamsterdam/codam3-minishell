@@ -6,14 +6,12 @@
 /*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 15:30:13 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 15:36:58 by kuyu             ###   ########.fr       */
+/*   Updated: 2026/01/18 18:05:52 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "struct.h"
 #include "minishell.h"
 #include "libft.h"
-#include "env.h"
 
 // count the number of nodes in env
 static int	env_count(t_env *env)

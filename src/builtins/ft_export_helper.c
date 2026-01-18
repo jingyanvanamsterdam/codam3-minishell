@@ -6,14 +6,12 @@
 /*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 14:48:41 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 14:50:18 by kuyu             ###   ########.fr       */
+/*   Updated: 2026/01/18 18:04:51 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "libft.h"
-#include <unistd.h>
-#include <stdlib.h>
 #include <stdio.h>
 
 // First character must be a letter or underscore

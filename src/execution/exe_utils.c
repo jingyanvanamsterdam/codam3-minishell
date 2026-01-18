@@ -6,7 +6,7 @@
 /*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 15:39:22 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 16:14:29 by kuyu             ###   ########.fr       */
+/*   Updated: 2026/01/18 18:07:39 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,9 @@
 #include <stdio.h>
 #include "libft.h"
 #include <fcntl.h>
-#include "utils.h"
-#include "env.h"
-#include "parse.h"
-#include "struct.h"
 #include <stdlib.h>		// for EXIT_FAILURE
 #include <sys/wait.h>
 #include <unistd.h>		// for STDIN_FILENO
-#include "libft.h"
 #include <string.h>
 #include <errno.h>
 

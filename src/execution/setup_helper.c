@@ -6,25 +6,16 @@
 /*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 15:39:56 by kuyu              #+#    #+#             */
-/*   Updated: 2026/01/18 15:44:23 by kuyu             ###   ########.fr       */
+/*   Updated: 2026/01/18 18:10:53 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "utils.h"
-#include "env.h"
-#include "parse.h"
-#include "struct.h"
-#include <fcntl.h> // for pid_t
-#include <stdlib.h>		// for EXIT_FAILURE
 #include <sys/wait.h>
-#include <unistd.h>		// for STDIN_FILENO
-#include <stdio.h>		// for perror()
 #include "libft.h"
 #include <errno.h>
 #include <string.h>
 #define _GNU_SOURCE
-#include <signal.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
