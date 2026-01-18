@@ -45,14 +45,14 @@ EXECUTION_SRC = $(shell find ./src/execution -iname "*.c")
 # builtins module
 BUILTINS_SRC = $(shell find ./src/builtins -iname "*.c")
 
-all: $(NAME) 
+all: buildlib $(NAME) 
 
 # %.o: %.c
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
 	cc $(FLAGS) $(HEADERS) -c $< -o $@ 
 
-$(NAME): buildlib $(OBJ)
+$(NAME): $(OBJ)
 	cc $(HEADERS) $(FLAGS) $(OBJ) $(LIBFT) $(RLFLAG) -o $@
 
 buildlib:
