@@ -6,7 +6,7 @@
 /*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2026/01/18 15:39:51 by kuyu          #+#    #+#                 */
-/*   Updated: 2026/01/23 16:20:03 by jdong         ########   odam.nl         */
+/*   Updated: 2026/01/23 16:24:23 by jdong         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void	wait_handler(t_shell *shell)
 			else if (WIFSIGNALED(status))
 			{
 				shell->exit = 128 + WTERMSIG(status);
-				write(1, "\n", 2);
+				write(1, "\n", 1);
 			}
 		}
 		++i;
