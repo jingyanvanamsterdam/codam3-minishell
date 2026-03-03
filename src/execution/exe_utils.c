@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   exe_utils.c                                        :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: kuyu <kuyu@student.codam.nl>                 +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2026/01/18 15:39:22 by kuyu          #+#    #+#                 */
-/*   Updated: 2026/01/23 16:24:03 by jdong         ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   exe_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kuyu <kuyu@student.codam.nl>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/18 15:39:22 by kuyu              #+#    #+#             */
+/*   Updated: 2026/01/18 18:07:39 by kuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,5 +128,7 @@ void	execve_builtin(t_shell *shell, t_builtin type, t_cmd *cmd)
 		status = ft_env(cmd->cmd, shell);
 	if (type == EXIT)
 		status = ft_exit(cmd->cmd, shell);
+	if (status != 0)
+		ft_execve_error(cmd->cmd[0], strerror(errno));
 	shell->exit = status;
 }
